@@ -11,7 +11,17 @@ SSH_PATH_LIST = ["C:\\Program Files\\Git\\mingw32\\bin\\ssh.exe",
                  "C:\\Program Files\\Git\\usr\\bin\\ssh.exe",
                  "B:\\Program Files\\Git\\usr\\bin\\ssh.exe",
                  "D:\\Program Files\\Git\\usr\\bin\\ssh.exe",
+                 "C:\\Program Files (x86)\\Git\\mingw32\\bin\\ssh.exe",
+                 "B:\\Program Files (x86)\\Git\\mingw32\\bin\\ssh.exe",
+                 "D:\\Program Files (x86)\\Git\\mingw32\\bin\\ssh.exe",
+                 "C:\\Program Files (x86)\\Git\\usr\\bin\\ssh.exe",
+                 "B:\\Program Files (x86)\\Git\\usr\\bin\\ssh.exe",
+                 "D:\\Program Files (x86)\\Git\\usr\\bin\\ssh.exe",
+				 "C:\\Program Files (x86)\\Git\\bin\\ssh.exe",
                  "ssh"]
+                 
+                 
+                 
                  
 SCP_PATH_LIST = ["C:\\Program Files\\Git\\mingw32\\bin\\scp.exe",
                  "B:\\Program Files\\Git\\mingw32\\bin\\scp.exe",
@@ -19,6 +29,13 @@ SCP_PATH_LIST = ["C:\\Program Files\\Git\\mingw32\\bin\\scp.exe",
                  "C:\\Program Files\\Git\\usr\\bin\\scp.exe",
                  "B:\\Program Files\\Git\\usr\\bin\\scp.exe",
                  "D:\\Program Files\\Git\\usr\\bin\\scp.exe",
+                 "C:\\Program Files (x86)\\Git\\mingw32\\bin\\scp.exe",
+                 "B:\\Program Files (x86)\\Git\\mingw32\\bin\\scp.exe",
+                 "D:\\Program Files (x86)\\Git\\mingw32\\bin\\scp.exe",
+                 "C:\\Program Files (x86)\\Git\\usr\\bin\\scp.exe",
+                 "B:\\Program Files (x86)\\Git\\usr\\bin\\scp.exe",
+                 "D:\\Program Files (x86)\\Git\\usr\\bin\\scp.exe",
+				 "C:\\Program Files (x86)\\Git\\bin\\scp.exe",
                  "scp"]
                  
 #Beaglebone Black should be at a fixed IP address
