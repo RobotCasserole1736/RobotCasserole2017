@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1736.robot;
 
+
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
+import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
  * directory.
  */
 public class Robot extends IterativeRobot {
+
 	
 	///////////////////////////////////////////////////////////////////
 	// Robot Class-Scope Objects
@@ -22,6 +25,7 @@ public class Robot extends IterativeRobot {
 	
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
+	public CasseroleWebServer webServer;
 	
 	
 	
@@ -41,8 +45,11 @@ public class Robot extends IterativeRobot {
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
+		
+		//Set up and start web server
+		webServer = new CasseroleWebServer();
+		webServer.startServer();
 	}
-	
 	
 	/**
 	 * This function is called just before the robot enters disabled
@@ -69,7 +76,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
 		//Open a new log
 		CsvLogger.init();
 
@@ -80,9 +86,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+
+		
 		
 		//Log data to file
 		CsvLogger.logData(false);
+
 	}
 	
 	

@@ -120,7 +120,7 @@
      To get around this, we're recompiling the entire project, which is not an issue for most teams. If this is an issue
      for you, you can remove the clean here, just be sure to do a full rebuild after you've changed any constants.
      Reference: http://stackoverflow.com/questions/6430001/ant-doesnt-recompile-constants -->
-  <target name="deploy" depends="clean,jar,get-target-ip,dependencies" description="Deploy the jar and start the program running.">
+  <target name="deploy" depends="clean,jar,get-target-ip,dependencies,web-content-deploy" description="Deploy the jar and start the program running.">
 
     <deploy-libs libs.name="WPI_Native_Libraries" libs.basedir="${wpilib.native.lib}" libs.deployDir="${libDeploy.dir}">
       <libs.local>
