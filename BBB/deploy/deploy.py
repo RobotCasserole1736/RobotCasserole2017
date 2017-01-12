@@ -44,6 +44,8 @@ TARGET_IP_ADDRESS = "10.17.36.20"
 #Path to root directory where we put the files on the remote
 TARGET_SCRIPT_DIR = "~/CasseroleVision/"
 TARGET_SERVICE_DIR = "/lib/systemd/system/"
+TARGET_SERVICE_DIR_TOM = "/home/root/CasseroleVision/"
+
 
 #Utility to determine if path is an executable   
 def isExecutable(fpath):
@@ -127,7 +129,7 @@ print("Copying service definition...")
 runCmd(cmd, False, "\n")
 
 #Copy service
-cmd = scp_exe + " ../LifeCam Settings" + " root@" + TARGET_IP_ADDRESS + ":" + TARGET_SERVICE_DIR
+cmd = scp_exe + " ../LifeCamSettings.sh" + " root@" + TARGET_IP_ADDRESS + ":" + TARGET_SERVICE_DIR_TOM
 print("Copying service definition...")
 runCmd(cmd, False, "\n")
 
