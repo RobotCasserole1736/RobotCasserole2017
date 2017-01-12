@@ -126,6 +126,11 @@ cmd = scp_exe + " ../CasseroleVisionCoprocessor.service" + " root@" + TARGET_IP_
 print("Copying service definition...")
 runCmd(cmd, False, "\n")
 
+#Copy service
+cmd = scp_exe + " ../LifeCam Settings" + " root@" + TARGET_IP_ADDRESS + ":" + TARGET_SERVICE_DIR
+print("Copying service definition...")
+runCmd(cmd, False, "\n")
+
 
 
 #Post-steps: start and enalble service
