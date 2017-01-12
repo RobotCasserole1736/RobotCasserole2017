@@ -10,6 +10,7 @@ import pythonled
 import Pipeline
 import TargetObservation
 import UDPServer
+import subprocess
 
 ################################################################################
 #Config Data
@@ -148,6 +149,12 @@ def img_process(img):
 ################################################################################
 ledStatus = False
 indicateLEDsNotRunning()
+
+ 
+subprocess.call(['./LifeCamSettings.sh']) # Thanks @Jim Dennis for suggesting the []
+
+
+
 
 #Open data stream from IP camera
 # Robust connect should hopefullyprevent race conditions between the camera
