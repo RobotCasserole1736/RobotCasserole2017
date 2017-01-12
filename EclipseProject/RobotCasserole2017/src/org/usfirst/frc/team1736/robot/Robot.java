@@ -51,6 +51,7 @@ public class Robot extends IterativeRobot {
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
+		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
 		
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
@@ -142,6 +143,9 @@ public class Robot extends IterativeRobot {
 		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
 	}
 
+	public double getLoopTime(){
+		return loop_time_elapsed;
+	}
 
 }
 
