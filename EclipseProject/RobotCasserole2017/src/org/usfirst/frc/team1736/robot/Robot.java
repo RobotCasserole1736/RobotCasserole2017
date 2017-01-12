@@ -3,6 +3,7 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
+import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -105,7 +106,11 @@ public class Robot extends IterativeRobot {
 
 		//Calculate Loop Time
 		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		
+		updateWebStates();
+		
 	}
+	
 	
 	
 	
@@ -141,11 +146,17 @@ public class Robot extends IterativeRobot {
 		
 		//Calculate Loop Time
 		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		
+		updateWebStates();
 	}
 
 	public double getLoopTime(){
 		return loop_time_elapsed;
 	}
 
+	 private void updateWebStates(){
+		  CassesroleWebStates.putDouble("Loop Time (ms)", loop_time_elapsed*1000);
+	 }
+	
 }
 
