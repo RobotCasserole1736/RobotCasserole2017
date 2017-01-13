@@ -13,21 +13,21 @@
 clear;
 
 %% Testcase constants - adjust to suit your needs (dependent on robot state at launch time)
-launch_x_ft = 6.5;  %Distance between launch point and goal.  
-launch_wheel_speed_RPM = 4000; %RPM speed of launch wheel (assumes single-wheel launcher)
+launch_x_ft = 10;  %Distance between launch point and goal.  
+launch_wheel_speed_RPM = 4100; %RPM speed of launch wheel (assumes single-wheel launcher)
 
 %Your system parameters (dependent on robot design)
-launch_z_ft = 0.5; %Launch point of the ball height off the ground in meters. Max is 1.37m
-launch_angle_deg = 70; %angle between floor and launch point
+launch_z_ft = 0.5; %Launch point of the ball height off the ground in meters. Max is 0.69m
+launch_angle_deg = 60; %angle between floor and launch point
 launch_wheel_diameter_in = 4; %Launch wheel diameter in inches
 launch_wheel_weight_lbs = 4; %Launch wheel mass in pounds
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Simulation constants - should probably stay as is.
-Ts = 0.001; %1ms sample rate for solver
+Ts = 0.001; %1ms sample rate for solver (1ms intervals)
 goal_height_m = 2.46378; %Height of the top rim of the high goal - 8ft 1 in
-goal_diameter_m = 0.5461; %Diameter of the top rim of the goal
+goal_diameter_m = 0.5461; %Diameter of the top rim of the goal - 1ft 9.5in
 ball_diameter_m = 0.127; % 5in ball 
 ball_rad_m = ball_diameter_m/2;
 g_mps = 9.81; %Gravitational constant
