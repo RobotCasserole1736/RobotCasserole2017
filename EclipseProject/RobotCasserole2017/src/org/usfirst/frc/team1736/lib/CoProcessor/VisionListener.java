@@ -66,6 +66,11 @@ public class VisionListener {
     //but this object will not be updated until the control system thread calls the sampleLatestData() method.
     private JSONObject userCurrObservation;
     
+    //Values used for axis M1011
+    double targetWidthFeet = 1.25;
+    int FOVWidthPixel = 640;
+    double tangentTheta = 1.0724;
+    
     /**
      * Constructor for the Vision Coprocessor listener socket. Sets up internal variables to get ready
      * for information to be transmitted from the coprocessor.
