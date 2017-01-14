@@ -41,6 +41,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit(){
 		//Set up physical devices
+		DriveTrain myRobot = new DriveTrain();
 		pdp = new PowerDistributionPanel();
 		VisionProk = new Vision_Processing_Main(); 
 		
@@ -120,6 +121,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		DriveTrain.myRobot.OperatorControl();
 		CsvLogger.logData(false);
 		VisionProk.update();
 	}
