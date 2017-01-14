@@ -6,6 +6,8 @@ import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
+import org.usfirst.frc.team1736.vision_processing_2017.Vision_Processing_Main;
+
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -41,7 +43,7 @@ public class Robot extends IterativeRobot {
 	
 
 	
-	
+    Vision_Processing_Main VisionProk;
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -54,6 +56,8 @@ public class Robot extends IterativeRobot {
 		//Set up physical devices
 		pdp = new PowerDistributionPanel();
 		botblock =new ADIS16448_IMU();
+		VisionProk = new Vision_Processing_Main(); 
+		
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
@@ -150,8 +154,15 @@ public class Robot extends IterativeRobot {
 		//Initialize Timer
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
-		CsvLogger.logData(false);
+		VisionProk.update();
 		
+		
+		
+		
+
+
+		
+		CsvLogger.logData(false);
 		//Calculate Loop Time
 		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
 		
@@ -160,6 +171,9 @@ public class Robot extends IterativeRobot {
 
 	public double getLoopTime(){
 		return loop_time_elapsed;
+
+		
+
 	}
 
 	public double getCpuLoad(){
