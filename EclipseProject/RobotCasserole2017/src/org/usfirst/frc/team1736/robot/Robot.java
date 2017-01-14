@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
 	PowerDistributionPanel pdp;
 	public CasseroleWebServer webServer;
 	ADIS16448_IMU botblock;
-	
+	DriveTrain myRobot;
 
 	
     Vision_Processing_Main VisionProk;
@@ -54,6 +54,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit(){
 		//Set up physical devices
+		myRobot = new DriveTrain();
 		pdp = new PowerDistributionPanel();
 		botblock =new ADIS16448_IMU();
 		VisionProk = new Vision_Processing_Main(); 
@@ -150,10 +151,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+
 		
 		//Initialize Timer
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
+
+		myRobot.OperatorControl();
+
+
 		VisionProk.update();
 		
 		
