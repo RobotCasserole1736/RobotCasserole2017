@@ -3,6 +3,7 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
+import org.usfirst.frc.team1736.vision_processing_2017.Vision_Processing_Main;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -29,7 +30,7 @@ public class Robot extends IterativeRobot {
 	
 	
 	
-	
+    Vision_Processing_Main VisionProk;
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -41,6 +42,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit(){
 		//Set up physical devices
 		pdp = new PowerDistributionPanel();
+		VisionProk = new Vision_Processing_Main(); 
 		
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
@@ -119,6 +121,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		CsvLogger.logData(false);
+		VisionProk.update();
 	}
 
 
