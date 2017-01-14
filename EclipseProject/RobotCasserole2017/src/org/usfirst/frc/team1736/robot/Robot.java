@@ -158,6 +158,7 @@ public class Robot extends IterativeRobot {
 
 	 private void updateWebStates(){
 		  CassesroleWebStates.putDouble("Loop Time (ms)", loop_time_elapsed*1000);
+		  CassesroleWebStates.putDouble("robot Yaw.", botblock.getYaw());
 	 }
 	
 }
