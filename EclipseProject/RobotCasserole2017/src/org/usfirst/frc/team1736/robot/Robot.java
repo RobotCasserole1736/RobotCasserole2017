@@ -2,6 +2,7 @@ package org.usfirst.frc.team1736.robot;
 
 
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
+import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -26,7 +27,7 @@ public class Robot extends IterativeRobot {
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
 	public CasseroleWebServer webServer;
-	
+	ADIS16448_IMU botblock;
 	
 	
 	
@@ -41,7 +42,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit(){
 		//Set up physical devices
 		pdp = new PowerDistributionPanel();
-		
+		botblock =new ADIS16448_IMU();
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
@@ -49,6 +50,7 @@ public class Robot extends IterativeRobot {
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
+		botblock.reset();
 	}
 	
 	/**
@@ -78,7 +80,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		//Open a new log
 		CsvLogger.init();
-
+		botblock.reset();
 	}
 
 	/**
@@ -91,7 +93,6 @@ public class Robot extends IterativeRobot {
 		
 		//Log data to file
 		CsvLogger.logData(false);
-
 	}
 	
 	
