@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1736.robot;
 
 
+import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
@@ -29,6 +30,9 @@ public class Robot extends IterativeRobot {
 	private double prev_loop_start_timestamp = 0;
 	private double loop_time_elapsed = 0;
 	
+	//Processor Stats
+	CasseroleRIOLoadMonitor ecuStats = new CasseroleRIOLoadMonitor();
+	
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
 	public CasseroleWebServer webServer;
@@ -53,6 +57,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
 		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
+		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
+		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
 		
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
@@ -154,8 +160,18 @@ public class Robot extends IterativeRobot {
 		return loop_time_elapsed;
 	}
 
+	public double getCpuLoad(){
+		return ecuStats.totalCPULoadPct;
+	}
+
+	public double getRAMUsage(){
+		return ecuStats.totalMemUsedPct;
+	}
+
 	 private void updateWebStates(){
 		  CassesroleWebStates.putDouble("Loop Time (ms)", loop_time_elapsed*1000);
+		  CassesroleWebStates.putDouble("CPU Load (%)", ecuStats.totalCPULoadPct); 
+		  CassesroleWebStates.putDouble("RAM Usage (%)", ecuStats.totalMemUsedPct); 
 	 }
 	
 }
