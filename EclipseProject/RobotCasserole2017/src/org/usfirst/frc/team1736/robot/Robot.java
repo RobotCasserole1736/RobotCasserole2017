@@ -2,6 +2,7 @@ package org.usfirst.frc.team1736.robot;
 
 
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
+import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
@@ -32,7 +33,7 @@ public class Robot extends IterativeRobot {
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
 	public CasseroleWebServer webServer;
-	
+	ADIS16448_IMU botblock;
 	
 
 	
@@ -48,7 +49,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit(){
 		//Set up physical devices
 		pdp = new PowerDistributionPanel();
-		
+		botblock =new ADIS16448_IMU();
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
@@ -57,6 +58,7 @@ public class Robot extends IterativeRobot {
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
+		botblock.reset();
 	}
 	
 	/**
@@ -86,9 +88,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		//Open a new log
 		CsvLogger.init();
-		
+
+		botblock.reset();
 		loop_time_elapsed = 0;
-		
 	}
 
 	/**
@@ -156,6 +158,7 @@ public class Robot extends IterativeRobot {
 
 	 private void updateWebStates(){
 		  CassesroleWebStates.putDouble("Loop Time (ms)", loop_time_elapsed*1000);
+		  CassesroleWebStates.putDouble("robot Yaw.", botblock.getYaw());
 	 }
 	
 }
