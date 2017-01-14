@@ -13,14 +13,14 @@
 clear;
 
 %% Testcase constants - adjust to suit your needs (dependent on robot state at launch time)
-launch_x_ft = 10;  %Distance between launch point and goal.  
-launch_wheel_speed_RPM = 4100; %RPM speed of launch wheel (assumes single-wheel launcher)
+launch_x_ft = 70.0/12.0;  %Distance between launch point and goal.  
+launch_wheel_speed_RPM = 2850; %RPM speed of launch wheel (assumes single-wheel launcher)
 
 %Your system parameters (dependent on robot design)
 launch_z_ft = 0.5; %Launch point of the ball height off the ground in meters. Max is 0.69m
-launch_angle_deg = 60; %angle between floor and launch point
-launch_wheel_diameter_in = 4; %Launch wheel diameter in inches
-launch_wheel_weight_lbs = 4; %Launch wheel mass in pounds
+launch_angle_deg = 70; %angle between floor and launch point
+launch_wheel_diameter_in = 6; %Launch wheel diameter in inches
+launch_wheel_weight_lbs = 3; %Launch wheel mass in pounds
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,7 +67,7 @@ vel_z(i) = launch_speed_mps*sin(launch_angle_rad);
 
 
 %calculate trajectory until terminal case (ball hits floor or ball hits goal)
-while( and(pos_z(i) > 0.5*ball_diameter_m,  pos_x(i) < (launch_x_m + goal_diameter_m)))
+while( and(pos_z(i) > 0.5*ball_diameter_m,  not(and(pos_z(i) < goal_height_m*0.75 , vel_z < 0, not(pos_x < launch_x_m)))))
   i = i + 1;
   time(i) = i*Ts;
   vel_x(i) = vel_x(i-1)/(1+Ts*g_mps/Vt_mps);
