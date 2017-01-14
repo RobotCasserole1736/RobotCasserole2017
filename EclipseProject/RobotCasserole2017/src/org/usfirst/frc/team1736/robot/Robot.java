@@ -4,6 +4,7 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
+import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -24,11 +25,17 @@ public class Robot extends IterativeRobot {
 	// Robot Class-Scope Objects
     ///////////////////////////////////////////////////////////////////
 	
+	//Performance Timer
+	Timer autoTimer = new Timer();
+	private double prev_loop_start_timestamp = 0;
+	private double loop_time_elapsed = 0;
+	
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
 	public CasseroleWebServer webServer;
 	ADIS16448_IMU botblock;
 	
+
 	
 	
 	///////////////////////////////////////////////////////////////////
@@ -46,6 +53,7 @@ public class Robot extends IterativeRobot {
 		//Set up all logging fields
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
+		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
 		
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
@@ -80,7 +88,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		//Open a new log
 		CsvLogger.init();
+
 		botblock.reset();
+		loop_time_elapsed = 0;
 	}
 
 	/**
@@ -88,12 +98,21 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-
+		
+		//Initialize Timer
+		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
 		
 		//Log data to file
 		CsvLogger.logData(false);
+
+		//Calculate Loop Time
+		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		
+		updateWebStates();
+		
 	}
+	
 	
 	
 	
@@ -109,6 +128,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		
+		loop_time_elapsed = 0;
+		
 		//Open a new log
 		CsvLogger.init();
 	}	
@@ -119,9 +140,25 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
+		//Initialize Timer
+		prev_loop_start_timestamp = Timer.getFPGATimestamp();
+		
 		CsvLogger.logData(false);
+		
+		//Calculate Loop Time
+		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		
+		updateWebStates();
 	}
 
+	public double getLoopTime(){
+		return loop_time_elapsed;
+	}
 
+	 private void updateWebStates(){
+		  CassesroleWebStates.putDouble("Loop Time (ms)", loop_time_elapsed*1000);
+	 }
+	
 }
 
