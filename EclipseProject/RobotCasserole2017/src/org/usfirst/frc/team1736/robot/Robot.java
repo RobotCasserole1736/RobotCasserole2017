@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	//Performance Timer
 	Timer autoTimer = new Timer();
 	private double prev_loop_start_timestamp = 0;
-	private double loop_time_elapsed = 0;
+	double loop_time_elapsed = 0;
 	
 	//Processor Stats
 	CasseroleRIOLoadMonitor ecuStats = new CasseroleRIOLoadMonitor();
@@ -59,23 +59,18 @@ public class Robot extends IterativeRobot {
 		botblock =new ADIS16448_IMU();
 		VisionProk = new Vision_Processing_Main(); 
 		
-		//Set up all logging fields
-		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
-		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
-		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
-		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
-		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
+		initLoggingChannels();
 		
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
-		botblock.reset();
+		
 	}
 	
 	/**
 	 * This function is called just before the robot enters disabled
 	 */
-		@Override
+	@Override
 	public void disabledInit() {
 		
 		//Close out any log which is running
@@ -97,11 +92,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+				
+		loop_time_elapsed = 0;
+
+		//Assume starting at 0 degrees
+		botblock.reset();
+		
 		//Open a new log
 		CsvLogger.init();
 
-		botblock.reset();
-		loop_time_elapsed = 0;
 	}
 
 	/**
@@ -110,18 +109,22 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		
-		//Initialize Timer
+		//Mark start of loop, Initialize Timer
+		//Must be as close to the start of the loop as possible
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
+		//Get all inputs from outside the robot
+		updateRobotInputs();
 		
-		//Log data to file
+		
+		
+		//Log & display present state data
 		CsvLogger.logData(false);
-
-		//Calculate Loop Time
-		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
-		
 		updateWebStates();
-		
+
+		//Mark end of loop and Calculate Loop Time
+		//Must be as close to the end of the loop as possible.
+		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
 	}
 	
 	
@@ -139,7 +142,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		
+
 		loop_time_elapsed = 0;
+		
+		//Assume starting at 0 degrees
+		botblock.reset();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -151,35 +158,67 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-
-		
 		//Initialize Timer
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
+		//Get all inputs from outside the robot
+		updateRobotInputs();
+		
 
+		//Update vision processing algorithm to find any targets on in view
+		VisionProk.update();
+		
+		//Run Drivietrain periodic loop
 		myRobot.OperatorControl();
 
 
-		VisionProk.update();
 		
 		
 		
 		
 
 
-		
+		//Log & display present state data
 		CsvLogger.logData(false);
-		//Calculate Loop Time
-		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
-		
 		updateWebStates();
+		//Mark end of loop and Calculate Loop Time
+		//Must be as close to the end of the loop as possible.
+		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+	}
+	
+	
+	
+	//Sets up all the logged channels of data. Should be called once before opening any logs
+	public void initLoggingChannels(){
+		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
+		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
+		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
+		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
+		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
+		
+	}
+	
+	//Puts all relevant data to the 
+	public void updateWebStates(){
+		CassesroleWebStates.putDouble("Loop Time (ms)",    loop_time_elapsed*1000);
+		CassesroleWebStates.putDouble("Robot Yaw (deg)",   botblock.getYaw());
+		CassesroleWebStates.putDouble("CPU Load (%)",      ecuStats.totalCPULoadPct); 
+		CassesroleWebStates.putDouble("RAM Usage (%)",     ecuStats.totalMemUsedPct); 
+		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
+		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
+		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 	}
 
+	//Updates all relevant robot inputs. Should be called during periodic loops
+	public void updateRobotInputs(){
+		
+	}
+
+	
+	
+	//Getters & setters for class-scope variables. Needed by MethodHandles logging infrastructure
 	public double getLoopTime(){
 		return loop_time_elapsed;
-
-		
-
 	}
 
 	public double getCpuLoad(){
@@ -190,12 +229,6 @@ public class Robot extends IterativeRobot {
 		return ecuStats.totalMemUsedPct;
 	}
 
-	 private void updateWebStates(){
-		  CassesroleWebStates.putDouble("Loop Time (ms)", loop_time_elapsed*1000);
-		  CassesroleWebStates.putDouble("Robot Yaw (deg)", botblock.getYaw());
-		  CassesroleWebStates.putDouble("CPU Load (%)", ecuStats.totalCPULoadPct); 
-		  CassesroleWebStates.putDouble("RAM Usage (%)", ecuStats.totalMemUsedPct); 
-	 }
 	
 }
 
