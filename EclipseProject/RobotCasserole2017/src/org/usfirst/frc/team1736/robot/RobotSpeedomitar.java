@@ -21,6 +21,8 @@ public class RobotSpeedomitar {
 			Vy  = (-WheelSpeedOno + WheelSpeedDos - WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
 		double netSpeed;
 			netSpeed = Math.sqrt(Vx*Vx+Vy*Vy);
-		CasseroleDriverView.setDialValue("RobotSpeed ftperse", netSpeed);	
+		CasseroleDriverView.setDialValue("RobotSpeed ftperse", netSpeed);
+		RobotState.robotFwdRevVel_ftpers = Vx;
+		RobotState.robotStrafeVel_ftpers = Vy;		
 	}
 }

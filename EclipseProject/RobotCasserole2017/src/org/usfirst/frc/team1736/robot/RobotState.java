@@ -28,6 +28,12 @@ public class RobotState {
 	static double robotPoseAngle_deg = 0; //Present rotation of the robot (relative to field)
 	static double robotRotationalVel_degpers = 0 ; //Present rotational velocity of the robot (relative to field)
 	static double robotFwdRevVel_ftpers = 0; //Present forward or reverse velocity of the robot in ft/sec. Positive numbers mean forward, negative numbers mean reverse.
+	public static double getRobotFwdRevVel_ftpers() {
+		return robotFwdRevVel_ftpers;
+	}
+	public static double getRobotStrafeVel_ftpers() {
+		return robotStrafeVel_ftpers;
+	}
 	static double robotStrafeVel_ftpers = 0; //Present side-to-side velocity of the robot in ft/sec. Positive numbers mean right, negative numbers mean left.
 	
 	
