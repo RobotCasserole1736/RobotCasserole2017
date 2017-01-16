@@ -212,6 +212,9 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
 		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getrobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("shooterDesiredVelocity_rpm","rpm","getshooterDesiredVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("shooterActualVelocity_rpm","rpm"," getShooterActualVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("shooterMotorCmd","rpm","getShooterMotorCmd",RobotState.class);
 	}
 	
 	//Puts all relevant data to the robot State webpage
