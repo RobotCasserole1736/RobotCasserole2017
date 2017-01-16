@@ -44,6 +44,7 @@ public class Robot extends IterativeRobot {
     Vision_Processing_Main VisionProk;
     
     //Software utilities
+    RobotSpeedomitar chris;
     CalWrangler wrangler;
     CasseroleWebServer webServer;
     
@@ -63,7 +64,7 @@ public class Robot extends IterativeRobot {
 		botblock =new ADIS16448_IMU();
 		VisionProk = new Vision_Processing_Main(); 
 		ecuStats = new CasseroleRIOLoadMonitor();
-		
+		chris = new RobotSpeedomitar();
 		initLoggingChannels();
 		
 		//Set up and start web server
@@ -178,7 +179,7 @@ public class Robot extends IterativeRobot {
 		
 		//Run Drivietrain periodic loop
 		myRobot.OperatorControl();
-
+		chris.update();
 
 		
 		

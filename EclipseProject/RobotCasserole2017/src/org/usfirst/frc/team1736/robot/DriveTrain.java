@@ -28,7 +28,7 @@ public class DriveTrain{
 	}
 	
 	public void OperatorControl() {
-			myDrive.mecanumDrive_Cartesian(moveStick.getY(), moveStick.getX(), rotateStick.getX(), 0);
+	//		myDrive.mecanumDrive_Cartesian(moveStick.getY(), moveStick.getX(), rotateStick.getX(), 0);
 			Timer.delay(0.02);
 	}
 }
