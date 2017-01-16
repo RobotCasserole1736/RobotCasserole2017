@@ -215,6 +215,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
 		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
+		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", this);
 	}
 	
 	//Puts all relevant data to the robot State webpage
@@ -225,7 +226,9 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
+		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
+		
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
@@ -246,6 +249,10 @@ public class Robot extends IterativeRobot {
 
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
+	}
+
+	public double getHopFeedCmd(){
+		return  RobotState.hopperMotorCmd;
 	}
 
 	
