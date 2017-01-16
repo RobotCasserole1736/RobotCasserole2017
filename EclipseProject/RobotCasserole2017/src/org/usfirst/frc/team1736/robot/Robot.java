@@ -47,6 +47,9 @@ public class Robot extends IterativeRobot {
     CalWrangler wrangler;
     CasseroleWebServer webServer;
     
+    //Hopper Feed Control
+    HopperControl hopControl = new HopperControl(); 
+    
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -124,7 +127,8 @@ public class Robot extends IterativeRobot {
 		//Get all inputs from outside the robot
 		updateRobotInputs();
 		
-		
+		//Set Hopper Feed State
+		hopControl.setSwitch(true);
 		
 		//Log & display present state data
 		CsvLogger.logData(false);
@@ -172,7 +176,9 @@ public class Robot extends IterativeRobot {
 		//Get all inputs from outside the robot
 		updateRobotInputs();
 		
-
+		//Set Hopper Feed State
+		hopControl.setSwitch(true);
+		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
 		
