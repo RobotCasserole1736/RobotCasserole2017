@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1736.robot;
 
 
+import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
@@ -28,22 +29,25 @@ public class Robot extends IterativeRobot {
 	// Robot Class-Scope Objects
     ///////////////////////////////////////////////////////////////////
 	
-	//Performance Timer
-	Timer autoTimer = new Timer();
-	private double prev_loop_start_timestamp = 0;
-	double loop_time_elapsed = 0;
-	
-	//Processor Stats
-	CasseroleRIOLoadMonitor ecuStats = new CasseroleRIOLoadMonitor();
+	//RIO Performance Monitoring
+	private double prev_loop_start_timestamp;
+	double loop_time_elapsed;
+	CasseroleRIOLoadMonitor ecuStats;
 	
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
-	public CasseroleWebServer webServer;
+	
 	ADIS16448_IMU botblock;
 	DriveTrain myRobot;
 
-	
+	//Vision Processing Algorithm
     Vision_Processing_Main VisionProk;
+    
+    //Software utilities
+    CalWrangler wrangler;
+    CasseroleWebServer webServer;
+    
+    
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -58,12 +62,16 @@ public class Robot extends IterativeRobot {
 		pdp = new PowerDistributionPanel();
 		botblock =new ADIS16448_IMU();
 		VisionProk = new Vision_Processing_Main(); 
+		ecuStats = new CasseroleRIOLoadMonitor();
 		
 		initLoggingChannels();
 		
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
+		
+		//Load any saved calibration values
+		CalWrangler.loadCalValues();
 		
 	}
 	
@@ -188,6 +196,12 @@ public class Robot extends IterativeRobot {
 	
 	
 	
+	
+	
+	///////////////////////////////////////////////////////////////////
+	// Utility Methods
+    ///////////////////////////////////////////////////////////////////
+	
 	//Sets up all the logged channels of data. Should be called once before opening any logs
 	public void initLoggingChannels(){
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
@@ -195,23 +209,22 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
 		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
-		
 	}
 	
-	//Puts all relevant data to the 
+	//Puts all relevant data to the robot State webpage
 	public void updateWebStates(){
-		CassesroleWebStates.putDouble("Loop Time (ms)",    loop_time_elapsed*1000);
-		CassesroleWebStates.putDouble("Robot Yaw (deg)",   botblock.getYaw());
-		CassesroleWebStates.putDouble("CPU Load (%)",      ecuStats.totalCPULoadPct); 
-		CassesroleWebStates.putDouble("RAM Usage (%)",     ecuStats.totalMemUsedPct); 
+		CassesroleWebStates.putDouble("Loop Time (ms)",    getLoopTime()*1000);
+		CassesroleWebStates.putDouble("CPU Load (%)",      getCpuLoad()); 
+		CassesroleWebStates.putDouble("RAM Usage (%)",     getRAMUsage()); 
 		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
+		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateRobotInputs(){
-		
+		RobotState.robotPoseAngle_deg = botblock.getYaw();
 	}
 
 	
