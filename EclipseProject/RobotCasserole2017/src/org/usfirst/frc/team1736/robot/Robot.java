@@ -8,6 +8,9 @@ import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import org.usfirst.frc.team1736.vision_processing_2017.Vision_Processing_Main;
+import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
+import org.usfirst.frc.team1736.robot.RobotState;
+
 
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -46,7 +49,9 @@ public class Robot extends IterativeRobot {
     //Software utilities
     CalWrangler wrangler;
     CasseroleWebServer webServer;
-    
+    //Controllers
+    Xbox360Controller driverCTRL;
+    Xbox360Controller operatorCTRL;
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -63,6 +68,8 @@ public class Robot extends IterativeRobot {
 		botblock =new ADIS16448_IMU();
 		VisionProk = new Vision_Processing_Main(); 
 		ecuStats = new CasseroleRIOLoadMonitor();
+		driverCTRL = new Xbox360Controller(0);
+		operatorCTRL = new Xbox360Controller(1);
 		
 		initLoggingChannels();
 		
@@ -176,8 +183,9 @@ public class Robot extends IterativeRobot {
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
 		
-		//Run Drivietrain periodic loop
-		myRobot.OperatorControl();
+		//Run Drive train periodic loop
+			myRobot.OperatorControl();
+	    
 
 
 		

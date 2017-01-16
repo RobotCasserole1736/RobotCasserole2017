@@ -4,9 +4,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
-
+import org.usfirst.frc.team1736.robot.RobotState;
+import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
-
+	
+	
+	Xbox360Controller driverCTRL;
+	Xbox360Controller operatorCTRL;
+	
 	public static Object myRobot;
 	RobotDrive myDrive;
 	Joystick moveStick, rotateStick;
@@ -23,12 +28,17 @@ public class DriveTrain{
 		moveStick = new Joystick(0);
 		rotateStick = new Joystick(1);
 	}
-	
-	public void autonomous() {
+	//plug 3DOF into the method autonomous
+/*	public void autonomous() {
+		myDrive.mecanumDrive_Cartesian(driverFwdRevCmd, driverStrafeCmd, driverRotateCmd, 0);
+		Timer.delay(0.02);
 	}
-	
+	*/
 	public void OperatorControl() {
-			myDrive.mecanumDrive_Cartesian(moveStick.getY(), moveStick.getX(), rotateStick.getX(), 0);
+			double driverFwdRevCmd = driverCTRL.LStick_Y();
+			double driverStrafeCmd = driverCTRL.LStick_X();
+			double driverRotateCmd = driverCTRL.RStick_X();
+			myDrive.mecanumDrive_Cartesian(driverFwdRevCmd, driverStrafeCmd, driverRotateCmd, 0);
 			Timer.delay(0.02);
 	}
 }
