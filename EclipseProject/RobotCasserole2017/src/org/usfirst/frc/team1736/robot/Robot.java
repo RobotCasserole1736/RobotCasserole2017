@@ -228,10 +228,21 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
+		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDrive);
+		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDrive);
+		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDrive);
+		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDrive);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateRobotInputs(){
+		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
+		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
+		RobotState.driverRotateCmd = driverCTRL.RStick_X();
+		RobotState.frontLeftDrive = myRobot.driverFL();
+		RobotState.frontRightDrive = myRobot.driverFR();
+		RobotState.rearLeftDrive = myRobot.driverRL();
+		RobotState.rearRightDrive = myRobot.driverRR();
 		RobotState.robotPoseAngle_deg = botblock.getYaw();
 	}
 

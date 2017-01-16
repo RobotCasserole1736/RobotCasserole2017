@@ -9,24 +9,30 @@ import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
 	
 	
+	public static final int DRIVER_FRONT_RIGHT_MOTOR = 0;
+	public static final int DRIVER_FRONT_LEFT_MOTOR = 1;
+	public static final int DRIVER_REAR_LEFT_MOTOR = 2;
+	public static final int DRIVER_REAR_RIGHT_MOTOR = 3;
+	
 	Xbox360Controller driverCTRL;
 	Xbox360Controller operatorCTRL;
 	
 	public static Object myRobot;
 	RobotDrive myDrive;
 	Joystick moveStick, rotateStick;
+	Victor frontLeft;
+	Victor frontRight;
+	Victor rearLeft;
+	Victor rearRight;
 	
 	public void RobotInit() {
-		Victor frontLeft = new Victor(1);
-    	Victor frontRight = new Victor(2);
-    	Victor rearLeft = new Victor (3);
-    	Victor rearRight = new Victor (4);
+		frontLeft = new Victor(DRIVER_FRONT_LEFT_MOTOR);
+    	frontRight = new Victor(DRIVER_FRONT_RIGHT_MOTOR);
+    	rearLeft = new Victor (DRIVER_REAR_LEFT_MOTOR);
+    	rearRight = new Victor (DRIVER_REAR_RIGHT_MOTOR);
     	
     	
     	myDrive = new RobotDrive(frontLeft, frontRight, rearLeft, rearRight);
-		myDrive = new RobotDrive(0, 1, 2, 3);
-		moveStick = new Joystick(0);
-		rotateStick = new Joystick(1);
 	}
 	//plug 3DOF into the method autonomous
 /*	public void autonomous() {
@@ -35,10 +41,28 @@ public class DriveTrain{
 	}
 	*/
 	public void OperatorControl() {
-			double driverFwdRevCmd = driverCTRL.LStick_Y();
-			double driverStrafeCmd = driverCTRL.LStick_X();
-			double driverRotateCmd = driverCTRL.RStick_X();
 			myDrive.mecanumDrive_Cartesian(driverFwdRevCmd, driverStrafeCmd, driverRotateCmd, 0);
 			Timer.delay(0.02);
+
+	
 	}
+
+	public double driverFL() {
+		return frontLeft.get();
+	}
+	
+	public double driverFR() {
+		return frontRight.get();
+	}
+	
+	public double driverRL() {
+		return rearLeft.get();
+	}
+
+	public double driverRR() {
+		return rearRight.get();
+	}
+
+
+
 }
