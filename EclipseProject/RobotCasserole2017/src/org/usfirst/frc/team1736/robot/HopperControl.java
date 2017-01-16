@@ -1,27 +1,33 @@
 package org.usfirst.frc.team1736.robot;
 
+import org.usfirst.frc.team1736.lib.Calibration.Calibration;
+
 import edu.wpi.first.wpilibj.Victor;
 
 public class HopperControl {
 	//Declare Motor Control
 	Victor hopMotor = new Victor(1);
 	
+	//Declaring Hopper Calibration
+	Calibration hopperMotorCmd = new Calibration("hopperMotorCmd", 0.5, 0.0, 1.0);
+	
 	//Hopper Speed
-	double hopSpeedOn = 0.5;
 	double hopSpeedOff = 0.0;
 	public HopperControl(){
 		
 		//Init Motor to off
 		RobotState.hopperMotorCmd = 0.0;
 		hopMotor.set(RobotState.hopperMotorCmd);
-
+		
+		//Create Calibration Value
+		
 	}
 	
 	
 	
 	public void setSwitch(boolean on) {
 		if(on){
-			RobotState.hopperMotorCmd = hopSpeedOn;
+			RobotState.hopperMotorCmd = hopperMotorCmd.get();
 		}else{
 			RobotState.hopperMotorCmd = hopSpeedOff;
 		}
