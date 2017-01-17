@@ -16,7 +16,6 @@ public class DriveTrain{
 	Xbox360Controller driverCTRL;
 	Xbox360Controller operatorCTRL;
 	
-	public static Object myRobot;
 	RobotDrive myDrive;
 	Joystick moveStick, rotateStick;
 	Victor frontLeft;
@@ -25,10 +24,10 @@ public class DriveTrain{
 	Victor rearRight;
 	
 	public void RobotInit() {
-		frontLeft = new Victor(DRIVER_FRONT_LEFT_MOTOR);
+		frontLeft  = new Victor(DRIVER_FRONT_LEFT_MOTOR);
     	frontRight = new Victor(DRIVER_FRONT_RIGHT_MOTOR);
-    	rearLeft = new Victor (DRIVER_REAR_LEFT_MOTOR);
-    	rearRight = new Victor (DRIVER_REAR_RIGHT_MOTOR);
+    	rearLeft   = new Victor(DRIVER_REAR_LEFT_MOTOR);
+    	rearRight  = new Victor(DRIVER_REAR_RIGHT_MOTOR);
     	
     	
     	myDrive = new RobotDrive(frontLeft, frontRight, rearLeft, rearRight);
@@ -40,6 +39,8 @@ public class DriveTrain{
 	}
 	*/
 	public void OperatorControl() {
+			
+			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
 			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, 0);
 			
 			//Update Motor Commands

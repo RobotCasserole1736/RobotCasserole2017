@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
     Xbox360Controller operatorCTRL;
 
     //Hopper Feed Control
-    HopperControl hopControl = new HopperControl(); 
+    HopperControl hopControl; 
 
     
 	///////////////////////////////////////////////////////////////////
@@ -75,6 +75,7 @@ public class Robot extends IterativeRobot {
 		VisionProk = new Vision_Processing_Main(); 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
+		hopControl = new HopperControl();
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -231,7 +232,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
 		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getrobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", this);
+		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", RobotState.class);
 	}
 	
 	//Puts all relevant data to the robot State webpage
@@ -276,10 +277,6 @@ public class Robot extends IterativeRobot {
 
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
-	}
-
-	public double getHopFeedCmd(){
-		return  RobotState.hopperMotorCmd;
 	}
 
 	

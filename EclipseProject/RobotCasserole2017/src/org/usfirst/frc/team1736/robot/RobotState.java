@@ -79,6 +79,12 @@ public class RobotState {
 	static double rearLeftDriveMotorCmd = 0;
 	static double rearRightDriveMotorCmd = 0;
 	
+	//Getters and Setters for select globals
+	public double getHopFeedCmd(){
+		return  RobotState.hopperMotorCmd;
+	}
+
+	
 
 
 }
