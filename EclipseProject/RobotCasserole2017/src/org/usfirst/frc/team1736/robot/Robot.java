@@ -5,6 +5,7 @@ import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
+import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import org.usfirst.frc.team1736.vision_processing_2017.Vision_Processing_Main;
@@ -162,6 +163,7 @@ public class Robot extends IterativeRobot {
 		
 		//Get all inputs from outside the robot
 		updateRobotInputs();
+		chris.update();
 		
 		//Set Hopper Feed State
 		hopControl.setSwitch(true);
@@ -214,6 +216,7 @@ public class Robot extends IterativeRobot {
 		
 		//Get all inputs from outside the robot
 		updateRobotInputs();
+		chris.update();
 		
 		//Set Hopper Feed State
 		hopControl.setSwitch(true);
@@ -224,11 +227,6 @@ public class Robot extends IterativeRobot {
 
 		//Run Drivietrain periodic loop
 		myRobot.OperatorControl();
-		chris.update();
-
-		
-		
-		
 		
 
 
@@ -260,6 +258,10 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", RobotState.class);
 	}
 	
+	public void initDriverView(){
+		CasseroleDriverView.newDial("RobotSpeed ftperse", 0, 25, 5, 0, 20);
+	}
+	
 	//Puts all relevant data to the robot State webpage
 	public void updateWebStates(){
 		CassesroleWebStates.putDouble("Loop Time (ms)",    getLoopTime()*1000);
@@ -274,7 +276,10 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);
 		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDriveMotorCmd);
 		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDriveMotorCmd);
-
+	}
+	
+	public void updateDriverView(){
+		CasseroleDriverView.setDialValue("RobotSpeed ftperse", RobotState.robotNetSpeed_ftpers);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops

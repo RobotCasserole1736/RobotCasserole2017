@@ -1,27 +1,36 @@
 package org.usfirst.frc.team1736.robot;
 
-import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 
 public class RobotSpeedomitar {
+	
 	public RobotSpeedomitar(){
-		CasseroleDriverView.newDial("RobotSpeed ftperse", 0, 25, 5, 0, 20);
+		return;
 	}
+	
 	public void update(){
 		double WheelSpeedOno;
-			WheelSpeedOno =RobotState.frontLeftWheelVelocity_rpm * 2.0 * Math.PI / 60; 
 		double WheelSpeedDos;
-			WheelSpeedDos =RobotState.frontRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
 		double WheelSpeedTres;
-			WheelSpeedTres =RobotState.rearLeftWheelVelocity_rpm * 2.0 * Math.PI / 60;
 		double WheelSpeedCuatro;
-			WheelSpeedCuatro =RobotState.rearRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
 		double Vx;
-			Vx = (WheelSpeedOno + WheelSpeedDos + WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
 		double Vy;
-			Vy  = (-WheelSpeedOno + WheelSpeedDos - WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
 		double netSpeed;
-			netSpeed = Math.sqrt(Vx*Vx+Vy*Vy);
-		CasseroleDriverView.setDialValue("RobotSpeed ftperse", netSpeed);
+		
+		//Calculate wheel speeds in radians per second
+		WheelSpeedOno =RobotState.frontLeftWheelVelocity_rpm * 2.0 * Math.PI / 60; 
+		WheelSpeedDos =RobotState.frontRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
+		WheelSpeedTres =RobotState.rearLeftWheelVelocity_rpm * 2.0 * Math.PI / 60;
+		WheelSpeedCuatro =RobotState.rearRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
+	
+		//Calculate translational velocity x/y components via inverse mechanum kinematic equations
+		Vx = (WheelSpeedOno + WheelSpeedDos + WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
+		Vy  = (-WheelSpeedOno + WheelSpeedDos - WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
+	
+		//Calculate net speed vector with pythagorean theorem
+		netSpeed = Math.sqrt(Vx*Vx+Vy*Vy);
+		
+		//Store results into state variables
+		RobotState.robotNetSpeed_ftpers = netSpeed;
 		RobotState.robotFwdRevVel_ftpers = Vx;
 		RobotState.robotStrafeVel_ftpers = Vy;		
 	}

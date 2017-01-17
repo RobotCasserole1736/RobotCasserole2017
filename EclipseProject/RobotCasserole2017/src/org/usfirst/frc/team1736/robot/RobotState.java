@@ -28,14 +28,8 @@ public class RobotState {
 	static double robotPoseAngle_deg = 0; //Present rotation of the robot (relative to field)
 	static double robotRotationalVel_degpers = 0 ; //Present rotational velocity of the robot (relative to field)
 	static double robotFwdRevVel_ftpers = 0; //Present forward or reverse velocity of the robot in ft/sec. Positive numbers mean forward, negative numbers mean reverse.
-	public static double getRobotFwdRevVel_ftpers() {
-		return robotFwdRevVel_ftpers;
-	}
-	public static double getRobotStrafeVel_ftpers() {
-		return robotStrafeVel_ftpers;
-	}
 	static double robotStrafeVel_ftpers = 0; //Present side-to-side velocity of the robot in ft/sec. Positive numbers mean right, negative numbers mean left.
-	
+	static double robotNetSpeed_ftpers = 0; //Present total translational speed in ft/sec
 	
 	//Wheel velocities (measured from drivetrain encoders) (Outputs from Drivetrain class)
 	static double frontLeftWheelVelocity_rpm = 0;
@@ -82,6 +76,12 @@ public class RobotState {
 	//Getters and Setters for select globals
 	public double getHopFeedCmd(){
 		return  RobotState.hopperMotorCmd;
+	}
+	public static double getRobotFwdRevVel_ftpers() {
+		return robotFwdRevVel_ftpers;
+	}
+	public static double getRobotStrafeVel_ftpers() {
+		return robotStrafeVel_ftpers;
 	}
 
 	
