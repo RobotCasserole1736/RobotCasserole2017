@@ -17,7 +17,7 @@ public class RobotState {
 	
 	
 	//Operator commands (derived from operator's Xbox360 controller)
-	static boolean opHopperFeedDesired = false; // True if the hopper should feed balls to the shooter, flase if not.
+	static boolean opHopperFeedDesired = false; // True if the hopper should feed balls to the shooter, false if not.
 	static boolean opShooterWheelActivieDesired = false; //True if the wheel should spool up to shot speed, false if it should turn off.
 	static boolean opClimbEnable = false; //True if climbing should be allowed, false if all climb commands should be ignored
 	static double  opClimbSpeedDesired = 0; //desired speed of the climber motor (0= off, 1 = full forward. Should never be reverse).
@@ -73,7 +73,11 @@ public class RobotState {
 	static boolean hopperFeedCmd; //True if the hopper should feed balls to the shooter, false if not (input from other sources)
 	static double  hopperMotorCmd; //Motor command sent to the hopper feed motor (0 = stop, 1 = feed as fast as possible) (calculated by this subsystem)
 	
-	
+	//DriveTrain motor command
+	static double frontLeftDrive = 0;
+	static double frontRightDrive = 0;
+	static double rearLeftDrive = 0;
+	static double rearRightDrive = 0;
 	
 
 

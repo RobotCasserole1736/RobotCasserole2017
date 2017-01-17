@@ -8,6 +8,9 @@ import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import org.usfirst.frc.team1736.vision_processing_2017.Vision_Processing_Main;
+import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
+import org.usfirst.frc.team1736.robot.RobotState;
+
 
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -47,7 +50,9 @@ public class Robot extends IterativeRobot {
     RobotSpeedomitar chris;
     CalWrangler wrangler;
     CasseroleWebServer webServer;
-    
+    //Controllers
+    Xbox360Controller driverCTRL;
+    Xbox360Controller operatorCTRL;
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -65,6 +70,11 @@ public class Robot extends IterativeRobot {
 		VisionProk = new Vision_Processing_Main(); 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
+
+		driverCTRL = new Xbox360Controller(0);
+		operatorCTRL = new Xbox360Controller(1);
+		
+
 		initLoggingChannels();
 		
 		//Set up and start web server
@@ -177,6 +187,7 @@ public class Robot extends IterativeRobot {
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
 		
+
 		//Run Drivietrain periodic loop
 		myRobot.OperatorControl();
 		chris.update();
@@ -223,10 +234,21 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
+		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDrive);
+		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDrive);
+		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDrive);
+		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDrive);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateRobotInputs(){
+		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
+		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
+		RobotState.driverRotateCmd = driverCTRL.RStick_X();
+		RobotState.frontLeftDrive = myRobot.driverFL();
+		RobotState.frontRightDrive = myRobot.driverFR();
+		RobotState.rearLeftDrive = myRobot.driverRL();
+		RobotState.rearRightDrive = myRobot.driverRR();
 		RobotState.robotPoseAngle_deg = botblock.getYaw();
 	}
 
