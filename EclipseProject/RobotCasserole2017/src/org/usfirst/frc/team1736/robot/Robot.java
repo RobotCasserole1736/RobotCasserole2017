@@ -101,6 +101,28 @@ public class Robot extends IterativeRobot {
 		//Close out any log which is running
 		CsvLogger.close();
 	}
+	
+	@Override
+	public void disabledPeriodic() {
+		
+		//Mark start of loop, Initialize Timer
+		//Must be as close to the start of the loop as possible
+		prev_loop_start_timestamp = Timer.getFPGATimestamp();
+		
+		//Get all inputs from outside the robot
+		updateRobotInputs();
+		
+		//Update vision processing algorithm to find any targets on in view
+		VisionProk.update();
+		
+		
+		updateWebStates();
+
+		//Mark end of loop and Calculate Loop Time
+		//Must be as close to the end of the loop as possible.
+		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		
+	}
 		
 		
 		
@@ -143,6 +165,9 @@ public class Robot extends IterativeRobot {
 		
 		//Set Hopper Feed State
 		hopControl.setSwitch(true);
+		
+		//Update vision processing algorithm to find any targets on in view
+		VisionProk.update();
 		
 		//Log & display present state data
 		CsvLogger.logData(false);
@@ -257,10 +282,6 @@ public class Robot extends IterativeRobot {
 		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
 		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
 		RobotState.driverRotateCmd = driverCTRL.RStick_X();
-		RobotState.frontLeftDriveMotorCmd = myRobot.getFLDriveMotorCmd();
-		RobotState.frontRightDriveMotorCmd = myRobot.getFRDriveMotorCmd();
-		RobotState.rearLeftDriveMotorCmd = myRobot.getRLDriveMotorCmd();
-		RobotState.rearRightDriveMotorCmd = myRobot.getRRDriveMotorCmd();
 		RobotState.robotPoseAngle_deg = botblock.getYaw();
 	}
 
