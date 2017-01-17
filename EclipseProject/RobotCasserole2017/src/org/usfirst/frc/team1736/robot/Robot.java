@@ -50,9 +50,14 @@ public class Robot extends IterativeRobot {
     RobotSpeedomitar chris;
     CalWrangler wrangler;
     CasseroleWebServer webServer;
+
     //Controllers
     Xbox360Controller driverCTRL;
     Xbox360Controller operatorCTRL;
+
+    //Hopper Feed Control
+    HopperControl hopControl = new HopperControl(); 
+
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -135,7 +140,8 @@ public class Robot extends IterativeRobot {
 		//Get all inputs from outside the robot
 		updateRobotInputs();
 		
-		
+		//Set Hopper Feed State
+		hopControl.setSwitch(true);
 		
 		//Log & display present state data
 		CsvLogger.logData(false);
@@ -183,7 +189,9 @@ public class Robot extends IterativeRobot {
 		//Get all inputs from outside the robot
 		updateRobotInputs();
 		
-
+		//Set Hopper Feed State
+		hopControl.setSwitch(true);
+		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
 		
@@ -223,6 +231,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
 		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getrobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", this);
 	}
 	
 	//Puts all relevant data to the robot State webpage
@@ -233,11 +242,13 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
+		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
 		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDrive);
 		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDrive);
 		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDrive);
 		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDrive);
+
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
@@ -265,6 +276,10 @@ public class Robot extends IterativeRobot {
 
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
+	}
+
+	public double getHopFeedCmd(){
+		return  RobotState.hopperMotorCmd;
 	}
 
 	

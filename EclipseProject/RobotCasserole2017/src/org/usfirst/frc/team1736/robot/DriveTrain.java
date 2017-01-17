@@ -42,7 +42,11 @@ public class DriveTrain{
 	*/
 	public void OperatorControl() {
 			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, 0);
-
+			
+			RobotState.frontLeftDrive  =  driverFL();
+			RobotState.frontRightDrive =  driverFR();
+			RobotState.rearLeftDrive   =  driverRL();
+			RobotState.rearRightDrive  =  driverRR();
 	
 	}
 
