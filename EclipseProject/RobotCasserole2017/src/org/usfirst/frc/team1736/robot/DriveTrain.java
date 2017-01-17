@@ -2,13 +2,12 @@ package org.usfirst.frc.team1736.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import org.usfirst.frc.team1736.robot.RobotState;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
 	
-	
+	//Motor port mappings
 	public static final int DRIVER_FRONT_RIGHT_MOTOR = 0;
 	public static final int DRIVER_FRONT_LEFT_MOTOR = 1;
 	public static final int DRIVER_REAR_LEFT_MOTOR = 2;
@@ -43,26 +42,27 @@ public class DriveTrain{
 	public void OperatorControl() {
 			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, 0);
 			
-			RobotState.frontLeftDrive  =  driverFL();
-			RobotState.frontRightDrive =  driverFR();
-			RobotState.rearLeftDrive   =  driverRL();
-			RobotState.rearRightDrive  =  driverRR();
+			//Update Motor Commands
+			RobotState.frontLeftDriveMotorCmd  =  getFLDriveMotorCmd();
+			RobotState.frontRightDriveMotorCmd =  getFRDriveMotorCmd();
+			RobotState.rearLeftDriveMotorCmd   =  getRLDriveMotorCmd();
+			RobotState.rearRightDriveMotorCmd  =  getRRDriveMotorCmd();
 	
 	}
 
-	public double driverFL() {
+	public double getFLDriveMotorCmd() {
 		return frontLeft.get();
 	}
 	
-	public double driverFR() {
+	public double getFRDriveMotorCmd() {
 		return frontRight.get();
 	}
 	
-	public double driverRL() {
+	public double getRLDriveMotorCmd() {
 		return rearLeft.get();
 	}
 
-	public double driverRR() {
+	public double getRRDriveMotorCmd() {
 		return rearRight.get();
 	}
 

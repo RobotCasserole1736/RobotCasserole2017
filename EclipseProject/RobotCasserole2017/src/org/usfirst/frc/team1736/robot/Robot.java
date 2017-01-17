@@ -244,10 +244,10 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
-		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDrive);
-		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDrive);
-		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDrive);
-		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDrive);
+		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDriveMotorCmd);
+		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);
+		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDriveMotorCmd);
+		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDriveMotorCmd);
 
 	}
 
@@ -256,10 +256,10 @@ public class Robot extends IterativeRobot {
 		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
 		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
 		RobotState.driverRotateCmd = driverCTRL.RStick_X();
-		RobotState.frontLeftDrive = myRobot.driverFL();
-		RobotState.frontRightDrive = myRobot.driverFR();
-		RobotState.rearLeftDrive = myRobot.driverRL();
-		RobotState.rearRightDrive = myRobot.driverRR();
+		RobotState.frontLeftDriveMotorCmd = myRobot.getFLDriveMotorCmd();
+		RobotState.frontRightDriveMotorCmd = myRobot.getFRDriveMotorCmd();
+		RobotState.rearLeftDriveMotorCmd = myRobot.getRLDriveMotorCmd();
+		RobotState.rearRightDriveMotorCmd = myRobot.getRRDriveMotorCmd();
 		RobotState.robotPoseAngle_deg = botblock.getYaw();
 	}
 
