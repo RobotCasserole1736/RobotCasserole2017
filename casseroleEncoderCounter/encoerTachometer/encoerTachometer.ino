@@ -14,6 +14,9 @@
 
 volatile unsigned int encoder0Pos = 0;
 
+//#define TICKS_PER_REV 120
+#define TICKS_PER_REV 1024
+
 
 double rot_vel_rpm;
 
@@ -50,7 +53,7 @@ void loop(){
 
     rot_vel_ticks_per_sec = (((double)abs(endPos-startPos))/((double)(endTime - startTime)))*1000.0;
 
-    tmp_calc = rot_vel_ticks_per_sec * (1.0/240.0) * (60.0) ; //120 ticks per rev, 60 seconds per minute
+    tmp_calc = rot_vel_ticks_per_sec * (1.0/(TICKS_PER_REV*2)) * (60.0) ; //120 ticks per rev, 60 seconds per minute
 
     //qualify the speed - if it's wacky keep old value
     if(tmp_calc < 6000.0){
