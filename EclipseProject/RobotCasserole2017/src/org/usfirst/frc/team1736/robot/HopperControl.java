@@ -16,16 +16,15 @@ public class HopperControl {
 	public HopperControl(){
 		
 		//Init Motor to off
-		RobotState.hopperMotorCmd = 0.0;
-		hopMotor.set(RobotState.hopperMotorCmd);
+		hopMotor.set(0.0);
 		
 
 	}
 	
 	
 	
-	public void setSwitch(boolean on) {
-		if(on){
+	public void update() {
+		if(RobotState.hopperFeedCmd){
 			RobotState.hopperMotorCmd = hopperMotorCmd.get();
 		}else{
 			RobotState.hopperMotorCmd = hopSpeedOff;

@@ -58,6 +58,9 @@ public class Robot extends IterativeRobot {
 
     //Hopper Feed Control
     HopperControl hopControl; 
+    
+    //Climber Control
+    ClimberControl climbControl;
 
     
 	///////////////////////////////////////////////////////////////////
@@ -77,6 +80,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		hopControl = new HopperControl();
+		climbControl = new ClimberControl();
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -165,8 +169,11 @@ public class Robot extends IterativeRobot {
 		updateRobotInputs();
 		chris.update();
 		
-		//Set Hopper Feed State
-		hopControl.setSwitch(true);
+		//Update Hopper Control
+		hopControl.update();
+		
+		//Update Climber Control
+		climbControl.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -218,8 +225,11 @@ public class Robot extends IterativeRobot {
 		updateRobotInputs();
 		chris.update();
 		
-		//Set Hopper Feed State
-		hopControl.setSwitch(true);
+		//Update Hopper Control
+		hopControl.update();
+		
+		//Update Climber Control
+		climbControl.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
