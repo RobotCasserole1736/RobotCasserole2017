@@ -73,6 +73,10 @@ public class RobotState {
 	static double rearLeftDriveMotorCmd = 0;
 	static double rearRightDriveMotorCmd = 0;
 	
+	//Climber Commands
+	static boolean climbEnable = false;
+	static double climbSpeedCmd = 0.0;
+	
 	//Getters and Setters for select globals
 	public double getHopFeedCmd(){
 		return  RobotState.hopperMotorCmd;

@@ -19,8 +19,7 @@ public class HopperControl {
 		RobotState.hopperMotorCmd = 0.0;
 		hopMotor.set(RobotState.hopperMotorCmd);
 		
-		//Create Calibration Value
-		
+
 	}
 	
 	
