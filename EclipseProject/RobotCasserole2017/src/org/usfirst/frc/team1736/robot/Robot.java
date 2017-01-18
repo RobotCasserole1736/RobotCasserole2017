@@ -58,6 +58,9 @@ public class Robot extends IterativeRobot {
 
     //Hopper Feed Control
     HopperControl hopControl; 
+    
+    //Climber Control
+    ClimberControl climbControl;
 
     
 	///////////////////////////////////////////////////////////////////
@@ -77,6 +80,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		hopControl = new HopperControl();
+		climbControl = new ClimberControl();
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -165,8 +169,11 @@ public class Robot extends IterativeRobot {
 		updateRobotInputs();
 		chris.update();
 		
-		//Set Hopper Feed State
-		hopControl.setSwitch(true);
+		//Update Hopper Control
+		hopControl.update();
+		
+		//Update Climber Control
+		climbControl.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -218,8 +225,11 @@ public class Robot extends IterativeRobot {
 		updateRobotInputs();
 		chris.update();
 		
-		//Set Hopper Feed State
-		hopControl.setSwitch(true);
+		//Update Hopper Control
+		hopControl.update();
+		
+		//Update Climber Control
+		climbControl.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -256,6 +266,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getrobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("ClimbSpeedCmd","%","getClimbSpeedCmd", RobotState.class);
 	}
 	
 	public void initDriverView(){
@@ -274,6 +285,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
+		CassesroleWebStates.putDouble("Climb Speed Cmd",   RobotState.climbSpeedCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
 		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDriveMotorCmd);
 		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);
@@ -291,6 +303,8 @@ public class Robot extends IterativeRobot {
 		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
 		RobotState.driverRotateCmd = driverCTRL.RStick_X();
 		RobotState.robotPoseAngle_deg = botblock.getYaw();
+		RobotState.climbEnable = true;
+		RobotState.climbSpeedCmd = operatorCTRL.LStick_Y();
 	}
 
 	
@@ -307,6 +321,8 @@ public class Robot extends IterativeRobot {
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
 	}
+	
+	
 
 	
 }
