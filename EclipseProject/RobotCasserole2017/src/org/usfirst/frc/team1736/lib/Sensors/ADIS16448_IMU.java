@@ -212,6 +212,18 @@ public class ADIS16448_IMU extends GyroBase implements Gyro, PIDSource, LiveWind
       m_integ_gyro_z = 0.0;
     }
   }
+  
+  /**
+   * {@inheritDoc}
+   * @param angleX reset gyro x axis angle to value
+   */
+  public void resetTo(double angleX) {
+    synchronized (this) {
+      m_integ_gyro_x = angleX;
+      m_integ_gyro_y = 0.0;
+      m_integ_gyro_z = 0.0;
+    }
+  }
 
   /**
    * Delete (free) the spi port used for the IMU.
