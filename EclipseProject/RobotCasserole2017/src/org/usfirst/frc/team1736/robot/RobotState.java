@@ -59,8 +59,17 @@ public class RobotState {
 	//Shooter subsystem 
 	static boolean shooterActiveCmd = false; //True if the shooter wheel should be at shot velocity, false if it should be off.
 	static double  shooterDesiredVelocity_rpm = 0; //RPM target the shooter should attempt to get to (output, calculated by this subsystem)
+	public static double getShooterDesiredVelocity_rpm() {
+		return shooterDesiredVelocity_rpm;
+	}
 	static double  shooterActualVelocity_rpm  = 0; //RPM the shooter wheel is actually running at (output, measured by this subsystem)
+	public static double getShooterActualVelocity_rpm() {
+		return shooterActualVelocity_rpm;
+	}
 	static double  shooterMotorCmd = 0; //Present control effort being applied to shooter motor(s) - 0.0 = stop, 1.0 = full power (output, calculated by this subsystem)
+	public static double getShooterMotorCmd() {
+		return shooterMotorCmd;
+	}
 	static boolean shooterVelocityOk = false; //True if the actual RPM is within a pre-defined range of the desired RPM and a shot can be taken accurately, false otherwise (output, calculated by this subsystem)
 
 	//Hopper Subsystem

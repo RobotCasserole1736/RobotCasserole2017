@@ -260,6 +260,9 @@ public class Robot extends IterativeRobot {
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ftperse", 0, 25, 5, 0, 20);
+		CsvLogger.addLoggingFieldDouble("shooterDesiredVelocity_rpm","rpm","getshooterDesiredVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("shooterActualVelocity_rpm","rpm"," getShooterActualVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("shooterMotorCmd","rpm","getShooterMotorCmd",RobotState.class);
 	}
 	
 	//Puts all relevant data to the robot State webpage
