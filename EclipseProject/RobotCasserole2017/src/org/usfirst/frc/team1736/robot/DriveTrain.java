@@ -17,7 +17,7 @@ public class DriveTrain{
 	Victor rearLeft;
 	Victor rearRight;
 	
-	public void RobotInit() {
+	public DriveTrain() {
 		frontLeft  = new Victor(RobotIOMap.DRIVER_FRONT_LEFT_MOTOR);
     	frontRight = new Victor(RobotIOMap.DRIVER_FRONT_RIGHT_MOTOR);
     	rearLeft   = new Victor(RobotIOMap.DRIVER_REAR_LEFT_MOTOR);

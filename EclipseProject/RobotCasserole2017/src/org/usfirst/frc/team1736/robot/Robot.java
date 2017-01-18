@@ -59,6 +59,9 @@ public class Robot extends IterativeRobot {
     //Hopper Feed Control
     HopperControl hopControl; 
     
+    //Shooter wheel control
+    ShooterWheelCTRL shooterControl;
+    
     //Climber Control
     ClimberControl climbControl;
 
@@ -80,6 +83,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		hopControl = new HopperControl();
+		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 
 		driverCTRL = new Xbox360Controller(0);
@@ -87,6 +91,7 @@ public class Robot extends IterativeRobot {
 		
 
 		initLoggingChannels();
+		initDriverView();
 		
 		//Set up and start web server
 		webServer = new CasseroleWebServer();
@@ -115,7 +120,8 @@ public class Robot extends IterativeRobot {
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateRobotInputs();
+		updateSensorInputs();
+		chris.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -166,17 +172,20 @@ public class Robot extends IterativeRobot {
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateRobotInputs();
+		updateSensorInputs();
 		chris.update();
+		
+		//Update vision processing algorithm to find any targets on in view
+		VisionProk.update();
 		
 		//Update Hopper Control
 		hopControl.update();
 		
+		//Update shooter wheel control
+		shooterControl.update();
+		
 		//Update Climber Control
 		climbControl.update();
-		
-		//Update vision processing algorithm to find any targets on in view
-		VisionProk.update();
 		
 		//Log & display present state data
 		CsvLogger.logData(false);
@@ -222,17 +231,22 @@ public class Robot extends IterativeRobot {
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateRobotInputs();
+		updateDriverInputs();
+		updateOperatorInputs();
+		updateSensorInputs();
 		chris.update();
+		
+		//Update vision processing algorithm to find any targets on in view
+		VisionProk.update();
 		
 		//Update Hopper Control
 		hopControl.update();
 		
+		//Update shooter wheel control
+		shooterControl.update();
+		
 		//Update Climber Control
 		climbControl.update();
-		
-		//Update vision processing algorithm to find any targets on in view
-		VisionProk.update();
 		
 
 		//Run Drivietrain periodic loop
@@ -259,26 +273,28 @@ public class Robot extends IterativeRobot {
 	//Sets up all the logged channels of data. Should be called once before opening any logs
 	public void initLoggingChannels(){
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
-		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
-		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
-		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
-		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
-		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getRobotFwdRevVel_ftpers",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("ClimbSpeedCmd","%","getClimbSpeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("PDP_Voltage","V","getVoltage", pdp);
+		CsvLogger.addLoggingFieldDouble("PDP_Current","A","getTotalCurrent", pdp);
+		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
+		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
+		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
+		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getRobotFwdRevVel_ftpers",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopFeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd",RobotState.class);
 	}
 	
 	public void initDriverView(){
-		CasseroleDriverView.newDial("RobotSpeed ftperse", 0, 25, 5, 0, 20);
-		CsvLogger.addLoggingFieldDouble("shooterDesiredVelocity_rpm","rpm","getshooterDesiredVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("shooterActualVelocity_rpm","rpm"," getShooterActualVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("shooterMotorCmd","rpm","getShooterMotorCmd",RobotState.class);
+		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
+
 	}
 	
 	//Puts all relevant data to the robot State webpage
 	public void updateWebStates(){
-		CassesroleWebStates.putDouble("Loop Time (ms)",    getLoopTime()*1000);
+		CassesroleWebStates.putDouble("Loop Time (ms)",    getLoopTime_ms());
 		CassesroleWebStates.putDouble("CPU Load (%)",      getCpuLoad()); 
 		CassesroleWebStates.putDouble("RAM Usage (%)",     getRAMUsage()); 
 		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
@@ -294,24 +310,30 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateDriverView(){
-		CasseroleDriverView.setDialValue("RobotSpeed ftperse", RobotState.robotNetSpeed_ftpers);
+		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
-	public void updateRobotInputs(){
+	public void updateDriverInputs(){
 		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
 		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
 		RobotState.driverRotateCmd = driverCTRL.RStick_X();
-		RobotState.robotPoseAngle_deg = botblock.getYaw();
-		RobotState.climbEnable = true;
+	}
+	
+	public void updateOperatorInputs(){
 		RobotState.climbSpeedCmd = operatorCTRL.LStick_Y();
+		RobotState.climbEnable = true;
+	}
+	
+	public void updateSensorInputs(){
+		RobotState.robotPoseAngle_deg = botblock.getYaw();
 	}
 
 	
 	
 	//Getters & setters for class-scope variables. Needed by MethodHandles logging infrastructure
-	public double getLoopTime(){
-		return loop_time_elapsed;
+	public double getLoopTime_ms(){
+		return loop_time_elapsed*1000;
 	}
 
 	public double getCpuLoad(){

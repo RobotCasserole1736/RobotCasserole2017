@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotState;
 
 import java.io.BufferedWriter;
@@ -76,7 +77,7 @@ public class CsvLogger {
      */
     public static int forceSync() {
         if (log_open == false) {
-            System.out.println("Error - Log is not yet opened, cannot sync!");
+            DriverStation.reportError("Error - Log is not yet opened, cannot sync!", false);
             return -1;
         }
         try {
@@ -84,7 +85,7 @@ public class CsvLogger {
         }
         // Catch ALL the errors!!!
         catch (IOException e) {
-            System.out.println("Error flushing IO stream file: " + e.getMessage());
+        	DriverStation.reportError("Error flushing IO stream file: " + e.getMessage(), false);
             return -1;
         }
 
@@ -103,7 +104,6 @@ public class CsvLogger {
     public static int close() {
 
         if (log_open == false) {
-            System.out.println("Warning - Log is not yet opened, nothing to close.");
             return 0;
         }
 
@@ -113,7 +113,7 @@ public class CsvLogger {
         }
         // Catch ALL the errors!!!
         catch (IOException e) {
-            System.out.println("Error Closing Log File: " + e.getMessage());
+        	DriverStation.reportError("Error Closing Log File: " + e.getMessage(), false);
             return -1;
         }
         return 0;
@@ -155,7 +155,7 @@ public class CsvLogger {
     public static int init() {
 
         if (log_open) {
-            System.out.println("Warning - log is already open!");
+        	DriverStation.reportWarning("Warning - log is already open!", false);
             return 0;
         }
 
@@ -198,7 +198,7 @@ public class CsvLogger {
         }
         // Catch ALL the errors!!!
         catch (IOException e) {
-            System.out.println("ERROR - cannot initalize log file: " + e.getMessage());
+        	DriverStation.reportError("ERROR - cannot initalize log file: " + e.getMessage(), false);
             return -1;
         }
 
@@ -393,7 +393,7 @@ public class CsvLogger {
             else if (methodHandle.type().returnType() == boolean.class)
                 return ((boolean) methodHandle.invokeWithArguments(args)) ? 1.0 : 0.0;
         } catch (Throwable e) {
-            System.out.println("Error running method for data logging");
+        	DriverStation.reportError("Error running method for data logging", false);
             e.printStackTrace();
         }
         return 0;
