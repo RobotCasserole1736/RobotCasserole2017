@@ -397,7 +397,12 @@ public class L3G4200DGyro {
         angle = 0;
     }
 
-
+    /** Resets the current angle of the gyro to externally set angle */
+    public void reset_gyro_angle(double input) {
+        angle = input;
+    }
+    
+    
     /**
      * Check if the most recent read from the gyro was good or not.
      * 
