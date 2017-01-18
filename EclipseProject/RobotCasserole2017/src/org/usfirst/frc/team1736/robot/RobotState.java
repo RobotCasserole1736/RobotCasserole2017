@@ -64,7 +64,7 @@ public class RobotState {
 	static boolean shooterVelocityOk = false; //True if the actual RPM is within a pre-defined range of the desired RPM and a shot can be taken accurately, false otherwise (output, calculated by this subsystem)
 
 	//Hopper Subsystem
-	static boolean hopperFeedCmd; //True if the hopper should feed balls to the shooter, false if not (input from other sources)
+	static boolean hopperFeedCmd;//True if the hopper should feed balls to the shooter, false if not (input from other sources)
 	static double  hopperMotorCmd; //Motor command sent to the hopper feed motor (0 = stop, 1 = feed as fast as possible) (calculated by this subsystem)
 	
 	//DriveTrain motor commands
@@ -80,6 +80,9 @@ public class RobotState {
 	//Getters and Setters for select globals
 	public double getHopFeedCmd(){
 		return  RobotState.hopperMotorCmd;
+	}
+	public double getClimbSpeedCmd(){
+		return RobotState.climbSpeedCmd;
 	}
 	public static double getRobotFwdRevVel_ftpers() {
 		return robotFwdRevVel_ftpers;

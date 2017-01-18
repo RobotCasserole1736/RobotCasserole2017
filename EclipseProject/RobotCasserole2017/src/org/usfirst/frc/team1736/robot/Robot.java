@@ -266,6 +266,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getrobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("ClimbSpeedCmd","%","getClimbSpeedCmd", RobotState.class);
 	}
 	
 	public void initDriverView(){
@@ -281,6 +282,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
+		CassesroleWebStates.putDouble("Climb Speed Cmd",   RobotState.climbSpeedCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
 		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDriveMotorCmd);
 		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);
@@ -314,6 +316,8 @@ public class Robot extends IterativeRobot {
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
 	}
+	
+	
 
 	
 }
