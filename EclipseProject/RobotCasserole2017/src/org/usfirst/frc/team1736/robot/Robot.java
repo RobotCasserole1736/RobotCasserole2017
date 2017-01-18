@@ -206,7 +206,6 @@ public class Robot extends IterativeRobot {
 	//Sets up all the logged channels of data. Should be called once before opening any logs
 	public void initLoggingChannels(){
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
-		CsvLogger.addLoggingFieldDouble("batteryvoltage","V","getVoltage", pdp);
 		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
 		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
@@ -215,6 +214,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("shooterDesiredVelocity_rpm","rpm","getshooterDesiredVelocity_rpm",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("shooterActualVelocity_rpm","rpm"," getShooterActualVelocity_rpm",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("shooterMotorCmd","rpm","getShooterMotorCmd",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("pdp_voltage","V","getVoltage",pdp);
+		CsvLogger.addLoggingFieldDouble("pdp_totalcurrent","A","getTotalCurrent",pdp);
 	}
 	
 	//Puts all relevant data to the robot State webpage
