@@ -300,6 +300,8 @@ public class Robot extends IterativeRobot {
 		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
 		RobotState.driverRotateCmd = driverCTRL.RStick_X();
 		RobotState.robotPoseAngle_deg = botblock.getYaw();
+		RobotState.climbEnable = true;
+		RobotState.climbSpeedCmd = operatorCTRL.LStick_Y();
 	}
 
 	
