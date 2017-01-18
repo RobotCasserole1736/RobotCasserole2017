@@ -1,0 +1,4 @@
+Static Allocations:
+
+10.17.36.20 - 1C:BA:8C:90:1C:73 (BBB)
+10.17.36.11 - 00:40:8C:BE:DD:4A (Axis Camera for Vision Processing)

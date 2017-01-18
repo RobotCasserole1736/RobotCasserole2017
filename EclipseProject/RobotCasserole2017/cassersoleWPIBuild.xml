@@ -197,7 +197,7 @@
       </libs.local>
     </deploy-libs>
 
-    <deploy-libs libs.name="User_Libraries" libs.basedir="${userLibs.dir}">
+    <deploy-libs libs.name="User_Libraries" libs.basedir="${userLibs.dir}" libs.deployDir="${libDeploy.dir}">
       <libs.local>
         <fileset dir="${userLibs.dir}">
           <include name="**/*.so"/>
