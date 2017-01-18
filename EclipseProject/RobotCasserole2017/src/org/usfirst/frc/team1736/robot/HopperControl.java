@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Victor;
 
 public class HopperControl {
 	//Declare Motor Control
-	Victor hopMotor = new Victor(1);
+	Victor hopMotor = new Victor(RobotIOMap.HOPPER_MOTOR_PWM_PORT);
 	
 	//Declaring Hopper Calibration
 	Calibration hopperMotorCmd = new Calibration("hopperMotorCmd", 0.5, 0.0, 1.0);

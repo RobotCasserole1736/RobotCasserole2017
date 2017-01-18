@@ -7,12 +7,6 @@ import org.usfirst.frc.team1736.robot.RobotState;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
 	
-	//Motor port mappings
-	public static final int DRIVER_FRONT_RIGHT_MOTOR = 0;
-	public static final int DRIVER_FRONT_LEFT_MOTOR = 1;
-	public static final int DRIVER_REAR_LEFT_MOTOR = 2;
-	public static final int DRIVER_REAR_RIGHT_MOTOR = 3;
-	
 	Xbox360Controller driverCTRL;
 	Xbox360Controller operatorCTRL;
 	
@@ -24,10 +18,10 @@ public class DriveTrain{
 	Victor rearRight;
 	
 	public void RobotInit() {
-		frontLeft  = new Victor(DRIVER_FRONT_LEFT_MOTOR);
-    	frontRight = new Victor(DRIVER_FRONT_RIGHT_MOTOR);
-    	rearLeft   = new Victor(DRIVER_REAR_LEFT_MOTOR);
-    	rearRight  = new Victor(DRIVER_REAR_RIGHT_MOTOR);
+		frontLeft  = new Victor(RobotIOMap.DRIVER_FRONT_LEFT_MOTOR);
+    	frontRight = new Victor(RobotIOMap.DRIVER_FRONT_RIGHT_MOTOR);
+    	rearLeft   = new Victor(RobotIOMap.DRIVER_REAR_LEFT_MOTOR);
+    	rearRight  = new Victor(RobotIOMap.DRIVER_REAR_RIGHT_MOTOR);
     	
     	
     	myDrive = new RobotDrive(frontLeft, frontRight, rearLeft, rearRight);

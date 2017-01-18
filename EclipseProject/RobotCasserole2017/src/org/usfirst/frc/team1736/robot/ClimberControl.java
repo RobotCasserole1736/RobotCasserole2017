@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Victor;
 public class ClimberControl {
 
 	//Declare Motor Control
-	Victor climbMotor = new Victor(1);
+	Victor climbMotor = new Victor(RobotIOMap.CLIMBER_MOTOR_PWM_PORT);
 	
 	//Climber Speed
 	public ClimberControl(){

@@ -13,7 +13,7 @@ public class ShooterWheelCTRL {
 	Calibration ErrorRange;
 	CANTalon TallonFlame;
 	public ShooterWheelCTRL(){
-	TallonFlame = new CANTalon(0);
+	TallonFlame = new CANTalon(RobotIOMap.SHOOTER_CAN_TALON_DEVICE_ID);
 	Shooter_ff_Gain = new Calibration("Shooter_ff_Gain",0);
 	Shooter_P_Gain = new Calibration("Shooter_P_Gain",0);
 	Shooter_I_Gain = new Calibration("Shooter_I_Gain",0);

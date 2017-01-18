@@ -263,7 +263,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("LoopTime","sec","getLoopTime", this);
 		CsvLogger.addLoggingFieldDouble("CpuLoad","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RAMUsage","%","getRAMUsage", this);
-		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getrobotFwdRevVel_ftpers",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("robotFwdRevVel_ftpers","ftperse","getRobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("robotStrafeVel_ftpers","ftperse","getrobotStrafeVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("HopFeedCmd","%","getHopFeedCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("ClimbSpeedCmd","%","getClimbSpeedCmd", RobotState.class);

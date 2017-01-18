@@ -12,12 +12,12 @@ public class Vision_Processing_Main {
 
 	public void update(){
 		 VL.sampleLatestData();
-         System.out.print(VL.getProcTimeMs());
-         System.out.print(" | ");
-         System.out.print(VL.getNumTargetsObserved());
-         System.out.print(" | ");
-         System.out.print(VL.isCoProcessorAlive());
-         System.out.println(" | ");
+         //System.out.print(VL.getProcTimeMs());
+         //System.out.print(" | ");
+         //System.out.print(VL.getNumTargetsObserved());
+         //System.out.print(" | ");
+         //System.out.print(VL.isCoProcessorAlive());
+         //System.out.println(" | ");
 }
 }
 
