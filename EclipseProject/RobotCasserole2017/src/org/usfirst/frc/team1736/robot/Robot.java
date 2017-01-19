@@ -88,6 +88,8 @@ public class Robot extends IterativeRobot {
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
+		driverCTRL.setDeadzone(0.175);
+		operatorCTRL.setDeadzone(0.175);
 		
 
 		initLoggingChannels();
