@@ -17,11 +17,13 @@ public class RobotState {
 	
 	
 	//Operator commands (derived from operator's Xbox360 controller)
-	static boolean opHopperFeedDesired = false; // True if the hopper should feed balls to the shooter, false if not.
-	static boolean opShooterWheelActivieDesired = false; //True if the wheel should spool up to shot speed, false if it should turn off.
+	static boolean opPrepToShootDesired = false; //True if the operator wants to get the shooter wheel up to speed, false if not
+	static boolean opShotDesired = false; //True if the operator wants to take a shot, false if not.
 	static boolean opClimbEnable = false; //True if climbing should be allowed, false if all climb commands should be ignored
 	static double  opClimbSpeedDesired = 0; //desired speed of the climber motor (0= off, 1 = full forward. Should never be reverse).
 	static boolean opGearReleaseDesired = false; //True if the gear should be released, false if not.
+	static boolean opIntakeDesired = false; //True if the operator wants to to pull in fuel throught the intake, false if not
+	static boolean opEjectDesired = false;  //True if the operator wants to reverse the intake direction to eject lodged balls, false if not.
 	
 	
 	//Whole-robot pose/velocity state information (outputs from drivetrain class or IMU)
@@ -84,9 +86,6 @@ public class RobotState {
 	static double climbSpeedCmd = 0.0;
 	
 	//Getters and Setters for select globals
-	public static double getHopFeedCmd(){
-		return  RobotState.hopperMotorCmd;
-	}
 	public static double getClimbSpeedCmd(){
 		return RobotState.climbSpeedCmd;
 	}
@@ -96,18 +95,147 @@ public class RobotState {
 	public static double getRobotStrafeVel_ftpers() {
 		return robotStrafeVel_ftpers;
 	}
-	
 	public static double getShooterActualVelocity_rpm() {
 		return shooterActualVelocity_rpm;
 	}
 	public static double getShooterDesiredVelocity_rpm() {
 		return shooterDesiredVelocity_rpm;
 	}
-	
 	public static double getShooterMotorCmd() {
 		return shooterMotorCmd;
 	}
-
+	public static double getDriverFwdRevCmd() {
+		return driverFwdRevCmd;
+	}
+	public static double getDriverStrafeCmd() {
+		return driverStrafeCmd;
+	}
+	public static double getDriverRotateCmd() {
+		return driverRotateCmd;
+	}
+	public static boolean isVisionAlignmentDesiried() {
+		return visionAlignmentDesiried;
+	}
+	public static double getAutonDtFwdRevCmd() {
+		return autonDtFwdRevCmd;
+	}
+	public static double getAutonDtrStrafeCmd() {
+		return autonDtrStrafeCmd;
+	}
+	public static double getAutonDtRotateCmd() {
+		return autonDtRotateCmd;
+	}
+	public static boolean isOpClimbEnable() {
+		return opClimbEnable;
+	}
+	public static double getOpClimbSpeedDesired() {
+		return opClimbSpeedDesired;
+	}
+	public static boolean isOpGearReleaseDesired() {
+		return opGearReleaseDesired;
+	}
+	public static double getRobotPoseAngle_deg() {
+		return robotPoseAngle_deg;
+	}
+	public static double getRobotRotationalVel_degpers() {
+		return robotRotationalVel_degpers;
+	}
+	public static double getRobotNetSpeed_ftpers() {
+		return robotNetSpeed_ftpers;
+	}
+	public static double getFrontLeftWheelVelocity_rpm() {
+		return frontLeftWheelVelocity_rpm;
+	}
+	public static double getFrontRightWheelVelocity_rpm() {
+		return frontRightWheelVelocity_rpm;
+	}
+	public static double getRearLeftWheelVelocity_rpm() {
+		return rearLeftWheelVelocity_rpm;
+	}
+	public static double getRearRightWheelVelocity_rpm() {
+		return rearRightWheelVelocity_rpm;
+	}
+	public static double getFrontLeftWheelDistance_ft() {
+		return frontLeftWheelDistance_ft;
+	}
+	public static double getFrontRightWheelDistance_ft() {
+		return frontRightWheelDistance_ft;
+	}
+	public static double getRearLeftWheelDistance_ft() {
+		return rearLeftWheelDistance_ft;
+	}
+	public static double getRearRightWheelDistance_ft() {
+		return rearRightWheelDistance_ft;
+	}
+	public static boolean isVisionOnline() {
+		return visionOnline;
+	}
+	public static boolean isVisionTargetFound() {
+		return visionTargetFound;
+	}
+	public static double getVisionTargetOffset_deg() {
+		return visionTargetOffset_deg;
+	}
+	public static double getVisionEstTargetDist_ft() {
+		return visionEstTargetDist_ft;
+	}
+	public static double getVisionEstCaptureTime() {
+		return visionEstCaptureTime;
+	}
+	public static double getVisionCoProcessorFPS() {
+		return visionCoProcessorFPS;
+	}
+	public static double getVisionCoProcessorCPULoad_pct() {
+		return visionCoProcessorCPULoad_pct;
+	}
+	public static double getVisionCoProcessorMemLoad_pct() {
+		return visionCoProcessorMemLoad_pct;
+	}
+	public static boolean isVisionAlignmentActive() {
+		return visionAlignmentActive;
+	}
+	public static boolean isVisionAlignmentPossible() {
+		return visionAlignmentPossible;
+	}
+	public static double getVisionDtFwdRevCmd() {
+		return visionDtFwdRevCmd;
+	}
+	public static double getVisionDtRotateCmd() {
+		return visionDtRotateCmd;
+	}
+	public static boolean isVisionAlignmentOnTarget() {
+		return visionAlignmentOnTarget;
+	}
+	public static boolean isShooterVelocityOk() {
+		return shooterVelocityOk;
+	}
+	public static boolean isHopperFeedCmd() {
+		return hopperFeedCmd;
+	}
+	public static double getHopperMotorCmd() {
+		return hopperMotorCmd;
+	}
+	public static double getFrontLeftDriveMotorCmd() {
+		return frontLeftDriveMotorCmd;
+	}
+	public static double getFrontRightDriveMotorCmd() {
+		return frontRightDriveMotorCmd;
+	}
+	public static double getRearLeftDriveMotorCmd() {
+		return rearLeftDriveMotorCmd;
+	}
+	public static double getRearRightDriveMotorCmd() {
+		return rearRightDriveMotorCmd;
+	}
+	public static boolean isClimbEnable() {
+		return climbEnable;
+	}
+	public static boolean isOpPrepToShootDesired() {
+		return opPrepToShootDesired;
+	}
+	public static boolean isOpShotDesired() {
+		return opShotDesired;
+	}
 	
 
 
