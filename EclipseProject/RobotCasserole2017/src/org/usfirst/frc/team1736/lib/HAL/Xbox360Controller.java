@@ -58,6 +58,8 @@ public class Xbox360Controller {
     // -Controller D-Pad POV Hat
     final static int XBOX_DPAD_POV = 0;
 
+    private double deadzone = 0;
+    
     private Joystick joystick; 
 
 
@@ -69,6 +71,15 @@ public class Xbox360Controller {
      */
     public Xbox360Controller(int joystick_id) {
         joystick = new Joystick(joystick_id);
+    }
+    
+    /**
+     * Update the deadzone for all joystick axes
+     * 
+     * @param _deadzone minimum non-zero output to allow from the joystick
+     */
+    public void setDeadzone(double _deadzone){
+    	deadzone = _deadzone;
     }
 
 
@@ -189,7 +200,7 @@ public class Xbox360Controller {
      *         the way to the left.
      */
     public double LStick_X() {
-        return joystick.getRawAxis(XBOX_LSTICK_XAXIS);
+    	return limitDeadzone(joystick.getRawAxis(XBOX_LSTICK_XAXIS));
     }
 
 
@@ -198,7 +209,7 @@ public class Xbox360Controller {
      *         way to the bottom.
      */
     public double LStick_Y() {
-        return -joystick.getRawAxis(XBOX_LSTICK_YAXIS);
+    	return limitDeadzone(-joystick.getRawAxis(XBOX_LSTICK_YAXIS));
     }
 
 
@@ -208,7 +219,7 @@ public class Xbox360Controller {
      *         so pulling both triggers at the same time results in interesting things happening.
      */
     public double LTrigger() {
-        return joystick.getRawAxis(XBOX_LTRIGGER_AXIS);
+        return limitDeadzone(joystick.getRawAxis(XBOX_LTRIGGER_AXIS));
     }
 
 
@@ -218,7 +229,7 @@ public class Xbox360Controller {
      *         so pulling both triggers at the same time results in interesting things happening.
      */
     public double RTrigger() {
-        return joystick.getRawAxis(XBOX_RTRIGGER_AXIS);
+        return limitDeadzone(joystick.getRawAxis(XBOX_RTRIGGER_AXIS));
     }
 
 
@@ -227,7 +238,7 @@ public class Xbox360Controller {
      *         the way to the left.
      */
     public double RStick_X() {
-        return joystick.getRawAxis(XBOX_RSTICK_XAXIS);
+        return limitDeadzone(joystick.getRawAxis(XBOX_RSTICK_XAXIS));
     }
 
 
@@ -236,7 +247,7 @@ public class Xbox360Controller {
      *         way to the bottom.
      */
     public double RStick_Y() {
-        return joystick.getRawAxis(XBOX_RSTICK_YAXIS);
+        return limitDeadzone(joystick.getRawAxis(XBOX_RSTICK_YAXIS));
     }
 
 
@@ -290,6 +301,15 @@ public class Xbox360Controller {
             return true;
         else
             return false;
+    }
+    
+    
+    private double limitDeadzone(double input){
+    	if(Math.abs(input) >= deadzone){
+    		return input;
+    	} else {
+    		return 0.0;
+    	}
     }
 
 }
