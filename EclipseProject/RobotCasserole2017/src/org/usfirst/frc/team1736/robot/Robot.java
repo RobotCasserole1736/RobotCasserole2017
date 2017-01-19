@@ -291,6 +291,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
 		CasseroleDriverView.newBoolean("Target in View", "green");
+		CasseroleDriverView.newStringBox("Orientation deg");
 
 	}
 	
@@ -315,6 +316,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
+		CasseroleDriverView.setStringBox("Orientation deg", String.format("%.1f", RobotState.robotPoseAngle_deg % 360.0));
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
