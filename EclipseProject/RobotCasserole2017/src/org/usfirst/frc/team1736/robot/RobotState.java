@@ -37,6 +37,12 @@ public class RobotState {
 	static double rearLeftWheelVelocity_rpm = 0;
 	static double rearRightWheelVelocity_rpm = 0;
 	
+	//Wheel total distance
+	static double frontLeftWheelDistance_ft = 0;
+	static double frontRightWheelDistance_ft= 0;
+	static double rearLeftWheelDistance_ft = 0;
+	static double rearRightWheelDistance_ft= 0;
+	
 	
 	//Vision Target Qualification System (Outputs from vision targeting system)
 	static boolean visionOnline = false; //True if information is being received from the coprocessor, false if the system is down. All other variables should only be considered valid if this field is true.

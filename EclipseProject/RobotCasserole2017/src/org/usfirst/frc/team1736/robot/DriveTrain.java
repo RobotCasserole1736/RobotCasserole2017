@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1736.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
@@ -7,25 +8,78 @@ import org.usfirst.frc.team1736.robot.RobotState;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
 	
-	Xbox360Controller driverCTRL;
-	Xbox360Controller operatorCTRL;
-	
 	RobotDrive myDrive;
-	Joystick moveStick, rotateStick;
-	Victor frontLeft;
-	Victor frontRight;
-	Victor rearLeft;
-	Victor rearRight;
+
+	Victor frontLeftMotor;
+	Victor frontRightMotor;
+	Victor rearLeftMotor;
+	Victor rearRightMotor;
+	
+	Encoder frontLeftEncoder;
+	Encoder frontRightEncoder;
+	Encoder rearLeftEncoder;
+	Encoder rearRightEncoder;
+	
+	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0;
+	
+	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
+	
+
 	
 	public DriveTrain() {
-		frontLeft  = new Victor(RobotIOMap.DRIVER_FRONT_LEFT_MOTOR);
-    	frontRight = new Victor(RobotIOMap.DRIVER_FRONT_RIGHT_MOTOR);
-    	rearLeft   = new Victor(RobotIOMap.DRIVER_REAR_LEFT_MOTOR);
-    	rearRight  = new Victor(RobotIOMap.DRIVER_REAR_RIGHT_MOTOR);
+		//Setup Drivetrain with motors and such
+		frontLeftMotor  = new Victor(RobotIOMap.DRIVETRAIN_FRONT_LEFT_MOTOR);
+    	frontRightMotor = new Victor(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_MOTOR);
+    	rearLeftMotor   = new Victor(RobotIOMap.DRIVETRAIN_REAR_LEFT_MOTOR);
+    	rearRightMotor  = new Victor(RobotIOMap.DRIVETRAIN_REAR_RIGHT_MOTOR);
+    	myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
+    	
+    	//set up encoders
+    	frontLeftEncoder  = new Encoder(RobotIOMap.DRIVETRAIN_FRONT_LEFT_ENCODER_A, RobotIOMap.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
+    	frontRightEncoder = new Encoder(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_ENCODER_A,RobotIOMap.DRIVETRAIN_FRONT_RIGHT_ENCODER_B, false);
+    	rearLeftEncoder   = new Encoder(RobotIOMap.DRIVETRAIN_REAR_LEFT_ENCODER_A,  RobotIOMap.DRIVETRAIN_REAR_LEFT_ENCODER_B,   false);
+    	rearRightEncoder  = new Encoder(RobotIOMap.DRIVETRAIN_REAR_RIGHT_ENCODER_A, RobotIOMap.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
+    	
+    	frontLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	frontRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
     	
     	
-    	myDrive = new RobotDrive(frontLeft, frontRight, rearLeft, rearRight);
+
 	}
+	
+	
+	/**
+	 * Reads the current speed and total distance of each wheel on the drivetrain. 
+	 * Should be called each periodic loop.
+	 */
+	public void readEncoders(){
+		
+		//getRate returns in per seconds, so we need to convert
+		RobotState.frontLeftWheelVelocity_rpm  = frontLeftEncoder.getRate()*60.0;
+		RobotState.frontRightWheelVelocity_rpm = frontRightEncoder.getRate()*60.0;
+		RobotState.rearLeftWheelVelocity_rpm   = rearLeftEncoder.getRate()*60.0;
+		RobotState.rearRightWheelVelocity_rpm  = rearRightEncoder.getRate()*60.0;
+		
+		//Get distance returns in total revolutions, so convert to ft with math
+		RobotState.frontLeftWheelDistance_ft  = frontLeftEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.frontRightWheelDistance_ft = frontRightEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.rearLeftWheelDistance_ft   = rearLeftEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.rearRightWheelDistance_ft  = rearRightEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
+		
+	}
+	
+	/**
+	 * Sets all encoder distances back to zero.
+	 */
+	public void resetEncoders(){
+		frontLeftEncoder.reset();
+		frontRightEncoder.reset();
+		rearLeftEncoder.reset();
+		rearRightEncoder.reset();
+	}
+	
 	//plug 3DOF into the method autonomous
 /*	public void autonomous() {
 		myDrive.mecanumDrive_Cartesian(driverFwdRevCmd, driverStrafeCmd, driverRotateCmd, 0);
@@ -46,19 +100,19 @@ public class DriveTrain{
 	}
 
 	public double getFLDriveMotorCmd() {
-		return frontLeft.get();
+		return frontLeftMotor.get();
 	}
 	
 	public double getFRDriveMotorCmd() {
-		return frontRight.get();
+		return frontRightMotor.get();
 	}
 	
 	public double getRLDriveMotorCmd() {
-		return rearLeft.get();
+		return rearLeftMotor.get();
 	}
 
 	public double getRRDriveMotorCmd() {
-		return rearRight.get();
+		return rearRightMotor.get();
 	}
 
 

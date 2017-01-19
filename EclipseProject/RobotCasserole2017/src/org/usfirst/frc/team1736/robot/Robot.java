@@ -156,6 +156,8 @@ public class Robot extends IterativeRobot {
 		//Assume starting at 0 degrees
 		botblock.reset();
 		
+		myRobot.resetEncoders();
+		
 		//Open a new log
 		CsvLogger.init();
 
@@ -174,6 +176,7 @@ public class Robot extends IterativeRobot {
 		//Get all inputs from outside the robot
 		updateSensorInputs();
 		chris.update();
+		myRobot.readEncoders();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -235,6 +238,7 @@ public class Robot extends IterativeRobot {
 		updateOperatorInputs();
 		updateSensorInputs();
 		chris.update();
+		myRobot.readEncoders();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -307,6 +311,10 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);
 		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDriveMotorCmd);
 		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDriveMotorCmd);
+		CassesroleWebStates.putDouble("Front Left Motor Speed (RPM)",   RobotState.frontLeftWheelVelocity_rpm);
+		CassesroleWebStates.putDouble("Front Right Motor Speed (RPM)",   RobotState.frontRightWheelVelocity_rpm);
+		CassesroleWebStates.putDouble("Rear Left Motor Speed (RPM)",   RobotState.rearLeftWheelVelocity_rpm);
+		CassesroleWebStates.putDouble("Rear Right Motor Speed (RPM)",   RobotState.rearRightWheelVelocity_rpm);
 	}
 	
 	public void updateDriverView(){
