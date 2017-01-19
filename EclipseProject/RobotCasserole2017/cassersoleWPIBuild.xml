@@ -75,7 +75,7 @@
 		<fileset file="${networktables.jar}"/>
 		<fileset file="${opencv.jar}"/>
 		<fileset file="${cscore.jar}"/>
-		<fileset dir="${userLibs}" erroronmissingdir="false"/>
+		<fileset dir="${userLibs}" erroronmissingdir="false" includes="*.jar"/>
 	</path>
 
     <pathconvert property="classpathProp" refid="classpath.path"/>
@@ -100,7 +100,7 @@
 
   <echo>[athena-jar] Copying jars to ${build.jars}.</echo>
   <copy todir="${build.jars}" flatten="true">
-    <path refid="classpath.path"/>
+    <path refid="classpath.path"/> 
   </copy>
 
     <jar destfile="${dist.jar}" update="false">
