@@ -281,13 +281,21 @@ public class Robot extends IterativeRobot {
 	public void initLoggingChannels(){
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("PDP_Voltage","V","getVoltage", pdp);
-		CsvLogger.addLoggingFieldDouble("PDP_Current","A","getTotalCurrent", pdp);
+		CsvLogger.addLoggingFieldDouble("PDP_Total_Current","A","getTotalCurrent", pdp);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_FL_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_FRONT_LEFT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_FR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_FRONT_RIGHT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_RL_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_LEFT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_RR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_RIGHT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Hopper_Motor_Current","A","getCurrent", pdp,  RobotIOMap.HOPPER_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Climber_Motor_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotIOMap.INTAKE_MOTOR_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
 		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","getDriverFwdRevCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getDriverStrafeCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getDriverRotateCmd", RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","isVisionAlignmentDesiried",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_FwdRev_cmd","cmd","getAutonDtFwdRevCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_Strafe_cmd","cmd","getAutonDtrStrafeCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_Rotate_cmd","cmd","getAutonDtRotateCmd", RobotState.class);
@@ -404,7 +412,6 @@ public class Robot extends IterativeRobot {
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
 	}
-	
 	
 
 	
