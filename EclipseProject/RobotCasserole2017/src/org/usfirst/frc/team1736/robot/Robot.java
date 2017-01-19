@@ -8,7 +8,6 @@ import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
-import org.usfirst.frc.team1736.vision_processing_2017.Vision_Processing_Main;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 import org.usfirst.frc.team1736.robot.RobotState;
 
@@ -319,6 +318,10 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Front Right Motor Speed (RPM)",   RobotState.frontRightWheelVelocity_rpm);
 		CassesroleWebStates.putDouble("Rear Left Motor Speed (RPM)",   RobotState.rearLeftWheelVelocity_rpm);
 		CassesroleWebStates.putDouble("Rear Right Motor Speed (RPM)",   RobotState.rearRightWheelVelocity_rpm);
+		CassesroleWebStates.putBoolean("Vision CoProcessor Online", RobotState.visionOnline);
+		CassesroleWebStates.putDouble("Vision CoProcessor FPS", RobotState.visionCoProcessorFPS);
+		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", RobotState.visionCoProcessorCPULoad_pct);
+		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", RobotState.visionCoProcessorMemLoad_pct);
 	}
 	
 	public void updateDriverView(){
