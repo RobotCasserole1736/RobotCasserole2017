@@ -101,6 +101,7 @@
   <echo>[athena-jar] Copying jars to ${build.jars}.</echo>
   <copy todir="${build.jars}" flatten="true">
     <path refid="classpath.path"/>
+  	<name name="*.jar"/>
   </copy>
 
     <jar destfile="${dist.jar}" update="false">
