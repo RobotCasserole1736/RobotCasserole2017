@@ -126,7 +126,7 @@ public class Robot extends IterativeRobot {
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
 		
-		
+		updateDriverView();
 		updateWebStates();
 
 		//Mark end of loop and Calculate Loop Time
@@ -188,6 +188,7 @@ public class Robot extends IterativeRobot {
 		climbControl.update();
 		
 		//Log & display present state data
+		updateDriverView();
 		CsvLogger.logData(false);
 		updateWebStates();
 
@@ -252,9 +253,8 @@ public class Robot extends IterativeRobot {
 		//Run Drivietrain periodic loop
 		myRobot.OperatorControl();
 		
-
-
 		//Log & display present state data
+		updateDriverView();
 		CsvLogger.logData(false);
 		updateWebStates();
 		//Mark end of loop and Calculate Loop Time
@@ -289,6 +289,8 @@ public class Robot extends IterativeRobot {
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
+		CasseroleDriverView.newBoolean("Vision Offline", "red");
+		CasseroleDriverView.newBoolean("Target in View", "green");
 
 	}
 	
@@ -311,6 +313,8 @@ public class Robot extends IterativeRobot {
 	
 	public void updateDriverView(){
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
+		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
+		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
