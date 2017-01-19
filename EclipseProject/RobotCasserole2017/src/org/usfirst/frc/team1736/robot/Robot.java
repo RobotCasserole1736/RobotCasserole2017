@@ -249,7 +249,6 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control
 		climbControl.update();
 		
-
 		//Run Drivietrain periodic loop
 		myRobot.OperatorControl();
 		
@@ -316,7 +315,12 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
-		CasseroleDriverView.setStringBox("Orientation deg", String.format("%.1f", RobotState.robotPoseAngle_deg % 360.0));
+		
+		String temp = String.format("%.1f", RobotState.robotPoseAngle_deg % 360.0);
+		for(int ii = 0; ii < 5 - temp.length(); ii++){
+			temp = " " + temp; 
+		}
+		CasseroleDriverView.setStringBox("Orientation deg", temp);
 	}
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
