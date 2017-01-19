@@ -94,11 +94,11 @@ public class Robot extends IterativeRobot {
 		initLoggingChannels();
 		initDriverView();
 		
-		//Set up and start web server
+		//Set up and start web server (must be after all other website init functions)
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
 		
-		//Load any saved calibration values
+		//Load any saved calibration values (must be last to ensure all calibrations have been initialized first)
 		CalWrangler.loadCalValues();
 		
 	}
@@ -108,6 +108,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		
+		//Update shooter PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
+		shooterControl.updateGains();
 		
 		//Close out any log which is running
 		CsvLogger.close();
