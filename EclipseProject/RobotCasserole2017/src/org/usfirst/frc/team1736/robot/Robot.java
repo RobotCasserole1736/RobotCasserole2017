@@ -82,7 +82,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		hopControl = new HopperControl();
-		//shooterControl = new ShooterWheelCTRL();
+		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 
 		driverCTRL = new Xbox360Controller(0);
@@ -186,7 +186,7 @@ public class Robot extends IterativeRobot {
 		hopControl.update();
 		
 		//Update shooter wheel control
-		//shooterControl.update();
+		shooterControl.update();
 		
 		//Update Climber Control
 		climbControl.update();
@@ -249,7 +249,7 @@ public class Robot extends IterativeRobot {
 		hopControl.update();
 		
 		//Update shooter wheel control
-		//shooterControl.update();
+		shooterControl.update();
 		
 		//Update Climber Control
 		climbControl.update();
