@@ -46,6 +46,9 @@ public class Robot extends IterativeRobot {
 	//Vision Processing Algorithm
     Vision_Processing_Main VisionProk;
     
+    //Use Vision output to get drive settings to reach alignment
+    VisionAlignment VisionAlign;
+    
     //Software utilities
     RobotSpeedomitar chris;
     CalWrangler wrangler;
@@ -79,6 +82,7 @@ public class Robot extends IterativeRobot {
 		pdp = new PowerDistributionPanel();
 		botblock =new ADIS16448_IMU();
 		VisionProk = new Vision_Processing_Main(); 
+		VisionAlign = new VisionAlignment();
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		hopControl = new HopperControl();
@@ -126,6 +130,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
+		if(RobotState.visionAlignmentActive){
+			VisionAlign.GetAligned();
+		}
 		
 		updateDriverView();
 		updateWebStates();
@@ -181,6 +188,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
+		if(RobotState.visionAlignmentActive){
+			VisionAlign.GetAligned();
+		}
 		
 		//Update Hopper Control
 		hopControl.update();
@@ -244,6 +254,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
+		if(RobotState.visionAlignmentActive){
+			VisionAlign.GetAligned();
+		}
 		
 		//Update Hopper Control
 		hopControl.update();
