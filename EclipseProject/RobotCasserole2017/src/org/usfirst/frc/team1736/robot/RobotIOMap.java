@@ -21,7 +21,7 @@ public class RobotIOMap {
 	public static final int INTAKE_MOTOR_PDP_CH   = 6;
 	
 	//CAN Device ID's
-	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 0;
+	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 1;
 	
 	//Encoder Input Ports
 	public static final int DRIVETRAIN_FRONT_LEFT_ENCODER_A = 0;

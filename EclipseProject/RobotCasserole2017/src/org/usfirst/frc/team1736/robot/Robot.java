@@ -311,7 +311,6 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocity_rpm",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd",RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","isShooterVelocityOk",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFrontLeftDriveMotorCmd",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("FR_Motor_Cmd","cmd","getFrontRightDriveMotorCmd",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("RL_Motor_Cmd","cmd","getRearLeftDriveMotorCmd",RobotState.class);
@@ -323,7 +322,6 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("Vision_System_Online","bit","isVisionOnline",RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isVisionTargetFound",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle","deg","getVisionTargetOffset_deg",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getVisionEstTargetDist_ft",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getVisionEstTargetDist_ft",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getProcTimeMs",VisionProk.VL);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getVisionCoProcessorFPS",RobotState.class);
