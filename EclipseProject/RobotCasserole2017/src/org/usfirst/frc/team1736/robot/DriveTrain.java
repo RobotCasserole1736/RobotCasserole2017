@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
 import org.usfirst.frc.team1736.robot.RobotState;
+import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
 	
@@ -20,6 +21,8 @@ public class DriveTrain{
 	Encoder rearLeftEncoder;
 	Encoder rearRightEncoder;
 	
+	Calibration fieldOrientedCtrl;
+	
 	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0;
 	
 	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
@@ -33,6 +36,9 @@ public class DriveTrain{
     	rearLeftMotor   = new Victor(RobotIOMap.DRIVETRAIN_REAR_LEFT_MOTOR);
     	rearRightMotor  = new Victor(RobotIOMap.DRIVETRAIN_REAR_RIGHT_MOTOR);
     	myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
+    	
+    	//Set up configurable field-oriented control
+    	fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
     	
     	//set up encoders
     	frontLeftEncoder  = new Encoder(RobotIOMap.DRIVETRAIN_FRONT_LEFT_ENCODER_A, RobotIOMap.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
@@ -80,23 +86,35 @@ public class DriveTrain{
 		rearRightEncoder.reset();
 	}
 	
-	//plug 3DOF into the method autonomous
-/*	public void autonomous() {
-		myDrive.mecanumDrive_Cartesian(driverFwdRevCmd, driverStrafeCmd, driverRotateCmd, 0);
-		Timer.delay(0.02);
+
+	public void autonomousControl() {
+		myDrive.mecanumDrive_Cartesian(RobotState.autonDtFwdRevCmd, RobotState.autonDtrStrafeCmd, RobotState.autonDtRotateCmd, 0);
+		
+		updateMotorCmds();
 	}
-	*/
-	public void OperatorControl() {
+
+	public void operatorControl() {
 			
+		if(fieldOrientedCtrl.get() == 0.0){
 			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
 			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, 0);
-			
-			//Update Motor Commands
-			RobotState.frontLeftDriveMotorCmd  =  getFLDriveMotorCmd();
-			RobotState.frontRightDriveMotorCmd =  getFRDriveMotorCmd();
-			RobotState.rearLeftDriveMotorCmd   =  getRLDriveMotorCmd();
-			RobotState.rearRightDriveMotorCmd  =  getRRDriveMotorCmd();
+		} else {
+			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
+			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, RobotState.robotPoseAngle_deg);
+		}
+		
+		updateMotorCmds();
+
+	}
 	
+	private void updateMotorCmds(){
+			
+		//Update Motor Commands
+		RobotState.frontLeftDriveMotorCmd  =  getFLDriveMotorCmd();
+		RobotState.frontRightDriveMotorCmd =  getFRDriveMotorCmd();
+		RobotState.rearLeftDriveMotorCmd   =  getRLDriveMotorCmd();
+		RobotState.rearRightDriveMotorCmd  =  getRRDriveMotorCmd();
+
 	}
 
 	public double getFLDriveMotorCmd() {

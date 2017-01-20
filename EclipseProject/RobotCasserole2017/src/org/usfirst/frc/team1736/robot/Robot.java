@@ -255,7 +255,7 @@ public class Robot extends IterativeRobot {
 		climbControl.update();
 		
 		//Run Drivietrain periodic loop
-		myRobot.OperatorControl();
+		myRobot.operatorControl();
 		
 		//Log & display present state data
 		updateDriverView();
