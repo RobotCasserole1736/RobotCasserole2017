@@ -8,6 +8,7 @@ import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
+import org.usfirst.frc.team1736.lib.HAL.JoyStickScaler;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 import org.usfirst.frc.team1736.robot.RobotState;
 
@@ -82,7 +83,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		hopControl = new HopperControl();
-		//shooterControl = new ShooterWheelCTRL();
+		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 
 		driverCTRL = new Xbox360Controller(0);
@@ -94,11 +95,11 @@ public class Robot extends IterativeRobot {
 		initLoggingChannels();
 		initDriverView();
 		
-		//Set up and start web server
+		//Set up and start web server (must be after all other website init functions)
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
 		
-		//Load any saved calibration values
+		//Load any saved calibration values (must be last to ensure all calibrations have been initialized first)
 		CalWrangler.loadCalValues();
 		
 	}
@@ -108,6 +109,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		
+		//Update shooter PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
+		shooterControl.updateGains();
 		
 		//Close out any log which is running
 		CsvLogger.close();
@@ -186,7 +190,7 @@ public class Robot extends IterativeRobot {
 		hopControl.update();
 		
 		//Update shooter wheel control
-		//shooterControl.update();
+		shooterControl.update();
 		
 		myRobot.autonomousControl();
 		
@@ -251,7 +255,7 @@ public class Robot extends IterativeRobot {
 		hopControl.update();
 		
 		//Update shooter wheel control
-		//shooterControl.update();
+		shooterControl.update();
 		
 		//Update Climber Control
 		climbControl.update();
@@ -280,17 +284,59 @@ public class Robot extends IterativeRobot {
 	public void initLoggingChannels(){
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("PDP_Voltage","V","getVoltage", pdp);
-		CsvLogger.addLoggingFieldDouble("PDP_Current","A","getTotalCurrent", pdp);
+		CsvLogger.addLoggingFieldDouble("PDP_Total_Current","A","getTotalCurrent", pdp);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_FL_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_FRONT_LEFT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_FR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_FRONT_RIGHT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_RL_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_LEFT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_RR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_RIGHT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Hopper_Motor_Current","A","getCurrent", pdp,  RobotIOMap.HOPPER_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Climber_Motor_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotIOMap.INTAKE_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.TallonFlame);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
+		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","getDriverFwdRevCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getDriverStrafeCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getDriverRotateCmd", RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","isVisionAlignmentDesiried",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_FwdRev_cmd","cmd","getAutonDtFwdRevCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_Strafe_cmd","cmd","getAutonDtrStrafeCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_Rotate_cmd","cmd","getAutonDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getRobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopFeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getRobotPoseAngle_deg",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Op_Gear_Release_Desired","bit","isOpGearReleaseDesired",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Op_Prep_to_Shoot_Desired","bit","isOpPrepToShootDesired",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Op_Shot_Desired","bit","isOpShotDesired",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopperMotorCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredVelocity_rpm",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocity_rpm",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","isShooterVelocityOk",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFrontLeftDriveMotorCmd",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("FR_Motor_Cmd","cmd","getFrontRightDriveMotorCmd",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("RL_Motor_Cmd","cmd","getRearLeftDriveMotorCmd",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("RR_Motor_Cmd","cmd","getRearRightDriveMotorCmd",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("FL_Wheel_Velocity","rpm","getFrontLeftWheelVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("FR_Wheel_Velocity","rpm","getFrontRightWheelVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("RL_Wheel_Velocity","rpm","getRearLeftWheelVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("RR_Wheel_Velocity","rpm","getRearRightWheelVelocity_rpm",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Vision_System_Online","bit","isVisionOnline",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isVisionTargetFound",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle","deg","getVisionTargetOffset_deg",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getVisionEstTargetDist_ft",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getProcTimeMs",VisionProk.VL);
+		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getVisionCoProcessorFPS",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_CoProc_CPU_load","%","getVisionCoProcessorCPULoad_pct",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_CoProc_Mem_load","%","getVisionCoProcessorMemLoad_pct",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Vision_Align_Active","bit","isVisionAlignmentActive",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Vision_Align_Possible","bit","isVisionAlignmentPossible",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getVisionDtFwdRevCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
+	
 	}
 	
 	public void initDriverView(){
@@ -340,9 +386,11 @@ public class Robot extends IterativeRobot {
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateDriverInputs(){
-		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
-		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
-		RobotState.driverRotateCmd = driverCTRL.RStick_X();
+		
+		RobotState.driverFwdRevCmd = JoyStickScaler.joyscale(driverCTRL.LStick_Y());
+
+		RobotState.driverStrafeCmd = JoyStickScaler.joyscale(driverCTRL.LStick_X());
+		RobotState.driverRotateCmd = JoyStickScaler.joyscale(driverCTRL.RStick_X());
 	}
 	
 	public void updateOperatorInputs(){
@@ -368,7 +416,6 @@ public class Robot extends IterativeRobot {
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
 	}
-	
 	
 
 	

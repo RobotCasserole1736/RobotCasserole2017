@@ -229,11 +229,11 @@ public class CsvLogger {
                 MethodHandle mh = methodHandles.get(i);
                 String fieldName = dataFieldNames.get(i);
                 Vector<Object> mhArgs = mhReferenceObjects.get(i);
-                log_file.write(getStandardLogData(mh, mhArgs) + ", ");
+                log_file.write(getStandardLogData(mh, mhArgs,fieldName) + ", ");
             }
             log_file.write("\n");
         } catch (Exception ex) {
-            System.out.println("Error writing to log file: " + ex.getMessage());
+        	DriverStation.reportError("Error writing to log file: " + ex.getMessage(), false);
             return -2;
         }
 
@@ -337,7 +337,7 @@ public class CsvLogger {
     private static void addLoggingField(MethodType methodType, String dataFieldName, String unitName, Class<?> classRef,
             String methodName, Object reference, Object... args) {
         if (log_open) {
-            System.out.println("Error: cannot add logging field while log file is open");
+        	DriverStation.reportError("Error: cannot add logging field while log file is open",false);
             return;
         }
         for (int i = 0; i < dataFieldNames.size(); i++) {
@@ -348,7 +348,7 @@ public class CsvLogger {
                 for (Object arg : args)
                     mhArgs.add(arg);
                 mhReferenceObjects.set(i, mhArgs);
-                System.out.println("Warning: log field already present. Reference updated");
+                DriverStation.reportWarning("Warning: log field named "+ fieldName + " already present. Reference updated", false);
                 return;
             }
         }
@@ -356,14 +356,13 @@ public class CsvLogger {
         try {
             methodHandle = MethodHandles.lookup().findVirtual(classRef, methodName, methodType);
         } catch (NoSuchMethodException e) {
-            System.out.println("Error: Could not add logging field " + dataFieldName + " (no such method)");
+        	DriverStation.reportError("Error: Could not add logging field " + dataFieldName + " (no such method)", true);
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             try {
                 methodHandle = MethodHandles.lookup().findStatic(classRef, methodName, methodType);
             } catch (Exception ex) {
-                System.out.println("Error: Could not add logging field " + dataFieldName);
-                ex.printStackTrace();
+            	DriverStation.reportError("Error: Could not add logging field " + dataFieldName, true);
             }
         }
         dataFieldNames.add(dataFieldName);
@@ -386,17 +385,16 @@ public class CsvLogger {
      * @param args Arguments for the given Method Handle
      * @return double value for double return types, 1 or 0 for boolean return types
      */
-    private static double getStandardLogData(MethodHandle methodHandle, Vector<Object> args) {
+    private static double getStandardLogData(MethodHandle methodHandle, Vector<Object> args, String name) {
         try {
             if (methodHandle.type().returnType() == double.class)
                 return (double) methodHandle.invokeWithArguments(args);
             else if (methodHandle.type().returnType() == boolean.class)
                 return ((boolean) methodHandle.invokeWithArguments(args)) ? 1.0 : 0.0;
         } catch (Throwable e) {
-        	DriverStation.reportError("Error running method for data logging", false);
-            e.printStackTrace();
+        	DriverStation.reportError("Error running method " + name + " for data logging", true);
         }
-        return 0;
+        return -1.0;
     }
 
 }

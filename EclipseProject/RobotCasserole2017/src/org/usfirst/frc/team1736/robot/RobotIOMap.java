@@ -4,14 +4,24 @@ public class RobotIOMap {
 	
 	//Motor Output port mappings
 	public static final int DRIVETRAIN_FRONT_RIGHT_MOTOR = 0;
-	public static final int DRIVETRAIN_FRONT_LEFT_MOTOR = 1;
-	public static final int DRIVETRAIN_REAR_LEFT_MOTOR = 2;
-	public static final int DRIVETRAIN_REAR_RIGHT_MOTOR = 3;
-	public static final int HOPPER_MOTOR_PWM_PORT = 4;
+	public static final int DRIVETRAIN_FRONT_LEFT_MOTOR  = 1;
+	public static final int DRIVETRAIN_REAR_RIGHT_MOTOR  = 2;
+	public static final int DRIVETRAIN_REAR_LEFT_MOTOR   = 3;
+	public static final int HOPPER_MOTOR_PWM_PORT  = 4;
 	public static final int CLIMBER_MOTOR_PWM_PORT = 5;
+	public static final int INTAKE_MOTOR_PWM_PORT  = 6;
+	
+	//Motor PDP channel mappings
+	public static final int DRIVETRAIN_FRONT_RIGHT_PDP_CH = 0;
+	public static final int DRIVETRAIN_FRONT_LEFT_PDP_CH  = 1;
+	public static final int DRIVETRAIN_REAR_RIGHT_PDP_CH  = 2;
+	public static final int DRIVETRAIN_REAR_LEFT_PDP_CH   = 3;
+	public static final int HOPPER_MOTOR_PDP_CH   = 4;
+	public static final int CLIMBER_MOTOR_PDP_CH  = 5;
+	public static final int INTAKE_MOTOR_PDP_CH   = 6;
 	
 	//CAN Device ID's
-	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 0;
+	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 1;
 	
 	//Encoder Input Ports
 	public static final int DRIVETRAIN_FRONT_LEFT_ENCODER_A = 0;
