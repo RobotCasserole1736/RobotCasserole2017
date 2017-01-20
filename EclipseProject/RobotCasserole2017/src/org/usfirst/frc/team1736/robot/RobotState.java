@@ -56,7 +56,6 @@ public class RobotState {
 	
 	
 	//Vision Align system (mostly outputs from vision-based alignment system)
-	static boolean visionAlignmentActive = false; //True if it is desired to use the vision system to align, false if not. (input from outside, driver inputs or autonomous routines)
 	static boolean visionAlignmentPossible = false; //True if the vision system is capiable of auto-aligning the robot, false if not. False should happen if the vision system is offline, or no target can be seen.
 	static double  visionDtFwdRevCmd = 0; //Forward/reverse command from vision alignment system to get the robot aligned for a shot. (-1 = full reverse, 0 = stop, 1 = full forward)
 	static double  visionDtRotateCmd = 0; //Rotation command from vision alignment system to get the robot aligned for a shot. (-1 = full reverse, 0 = stop, 1 = full forward)

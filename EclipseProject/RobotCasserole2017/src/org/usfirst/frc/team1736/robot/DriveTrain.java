@@ -50,9 +50,6 @@ public class DriveTrain{
     	frontRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
     	rearLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
     	rearRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	
-    	
-
 	}
 	
 	
@@ -88,18 +85,33 @@ public class DriveTrain{
 	
 
 	public void autonomousControl() {
-		myDrive.mecanumDrive_Cartesian(RobotState.autonDtFwdRevCmd, RobotState.autonDtrStrafeCmd, RobotState.autonDtRotateCmd, 0);
+		if(RobotState.visionAlignmentDesiried){
+			if(RobotState.visionAlignmentPossible){
+				//If we're in autonomous and vision alignment is desired (and possible), use the vision commands with no strafe
+				myDrive.mecanumDrive_Cartesian(RobotState.visionDtFwdRevCmd, 0, RobotState.visionDtRotateCmd, 0);
+			} else {
+				//If the auto routine wanted vision but we can't find a target, give up and stay still.
+				myDrive.mecanumDrive_Cartesian(0, 0, 0, 0);
+			}
+
+		} else {
+			//If we're in autonomous but don't need vision alignment, use the normal autonomous motor commands
+			myDrive.mecanumDrive_Cartesian(RobotState.autonDtFwdRevCmd, RobotState.autonDtrStrafeCmd, RobotState.autonDtRotateCmd, 0);
+		}
 		
 		updateMotorCmds();
 	}
 
 	public void operatorControl() {
 			
-		if(fieldOrientedCtrl.get() == 0.0){
+		if(RobotState.visionAlignmentDesiried & RobotState.visionAlignmentPossible){
+			//For operator control, vision assist, get commands from the vision subsystem (although the driver may still strafe)
+			myDrive.mecanumDrive_Cartesian(RobotState.visionDtFwdRevCmd, RobotState.driverStrafeCmd, RobotState.visionDtRotateCmd, 0);
+		} else if(fieldOrientedCtrl.get() == 0.0){
 			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
 			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, 0);
 		} else {
-			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
+			//For operator control, field oriented, and no vision assist, get all commands from driver along with gyro angle
 			myDrive.mecanumDrive_Cartesian(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, RobotState.robotPoseAngle_deg);
 		}
 		
@@ -107,14 +119,13 @@ public class DriveTrain{
 
 	}
 	
-	private void updateMotorCmds(){
-			
+	
+	private void updateMotorCmds(){		
 		//Update Motor Commands
 		RobotState.frontLeftDriveMotorCmd  =  getFLDriveMotorCmd();
 		RobotState.frontRightDriveMotorCmd =  getFRDriveMotorCmd();
 		RobotState.rearLeftDriveMotorCmd   =  getRLDriveMotorCmd();
 		RobotState.rearRightDriveMotorCmd  =  getRRDriveMotorCmd();
-
 	}
 
 	public double getFLDriveMotorCmd() {

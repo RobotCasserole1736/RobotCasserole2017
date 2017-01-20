@@ -188,6 +188,8 @@ public class Robot extends IterativeRobot {
 		//Update shooter wheel control
 		//shooterControl.update();
 		
+		myRobot.autonomousControl();
+		
 		//Update Climber Control
 		climbControl.update();
 		
