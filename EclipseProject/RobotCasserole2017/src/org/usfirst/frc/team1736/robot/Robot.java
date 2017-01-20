@@ -289,6 +289,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Hopper_Motor_Current","A","getCurrent", pdp,  RobotIOMap.HOPPER_MOTOR_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Climber_Motor_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotIOMap.INTAKE_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.TallonFlame);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
