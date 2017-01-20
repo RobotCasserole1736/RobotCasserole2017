@@ -8,6 +8,7 @@ import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
+import org.usfirst.frc.team1736.lib.HAL.JoyStickScaler;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 import org.usfirst.frc.team1736.robot.RobotState;
 
@@ -383,9 +384,11 @@ public class Robot extends IterativeRobot {
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateDriverInputs(){
-		RobotState.driverFwdRevCmd = driverCTRL.LStick_Y();
-		RobotState.driverStrafeCmd = driverCTRL.LStick_X();
-		RobotState.driverRotateCmd = driverCTRL.RStick_X();
+		
+		RobotState.driverFwdRevCmd = JoyStickScaler.joyscale(driverCTRL.LStick_Y());
+
+		RobotState.driverStrafeCmd = JoyStickScaler.joyscale(driverCTRL.LStick_X());
+		RobotState.driverRotateCmd = JoyStickScaler.joyscale(driverCTRL.RStick_X());
 	}
 	
 	public void updateOperatorInputs(){
