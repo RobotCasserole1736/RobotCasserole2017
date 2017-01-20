@@ -190,9 +190,6 @@ public class RobotState {
 	public static double getVisionCoProcessorMemLoad_pct() {
 		return visionCoProcessorMemLoad_pct;
 	}
-	public static boolean isVisionAlignmentActive() {
-		return visionAlignmentActive;
-	}
 	public static boolean isVisionAlignmentPossible() {
 		return visionAlignmentPossible;
 	}

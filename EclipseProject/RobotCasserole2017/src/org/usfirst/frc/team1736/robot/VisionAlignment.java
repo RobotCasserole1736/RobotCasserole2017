@@ -22,7 +22,7 @@ public class VisionAlignment {
 		
 		
 		//Check is Vision Alignment function is enabled
-		if(RobotState.visionAlignmentActive){
+		if(RobotState.visionAlignmentDesiried){
 			//Calculate drive settings using angle and distance
 			if(curAngle == this.matchAngle && curDistance == this.matchDist)
 			{

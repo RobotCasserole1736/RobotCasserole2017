@@ -134,7 +134,7 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
-		if(RobotState.visionAlignmentActive){
+		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
 		}
 		
@@ -192,7 +192,8 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
-		if(RobotState.visionAlignmentActive){
+		
+		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
 		}
 		
@@ -260,7 +261,7 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
-		if(RobotState.visionAlignmentActive){
+		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
 		}
 		
