@@ -9,6 +9,16 @@ public class RobotState {
 	static double  driverRotateCmd = 0; //Driver desired rotational velocity (-1 = full CCW, 0 = stop, 1 = full CW)
 	static boolean visionAlignmentDesiried = false; //True if the vision algorithm should attempt to align the robot, false if not.
 	
+	//camera positioning commands (derived from Xbox360 controller)
+	static boolean gearCamAlign = false;
+	static boolean shooterCamAlign = false;
+	static boolean intakeCamAlign = false;
+	
+	//gyro align commands
+	static boolean gyroAlignRight = false;
+	static boolean gyroAlignLeft = false;
+	static boolean gyroAlignUp = false;
+	static boolean gyroAlignDown = false;
 	
 	// Autonomous drivetrain commands (derived from autonomous path planning routines)
 	static double autonDtFwdRevCmd = 0;
@@ -17,14 +27,12 @@ public class RobotState {
 	
 	
 	//Operator commands (derived from operator's Xbox360 controller)
-	static boolean opPrepToShootDesired = false; //True if the operator wants to get the shooter wheel up to speed, false if not
-	static boolean opShotDesired = false; //True if the operator wants to take a shot, false if not.
+	static Shooter_States opShotCTRL = Shooter_States.NO_Shoot;
 	static boolean opClimbEnable = false; //True if climbing should be allowed, false if all climb commands should be ignored
 	static double  opClimbSpeedDesired = 0; //desired speed of the climber motor (0= off, 1 = full forward. Should never be reverse).
 	static boolean opGearReleaseDesired = false; //True if the gear should be released, false if not.
 	static boolean opIntakeDesired = false; //True if the operator wants to to pull in fuel throught the intake, false if not
 	static boolean opEjectDesired = false;  //True if the operator wants to reverse the intake direction to eject lodged balls, false if not.
-	
 	
 	//Whole-robot pose/velocity state information (outputs from drivetrain class or IMU)
 	static double robotPoseAngle_deg = 0; //Present rotation of the robot (relative to field)
@@ -226,12 +234,7 @@ public class RobotState {
 	public static boolean isClimbEnable() {
 		return climbEnable;
 	}
-	public static boolean isOpPrepToShootDesired() {
-		return opPrepToShootDesired;
-	}
-	public static boolean isOpShotDesired() {
-		return opShotDesired;
-	}
+
 	
 
 

@@ -53,6 +53,21 @@ public class DaBouncer {
             return false;
         }
     }
+    
+    public boolean AboveDebounceBoo(boolean b) {
+    	if (b = true){
+    		DebounceCounter++;	
+    	}
+    	else {
+    		DebounceCounter = 0;
+    	}
+    	
+    	if (DebounceCounter > dbnc) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     /**
