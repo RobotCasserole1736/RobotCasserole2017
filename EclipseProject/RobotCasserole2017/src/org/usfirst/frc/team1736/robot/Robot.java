@@ -455,6 +455,9 @@ public class Robot extends IterativeRobot {
 		RobotState.climbSpeedCmd = operatorCTRL.LStick_X();
 		RobotState.climbEnable = true;
 		
+		RobotState.opIntakeDesired = operatorCTRL.LB();
+		RobotState.opEjectDesired = operatorCTRL.B();
+		
 		if( operatorCTRL.Y()){
 			RobotState.opShotCTRL=Shooter_States.PREP_TO_SHOOT;
 		}
