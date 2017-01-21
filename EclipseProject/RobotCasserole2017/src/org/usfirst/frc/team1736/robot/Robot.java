@@ -5,6 +5,7 @@ import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
+import org.usfirst.frc.team1736.lib.Util.DaBouncer;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
@@ -400,16 +401,36 @@ public class Robot extends IterativeRobot {
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateDriverInputs(){
-		
+		//drive train commands
 		RobotState.driverFwdRevCmd = JoyStickScaler.joyscale(driverCTRL.LStick_Y());
-
 		RobotState.driverStrafeCmd = JoyStickScaler.joyscale(driverCTRL.LStick_X());
 		RobotState.driverRotateCmd = JoyStickScaler.joyscale(driverCTRL.RStick_X());
+		RobotState.visionAlignmentDesiried = driverCTRL.RB();	
+		
+		//camera positioning commands
+		RobotState.gearCamAlign = driverCTRL.B();
+		RobotState.intakeCamAlign = driverCTRL.X();
+		RobotState.shooterCamAlign = driverCTRL.Y();
+		
+		//gyro align commands
+//		boolean newR = driverCTRL.DPadRight();
+//		boolean newD = driverCTRL.DPadDown();
+//		boolean newL = driverCTRL.DPadLeft();
+//		boolean newU = driverCTRL.DPadUp();
+//		RobotState.gyroAlignRight = DaBouncer.AboveDebounceBoo(newR);
+//		RobotState.gyroAlignDown = DaBouncer.AboveDebounceBoo(newD);
+//		RobotState.gyroAlignUp = driverCTRL.DPadUp();
+//		RobotState.gyroAlignLeft = driverCTRL.DPadLeft();
+//		
+		
 	}
 	
 	public void updateOperatorInputs(){
 		RobotState.climbSpeedCmd = operatorCTRL.LStick_Y();
 		RobotState.climbEnable = true;
+		RobotState.opPrepToShootDesired = operatorCTRL.B();
+		RobotState.opShotDesired = operatorCTRL.A();
+
 	}
 	
 	public void updateSensorInputs(){

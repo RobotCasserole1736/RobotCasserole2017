@@ -9,6 +9,16 @@ public class RobotState {
 	static double  driverRotateCmd = 0; //Driver desired rotational velocity (-1 = full CCW, 0 = stop, 1 = full CW)
 	static boolean visionAlignmentDesiried = false; //True if the vision algorithm should attempt to align the robot, false if not.
 	
+	//camera positioning commands (derived from Xbox360 controller)
+	static boolean gearCamAlign = false;
+	static boolean shooterCamAlign = false;
+	static boolean intakeCamAlign = false;
+	
+	//gyro align commands
+	static boolean gyroAlignRight = false;
+	static boolean gyroAlignLeft = false;
+	static boolean gyroAlignUp = false;
+	static boolean gyroAlignDown = false;
 	
 	// Autonomous drivetrain commands (derived from autonomous path planning routines)
 	static double autonDtFwdRevCmd = 0;
