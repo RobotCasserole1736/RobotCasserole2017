@@ -84,6 +84,9 @@ public class RobotState {
 	static boolean climbEnable = false;
 	static double climbSpeedCmd = 0.0;
 	
+	//Intake Command
+	static double intakeSpeedCmd = 0.0;
+	
 	//Getters and Setters for select globals
 	public static double getClimbSpeedCmd(){
 		return RobotState.climbSpeedCmd;
@@ -210,6 +213,15 @@ public class RobotState {
 	}
 	public static double getHopperMotorCmd() {
 		return hopperMotorCmd;
+	}
+	public static double getIntakeSpeedCmd() {
+		return intakeSpeedCmd;
+	}
+	public static boolean isOpIntakeDesired() {
+		return opIntakeDesired;
+	}
+	public static boolean isOpEjectDesired() {
+		return opEjectDesired;
 	}
 	public static double getFrontLeftDriveMotorCmd() {
 		return frontLeftDriveMotorCmd;

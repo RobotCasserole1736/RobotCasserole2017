@@ -62,6 +62,9 @@ public class Robot extends IterativeRobot {
     //Hopper Feed Control
     HopperControl hopControl; 
     
+    //Intake Control
+    IntakeControl intakeControl;
+    
     //Shooter wheel control
     ShooterWheelCTRL shooterControl;
     
@@ -89,6 +92,7 @@ public class Robot extends IterativeRobot {
 		hopControl = new HopperControl();
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
+		intakeControl = new IntakeControl();
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -200,6 +204,9 @@ public class Robot extends IterativeRobot {
 		//Update Hopper Control
 		hopControl.update();
 		
+		//Update Intake Control
+		intakeControl.update();
+		
 		//Update shooter wheel control
 		shooterControl.update();
 		
@@ -268,6 +275,9 @@ public class Robot extends IterativeRobot {
 		//Update Hopper Control
 		hopControl.update();
 		
+		//Update Intake Control
+		intakeControl.update();
+		
 		//Update shooter wheel control
 		shooterControl.update();
 		
@@ -324,6 +334,9 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("Op_Prep_to_Shoot_Desired","bit","isOpPrepToShootDesired",RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Op_Shot_Desired","bit","isOpShotDesired",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopperMotorCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Intake_Speed_Cmd","cmd","getIntakeSpeedCmd", RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Op_Intake_Desired","bit","isOpIntakeDesired",RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Op_Eject_Desired","bit","isOpEjectDesired",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredVelocity_rpm",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocity_rpm",RobotState.class);
@@ -345,7 +358,6 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getVisionCoProcessorFPS",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_CPU_load","%","getVisionCoProcessorCPULoad_pct",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_Mem_load","%","getVisionCoProcessorMemLoad_pct",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Vision_Align_Active","bit","isVisionAlignmentActive",RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_Possible","bit","isVisionAlignmentPossible",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getVisionDtFwdRevCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
@@ -370,6 +382,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
+		CassesroleWebStates.putDouble("Intake Speed Cmd",   RobotState.intakeSpeedCmd);
 		CassesroleWebStates.putDouble("Climb Speed Cmd",   RobotState.climbSpeedCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
 		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDriveMotorCmd);
