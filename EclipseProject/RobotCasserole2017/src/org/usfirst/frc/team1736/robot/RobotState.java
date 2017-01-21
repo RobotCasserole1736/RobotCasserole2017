@@ -234,12 +234,7 @@ public class RobotState {
 	public static boolean isClimbEnable() {
 		return climbEnable;
 	}
-	public static boolean isOpPrepToShootDesired() {
-		return opPrepToShootDesired;
-	}
-	public static boolean isOpShotDesired() {
-		return opShotDesired;
-	}
+
 	
 
 

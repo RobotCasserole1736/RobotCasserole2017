@@ -18,10 +18,10 @@ public class ShooterWheelCTRL {
 	public ShooterWheelCTRL(){
 		TallonFlame = new CANTalon(RobotIOMap.SHOOTER_CAN_TALON_DEVICE_ID);
 		Shooter_ff_Gain = new Calibration("Shooter_ff_Gain",0);
-		Shooter_P_Gain = new Calibration("Shooter_P_Gain",0);
+		Shooter_P_Gain = new Calibration("Shooter_P_Gain",0.001);
 		Shooter_I_Gain = new Calibration("Shooter_I_Gain",0);
 		Shooter_D_Gain = new Calibration("Shooter_D_Gain",0);
-		ErrorRange = new Calibration("Shooter_Error_Limit_RPM",0);
+		ErrorRange = new Calibration("Shooter_Error_Limit_RPM",0,10,1000);
 
 		TallonFlame.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative); //Tells the SRX an encoder is attached to its input.
 		TallonFlame.setProfile(0); //Select slot 0 for PID gains
@@ -66,6 +66,7 @@ public class ShooterWheelCTRL {
 	public void update(){
 		TallonFlame.set(RobotState.shooterDesiredVelocity_rpm); // set what speed the wheel should be running at 
 		RobotState.shooterActualVelocity_rpm = TallonFlame.getSpeed();
+		RobotState.shooterMotorCmd = TallonFlame.get();
 		double Error = Math.abs(RobotState.shooterDesiredVelocity_rpm -RobotState.shooterActualVelocity_rpm);
 		if (Error > ErrorRange.get()){
 			RobotState.shooterVelocityOk = false;
@@ -75,4 +76,4 @@ public class ShooterWheelCTRL {
 	
 	}
 	
-}   
+}

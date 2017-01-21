@@ -31,3 +31,4 @@ public class HopperControl {
 		}
 		hopMotor.set(RobotState.hopperMotorCmd);
 	}
+}

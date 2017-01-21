@@ -68,7 +68,9 @@ public class Robot extends IterativeRobot {
     
     //Climber Control
     ClimberControl climbControl;
-
+    
+    boolean pev_State;
+    Sht_ctrl shotCTRL;
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -87,6 +89,7 @@ public class Robot extends IterativeRobot {
 		VisionAlign = new VisionAlignment();
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
+		shotCTRL = new Sht_ctrl();
 		hopControl = new HopperControl();
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
@@ -197,7 +200,7 @@ public class Robot extends IterativeRobot {
 		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
 		}
-		
+		shotCTRL.update();
 		//Update Hopper Control
 		hopControl.update();
 		
@@ -264,8 +267,9 @@ public class Robot extends IterativeRobot {
 		VisionProk.update();
 		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
+			
 		}
-		
+		shotCTRL.update();
 		//Update Hopper Control
 		hopControl.update();
 		
@@ -370,6 +374,11 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
+		CassesroleWebStates.putString("Op Shot Command", RobotState.opShotCTRL.toString());
+		CassesroleWebStates.putDouble("Shooter Wheel Command", RobotState.shooterMotorCmd);
+		CassesroleWebStates.putDouble("Shooter Desired Speed (RPM)", RobotState.shooterDesiredVelocity_rpm);
+		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", RobotState.shooterActualVelocity_rpm);
+		CassesroleWebStates.putBoolean("Shooter Speed OK", RobotState.shooterVelocityOk);
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
 		CassesroleWebStates.putDouble("Climb Speed Cmd",   RobotState.climbSpeedCmd);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
@@ -425,12 +434,42 @@ public class Robot extends IterativeRobot {
 		
 	}
 	
-	public void updateOperatorInputs(){
-		RobotState.climbSpeedCmd = operatorCTRL.LStick_Y();
+	 void updateOperatorInputs(){
+		boolean rising_edge;
+		boolean falling_edge;
+		
+		RobotState.climbSpeedCmd = operatorCTRL.LStick_X();
 		RobotState.climbEnable = true;
-		RobotState.opPrepToShootDesired = operatorCTRL.B();
-		RobotState.opShotDesired = operatorCTRL.A();
-
+		
+		if( operatorCTRL.Y()){
+			RobotState.opShotCTRL=Shooter_States.PREP_TO_SHOOT;
+		}
+		
+		if(operatorCTRL.A()){
+			RobotState.opShotCTRL=Shooter_States.NO_Shoot;	
+		}
+		
+		if(operatorCTRL.RB()==true & pev_State==false){
+			rising_edge=true;	
+		} else{
+			rising_edge=false;
+		}
+		
+		if(rising_edge==true){
+			RobotState.opShotCTRL=Shooter_States.SHOOT;	
+		}
+		
+		if(operatorCTRL.RB()==false & pev_State==true){
+			falling_edge=true;	
+		}
+		else{
+			falling_edge=false;
+		}	
+		if(falling_edge==true){
+			RobotState.opShotCTRL=Shooter_States.PREP_TO_SHOOT;
+		}
+		
+		pev_State = operatorCTRL.RB();
 	}
 	
 	public void updateSensorInputs(){
