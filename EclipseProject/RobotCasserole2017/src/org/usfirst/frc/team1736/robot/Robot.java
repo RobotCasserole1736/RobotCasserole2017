@@ -4,7 +4,7 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
-import org.usfirst.frc.team1736.lib.Sensors.ADIS16448_IMU;
+import org.usfirst.frc.team1736.lib.Sensors.ADXRS453_Gyro;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
 	
-	ADIS16448_IMU botblock;
+	ADXRS453_Gyro gyro;
 	DriveTrain myRobot;
 
 	//Vision Processing Algorithm
@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 		//Set up physical devices
 		myRobot = new DriveTrain();
 		pdp = new PowerDistributionPanel();
-		botblock =new ADIS16448_IMU();
+		gyro =new ADXRS453_Gyro();
 		VisionProk = new Vision_Processing_Main(); 
 		VisionAlign = new VisionAlignment();
 		ecuStats = new CasseroleRIOLoadMonitor();
@@ -129,7 +129,7 @@ public class Robot extends IterativeRobot {
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateSensorInputs();
+		updateGlobalSensorInputs();
 		chris.update();
 		
 		//Update vision processing algorithm to find any targets on in view
@@ -166,7 +166,7 @@ public class Robot extends IterativeRobot {
 		loop_time_elapsed = 0;
 
 		//Assume starting at 0 degrees
-		botblock.reset();
+		gyro.reset();
 		
 		myRobot.resetEncoders();
 		
@@ -186,7 +186,7 @@ public class Robot extends IterativeRobot {
 		prev_loop_start_timestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateSensorInputs();
+		updateGlobalSensorInputs();
 		chris.update();
 		myRobot.readEncoders();
 		
@@ -237,7 +237,7 @@ public class Robot extends IterativeRobot {
 		loop_time_elapsed = 0;
 		
 		//Assume starting at 0 degrees
-		botblock.reset();
+		gyro.reset();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -255,7 +255,7 @@ public class Robot extends IterativeRobot {
 		//Get all inputs from outside the robot
 		updateDriverInputs();
 		updateOperatorInputs();
-		updateSensorInputs();
+		updateGlobalSensorInputs();
 		chris.update();
 		myRobot.readEncoders();
 		
@@ -412,8 +412,8 @@ public class Robot extends IterativeRobot {
 		RobotState.climbEnable = true;
 	}
 	
-	public void updateSensorInputs(){
-		RobotState.robotPoseAngle_deg = botblock.getYaw();
+	public void updateGlobalSensorInputs(){
+		RobotState.robotPoseAngle_deg = gyro.getAngle();
 	}
 
 	
