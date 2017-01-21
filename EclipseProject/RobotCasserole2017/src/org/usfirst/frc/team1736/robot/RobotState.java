@@ -96,6 +96,9 @@ public class RobotState {
 	static double intakeSpeedCmd = 0.0;
 	
 	//Getters and Setters for select globals
+	public static double getopShotCTRLOrdinal(){
+		return (double)RobotState.opShotCTRL.ordinal();
+	}
 	public static double getClimbSpeedCmd(){
 		return RobotState.climbSpeedCmd;
 	}

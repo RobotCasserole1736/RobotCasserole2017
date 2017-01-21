@@ -335,8 +335,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getRobotPoseAngle_deg",RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Op_Gear_Release_Desired","bit","isOpGearReleaseDesired",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Op_Prep_to_Shoot_Desired","bit","isOpPrepToShootDesired",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Op_Shot_Desired","bit","isOpShotDesired",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Shot_State_Command","bits","getopShotCTRLOrdinal",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopperMotorCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Intake_Speed_Cmd","cmd","getIntakeSpeedCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Op_Intake_Desired","bit","isOpIntakeDesired",RobotState.class);
