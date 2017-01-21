@@ -17,14 +17,12 @@ public class RobotState {
 	
 	
 	//Operator commands (derived from operator's Xbox360 controller)
-	static boolean opPrepToShootDesired = false; //True if the operator wants to get the shooter wheel up to speed, false if not
-	static boolean opShotDesired = false; //True if the operator wants to take a shot, false if not.
+	static Shooter_States opShotCTRL = Shooter_States.NO_Shoot;
 	static boolean opClimbEnable = false; //True if climbing should be allowed, false if all climb commands should be ignored
 	static double  opClimbSpeedDesired = 0; //desired speed of the climber motor (0= off, 1 = full forward. Should never be reverse).
 	static boolean opGearReleaseDesired = false; //True if the gear should be released, false if not.
 	static boolean opIntakeDesired = false; //True if the operator wants to to pull in fuel throught the intake, false if not
 	static boolean opEjectDesired = false;  //True if the operator wants to reverse the intake direction to eject lodged balls, false if not.
-	
 	
 	//Whole-robot pose/velocity state information (outputs from drivetrain class or IMU)
 	static double robotPoseAngle_deg = 0; //Present rotation of the robot (relative to field)
