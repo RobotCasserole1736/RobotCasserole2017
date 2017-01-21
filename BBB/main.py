@@ -19,8 +19,6 @@ import subprocess
 #Fixed IP address of IP Camera
 camera_IP = '10.17.36.11'
 
-#Fixed IP address of this BBB
-bbb_IP = '10.17.36.20'
 
 ################################################################################
 # Global Data
@@ -126,8 +124,8 @@ def img_process(img):
         curObservation.addTarget(x, y, 0, w, h) #area unused for now.
     """
         
-    hsv_thres_lower = np.array([39,156,9])
-    hsv_thres_upper = np.array([92,255,255])
+    hsv_thres_lower = np.array([52,60, 21])
+    hsv_thres_upper = np.array([180,255,255])
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hsv_mask = cv2.inRange(hsv, hsv_thres_lower, hsv_thres_upper)
@@ -137,7 +135,7 @@ def img_process(img):
     for c in contours:
         x, y, w, h = cv2.boundingRect(c)
         #minimal amount of qualification on targets
-        if(w > 10 and h > 10): 
+        if(w > 10 and h > 3): 
             curObservation.addTarget(x, y, 0, w, h) #area unused for now.
 
 

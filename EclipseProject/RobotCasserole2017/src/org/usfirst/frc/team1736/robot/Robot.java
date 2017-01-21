@@ -384,6 +384,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision CoProcessor FPS", RobotState.visionCoProcessorFPS);
 		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", RobotState.visionCoProcessorCPULoad_pct);
 		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", RobotState.visionCoProcessorMemLoad_pct);
+		CassesroleWebStates.putDouble("Vision Num Contours Observed", VisionProk.VL.getNumTargetsObserved());
+		
 	}
 	
 	public void updateDriverView(){
