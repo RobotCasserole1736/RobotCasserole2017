@@ -44,7 +44,7 @@ public class Calibration {
      * boolean to see if the user has commanded a change, and then call the acknowledgeValUpdate()
      * method to indicate they have processed the new value
      */
-    public boolean is_updated;
+    private  boolean is_updated;
     /** Upper limit on the allowed calibration range */
     public double max_cal;
     /** Lower limit on the allowed calibration range */
@@ -64,7 +64,7 @@ public class Calibration {
         /* default stuff and stuff */
         default_val = default_val_in;
         cur_val = default_val;
-        name = name_in.trim();
+        name = name_in.trim().replace(" ", "_").replace("-", "_");
         overridden = false;
         is_updated = false;
         min_cal = Double.NEGATIVE_INFINITY;
@@ -92,7 +92,7 @@ public class Calibration {
     public Calibration(String name_in, double default_val_in, double min_in, double max_in) {
 
         /* default stuff and stuff */
-        name = name_in.trim();
+        name = name_in.trim().replace(" ", "_").replace("-", "_");
         min_cal = min_in;
         max_cal = max_in;
 
@@ -181,6 +181,7 @@ public class Calibration {
      */
     public void acknowledgeValUpdate() {
         is_updated = false;
+        System.out.println("Info: Calibration " + this.name + " acknowledged update ");
     }
 
 
@@ -205,6 +206,8 @@ public class Calibration {
         double temp = limitRange(val_in);
         cur_val = temp;
         overridden = true;
+        is_updated = true;
+        System.out.println("Info: Calibration " + this.name + " set to " + Double.toString(cur_val));
     }
 
 

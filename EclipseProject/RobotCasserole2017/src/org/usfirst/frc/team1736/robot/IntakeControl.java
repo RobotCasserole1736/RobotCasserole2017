@@ -10,8 +10,8 @@ public class IntakeControl {
 	Victor intakeMotor = new Victor(RobotIOMap.INTAKE_MOTOR_PWM_PORT);
 	
 	//Declaring Intake Calibration
-	Calibration intakeMotorFwdCmd = new Calibration("Forward Intake Motor Command", 0.5, 0.0, 1.0);
-	Calibration intakeMotorRevCmd = new Calibration("Reverse Intake Motor Command", -0.5, -1.0, 0.0);
+	Calibration intakeMotorFwdCmd = new Calibration("Ground Pickup Intake Motor Command", 0.5, 0.0, 1.0);
+	Calibration intakeMotorRevCmd = new Calibration("Ground Pickup Eject Motor Command", -0.5, -1.0, 0.0);
 	
 	//Intake Speed
 	double intakeOff = 0.0;

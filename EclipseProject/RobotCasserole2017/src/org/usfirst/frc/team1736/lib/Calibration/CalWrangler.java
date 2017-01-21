@@ -171,8 +171,10 @@ public class CalWrangler {
         // Indicate any errors
         if (errors_present) {
             resetAllCalsToDefault();
+            System.out.println("ERROR: Calibration: could not load cal file " + calFile + ". All calibrations left at default values.");
             return -1;
         } else {
+        	System.out.println("Calibration: Successfully loaded cal file " + calFile);
             return 0;
         }
 
@@ -232,6 +234,7 @@ public class CalWrangler {
         if (errors_present) {
             return -1;
         } else {
+        	System.out.println("Calibration: Cal file " + calFile + " successfully written.");
             return 0;
         }
     }

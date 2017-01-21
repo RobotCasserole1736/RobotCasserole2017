@@ -121,9 +121,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		
-		//Update shooter PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
-		shooterControl.updateGains();
-		
 		//Close out any log which is running
 		CsvLogger.close();
 	}
@@ -144,6 +141,9 @@ public class Robot extends IterativeRobot {
 		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
 		}
+		
+		//Update shooter PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
+		shooterControl.updateGains();
 		
 		updateDriverView();
 		updateWebStates();
@@ -169,7 +169,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-				
+		//Prevent warning if init takes too long
+		myRobot.myDrive.setSafetyEnabled(false);		
+		
 		loop_time_elapsed = 0;
 
 		//Assume starting at 0 degrees
@@ -242,12 +244,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		
+		//Prevent warning if init takes too long
+		myRobot.myDrive.setSafetyEnabled(false);
 
 		loop_time_elapsed = 0;
-		
-		//Assume starting at 0 degrees
-		gyro.reset();
 		
 		//Open a new log
 		CsvLogger.init();

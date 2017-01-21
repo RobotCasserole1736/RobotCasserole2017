@@ -274,7 +274,7 @@ while True:
             cv2.imshow('Video', img)
 
         # I'm presuming this is needed to allow background things to hapapen
-        time.sleep(.01)
+        # time.sleep(.01)
 
 
 

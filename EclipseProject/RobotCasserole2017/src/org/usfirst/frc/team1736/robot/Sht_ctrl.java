@@ -6,7 +6,7 @@ public class Sht_ctrl {
 
 	 Calibration wheel_Set_Point_rpm;
 	 public Sht_ctrl(){ 
-		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint (RPM)", 2700, 0, 5000);
+		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint RPM", 2700, 0, 5000);
 		 RobotState.hopperFeedCmd = false;
 		 RobotState.shooterDesiredVelocity_rpm= 0;
 	 }
