@@ -3,7 +3,7 @@ Description=Casserole Vision Co-Processing Service
 
 [Service]
 WorkingDirectory=/home/root/CasseroleVision/
-ExecStart=/usr/bin/python main.py
+ExecStart=/usr/bin/nice --19 /usr/bin/python main.py
 KillMode=process
 Restart=on-failure
 

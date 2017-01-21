@@ -198,7 +198,7 @@ while True:
     # Read data from the network in 1kb chunks
     #  Catch any issues reading. if we have issues, try to reset the connection.
     try:
-        bytes += camera_data_stream.read(4096)
+        bytes += camera_data_stream.read(2048)
     except Exception as e:
         print("WARNING: problems reading camera data from stream.")
         print("Reason: " + str(e))
