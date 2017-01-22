@@ -21,9 +21,10 @@ public class RobotState {
 	static boolean gyroAlignDown = false;
 	
 	// Autonomous drivetrain commands (derived from autonomous path planning routines)
-	static double autonDtFwdRevCmd = 0;
-	static double autonDtrStrafeCmd = 0;
-	static double autonDtRotateCmd = 0;
+	static double autonDtfrontLeftWheelVelocityCmd_rpm= 0;
+	static double autonDtfrontRightWheelVelocityCmd_rpm = 0;
+	static double autonDtrearLeftWheelVelocityCmd_rpm = 0;
+	static double autonDtrearRightWheelVelocityCmd_rpm = 0;
 	
 	
 	//Operator commands (derived from operator's Xbox360 controller)
@@ -128,15 +129,6 @@ public class RobotState {
 	}
 	public static boolean isVisionAlignmentDesiried() {
 		return visionAlignmentDesiried;
-	}
-	public static double getAutonDtFwdRevCmd() {
-		return autonDtFwdRevCmd;
-	}
-	public static double getAutonDtrStrafeCmd() {
-		return autonDtrStrafeCmd;
-	}
-	public static double getAutonDtRotateCmd() {
-		return autonDtRotateCmd;
 	}
 	public static boolean isOpClimbEnable() {
 		return opClimbEnable;
@@ -248,6 +240,42 @@ public class RobotState {
 	}
 	public static boolean isClimbEnable() {
 		return climbEnable;
+	}
+	public static boolean isGearCamAlign() {
+		return gearCamAlign;
+	}
+	public static boolean isShooterCamAlign() {
+		return shooterCamAlign;
+	}
+	public static boolean isIntakeCamAlign() {
+		return intakeCamAlign;
+	}
+	public static boolean isGyroAlignRight() {
+		return gyroAlignRight;
+	}
+	public static boolean isGyroAlignLeft() {
+		return gyroAlignLeft;
+	}
+	public static boolean isGyroAlignUp() {
+		return gyroAlignUp;
+	}
+	public static boolean isGyroAlignDown() {
+		return gyroAlignDown;
+	}
+	public static double getAutonDtfrontLeftWheelVelocityCmd_rpm() {
+		return autonDtfrontLeftWheelVelocityCmd_rpm;
+	}
+	public static double getAutonDtfrontRightWheelVelocityCmd_rpm() {
+		return autonDtfrontRightWheelVelocityCmd_rpm;
+	}
+	public static double getAutonDtrearLeftWheelVelocityCmd_rpm() {
+		return autonDtrearLeftWheelVelocityCmd_rpm;
+	}
+	public static double getAutonDtrearRightWheelVelocityCmd_rpm() {
+		return autonDtrearRightWheelVelocityCmd_rpm;
+	}
+	public static boolean isShooterActiveCmd() {
+		return shooterActiveCmd;
 	}
 
 	

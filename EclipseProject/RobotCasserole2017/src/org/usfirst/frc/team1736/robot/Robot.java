@@ -142,8 +142,9 @@ public class Robot extends IterativeRobot {
 			VisionAlign.GetAligned();
 		}
 		
-		//Update shooter PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
+		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterControl.updateGains();
+		myRobot.updateAllCals();
 		
 		updateDriverView();
 		updateWebStates();
@@ -177,7 +178,8 @@ public class Robot extends IterativeRobot {
 		//Assume starting at 0 degrees
 		gyro.reset();
 		
-		myRobot.resetEncoders();
+		myRobot.resetAllEncoders();
+		myRobot.resetAllIntegrators();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -248,6 +250,8 @@ public class Robot extends IterativeRobot {
 		myRobot.myDrive.setSafetyEnabled(false);
 
 		loop_time_elapsed = 0;
+		
+		myRobot.resetAllIntegrators();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -328,9 +332,11 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getDriverStrafeCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getDriverRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","isVisionAlignmentDesiried",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_FwdRev_cmd","cmd","getAutonDtFwdRevCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_Strafe_cmd","cmd","getAutonDtrStrafeCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_Rotate_cmd","cmd","getAutonDtRotateCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_DT_FL_Desired_Velocity","RPM","getAutonDtfrontLeftWheelVelocityCmd_rpm", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_DT_FR_Desired_Velocity","RPM","getAutonDtfrontRightWheelVelocityCmd_rpm", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_DT_RL_Desired_Velocity","RPM","getAutonDtrearLeftWheelVelocityCmd_rpm", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Auton_DT_RR_Desired_Velocity","RPM","getAutonDtrearRightWheelVelocityCmd_rpm", RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",myRobot);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getRobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getRobotPoseAngle_deg",RobotState.class);

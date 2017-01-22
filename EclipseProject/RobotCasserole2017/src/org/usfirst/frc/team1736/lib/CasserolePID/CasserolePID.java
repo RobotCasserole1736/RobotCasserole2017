@@ -108,7 +108,7 @@ public abstract class CasserolePID {
      * @param Ki_in Integral Term Gain
      * @param Kd_in Derivative Term Gain
      */
-    CasserolePID(double Kp_in, double Ki_in, double Kd_in) {
+    protected CasserolePID(double Kp_in, double Ki_in, double Kd_in) {
         Kp = Kp_in;
         Ki = Ki_in;
         Kd = Kd_in;
@@ -129,7 +129,7 @@ public abstract class CasserolePID {
      * @param Kdf_in Setpoint Derivative Feed-Forward Term Gain
      * @param Kp2_in Proportional Squared Term Gain
      */
-    CasserolePID(double Kp_in, double Ki_in, double Kd_in, double Kf_in, double Kdf_in, double Kp2_in) {
+    protected CasserolePID(double Kp_in, double Ki_in, double Kd_in, double Kf_in, double Kdf_in, double Kp2_in) {
         Kp = Kp_in;
         Ki = Ki_in;
         Kd = Kd_in;
