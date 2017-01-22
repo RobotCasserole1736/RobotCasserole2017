@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import org.json.simple.JSONObject;
-import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 
 /**
  * DESCRIPTION: <br>
@@ -58,7 +57,8 @@ public class CasseroleDriverView {
      * @param min_acceptable_in Lower limit of green display area on drawn dial.
      * @param max_acceptable_in Upper limit of green display area on drawn dial.
      */
-    public static void newDial(String name_in, double min_in, double max_in, double step_in, double min_acceptable_in,
+    @SuppressWarnings("unchecked")
+	public static void newDial(String name_in, double min_in, double max_in, double step_in, double min_acceptable_in,
             double max_acceptable_in) {
         // Sanitize user inputs
         if (min_in >= max_in) {
@@ -107,7 +107,8 @@ public class CasseroleDriverView {
      *        drawn on top of the already-rotated image.
      * @param name_in Name of the web stream. Internal uses only, currently...
      */
-    public static void newWebcam(String name_in, String url_in, double marker_x, double marker_y,
+    @SuppressWarnings("unchecked")
+	public static void newWebcam(String name_in, String url_in, double marker_x, double marker_y,
             double img_rotate_deg) {
         // Create new object
         JSONObject new_obj = new JSONObject();
@@ -131,7 +132,8 @@ public class CasseroleDriverView {
      * @param name_in Name of the value to display. Also used to reference the value when updating
      *        it.
      */
-    public static void newStringBox(String name_in) {
+    @SuppressWarnings("unchecked")
+	public static void newStringBox(String name_in) {
         // Create new object
         JSONObject new_obj = new JSONObject();
         new_obj.put("type", "stringbox");
@@ -158,7 +160,8 @@ public class CasseroleDriverView {
      * @param color_in Color to display. Currently, only supported values are "red", "yellow", and
      *        "green".
      */
-    public static void newBoolean(String name_in, String color_in) {
+    @SuppressWarnings("unchecked")
+	public static void newBoolean(String name_in, String color_in) {
         // Create new object
         JSONObject new_obj = new JSONObject();
         new_obj.put("type", "boolean");

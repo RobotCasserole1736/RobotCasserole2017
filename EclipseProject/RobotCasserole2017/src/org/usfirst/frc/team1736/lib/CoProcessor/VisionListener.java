@@ -58,7 +58,6 @@ public class VisionListener {
     // state - that is to say they are not valid for use by other threads. Therefore, during the whole update process,
     // we must LOCK that critical section so other threads which access either observation. 
     private JSONObject currObservation;
-    private JSONObject prevObservation;
     private ReentrantLock observationLock;
     private long mostRecentPacketTime;
     
@@ -82,7 +81,6 @@ public class VisionListener {
         port = listen_on_port;
         coprocessorActive = false;
         currObservation = new JSONObject();
-        prevObservation = new JSONObject();
         userCurrObservation = new JSONObject();
         parser = new JSONParser();
         observationLock = new ReentrantLock();
@@ -128,7 +126,6 @@ public class VisionListener {
         if(rx_data.length() != 0){
             while(observationLock.tryLock()==false){} //lazy man's spinlock
             //Begin critical section
-            prevObservation = currObservation;
             try {
                 currObservation = (JSONObject) parser.parse(rx_data);
                 mostRecentPacketTime = System.currentTimeMillis();

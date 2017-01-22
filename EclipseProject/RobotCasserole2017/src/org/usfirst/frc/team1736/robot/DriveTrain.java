@@ -1,12 +1,10 @@
 package org.usfirst.frc.team1736.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
 import org.usfirst.frc.team1736.robot.RobotState;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
-import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriveTrain{
 	
 	RobotDrive myDrive;

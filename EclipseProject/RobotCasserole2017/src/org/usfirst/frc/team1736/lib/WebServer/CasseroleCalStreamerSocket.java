@@ -1,14 +1,12 @@
 package org.usfirst.frc.team1736.lib.WebServer;
 
 import java.io.IOException;
-import java.util.TimerTask;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import java.util.Timer;
 
 /**
  * DESCRIPTION: <br>
@@ -80,7 +78,8 @@ public class CasseroleCalStreamerSocket extends WebSocketAdapter {
     /**
      * send a string message over the socket to notify the user of something.
      */
-    public void broadcastMsg(String msg) {
+    @SuppressWarnings("unchecked")
+	public void broadcastMsg(String msg) {
         try {
             JSONObject full_obj = new JSONObject();
             // package array into object
@@ -97,7 +96,8 @@ public class CasseroleCalStreamerSocket extends WebSocketAdapter {
     /**
      * send socket data out to client
      */
-    public void broadcastData() {
+    @SuppressWarnings("unchecked")
+	public void broadcastData() {
         if (isConnected()) {
             Calibration[] allCals =
                     CalWrangler.registeredCals.toArray(new Calibration[CalWrangler.registeredCals.size()]);

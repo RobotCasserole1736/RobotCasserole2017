@@ -128,6 +128,7 @@ public class DotStarsLEDStrip {
      * @return 0 on successful write, -1 on failure
      */
     private int updateColors() {
+    	@SuppressWarnings("unused")
         int ret_val = 0;
 
         // If we need to write something, attempt to put it on the SPI port
@@ -142,7 +143,7 @@ public class DotStarsLEDStrip {
                 int end_index = Math.min(offset + 128, temp_ledBuff.length);
                 int size = end_index - start_index;
                 byte[] tx_array = Arrays.copyOfRange(temp_ledBuff, start_index, end_index);
-                ret_val = spi.write(tx_array, size);
+                ret_val = spi.write(tx_array, size); //I think this returns number of bytes actually written?
             }
 
         }

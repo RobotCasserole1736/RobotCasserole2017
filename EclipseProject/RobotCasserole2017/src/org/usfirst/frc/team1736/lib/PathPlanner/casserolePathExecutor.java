@@ -2,7 +2,6 @@ package org.usfirst.frc.team1736.lib.PathPlanner;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 public abstract class casserolePathExecutor {
 

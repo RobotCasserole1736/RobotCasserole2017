@@ -9,7 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 
 class CasserolePingServlet extends HttpServlet {
 
-    @Override
+    /**
+	 * This prevents warnings. I do not know why. Eclipse did this. Not me.
+	 */
+	private static final long serialVersionUID = -9076510709468876590L;
+
+	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
