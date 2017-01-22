@@ -44,6 +44,13 @@ public class DriveTrain{
     	frontRightMotor = new Victor(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_MOTOR);
     	rearLeftMotor   = new Victor(RobotIOMap.DRIVETRAIN_REAR_LEFT_MOTOR);
     	rearRightMotor  = new Victor(RobotIOMap.DRIVETRAIN_REAR_RIGHT_MOTOR);
+    	
+    	//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
+    	frontLeftMotor.setInverted(false);
+    	frontRightMotor.setInverted(true);
+    	rearLeftMotor.setInverted(false);
+    	rearRightMotor.setInverted(true);
+    	
     	myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
     	
     	//Set up calibratable values
@@ -58,10 +65,12 @@ public class DriveTrain{
     	rearLeftEncoder   = new Encoder(RobotIOMap.DRIVETRAIN_REAR_LEFT_ENCODER_A,   RobotIOMap.DRIVETRAIN_REAR_LEFT_ENCODER_B,   false);
     	rearRightEncoder  = new Encoder(RobotIOMap.DRIVETRAIN_REAR_RIGHT_ENCODER_A,  RobotIOMap.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
     	
+    	//Note minus signs to invert right side of drivetrain
     	frontLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	frontRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	frontRightEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
     	rearLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearRightEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	
     	
     	//Set up autonomous PI controllers
     	frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(frontLeftMotor,  frontLeftEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
@@ -178,7 +187,9 @@ public class DriveTrain{
 		rearLeftAutonCtrl.setEnabled(false);
 		rearRightAutonCtrl.setEnabled(false);
 		
-		myDrive.mecanumDrive_Cartesian(fwdRevCmd, strafeCmd, rotateCmd, gyroAngle);
+		//Note this method inverts Y to match the joystick convention. But since
+		//we already undid that joystick convention, we compensate here.
+		myDrive.mecanumDrive_Cartesian(fwdRevCmd, -strafeCmd, rotateCmd, gyroAngle);
 		
 		runningClosedLoop = false;
 	}

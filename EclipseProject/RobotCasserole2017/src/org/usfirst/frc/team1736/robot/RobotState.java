@@ -21,6 +21,7 @@ public class RobotState {
 	static boolean gyroAlignDown = false;
 	
 	// Autonomous drivetrain commands (derived from autonomous path planning routines)
+	// Positive means the wheel rotates forward, negative means it rotates backward
 	static double autonDtfrontLeftWheelVelocityCmd_rpm= 0;
 	static double autonDtfrontRightWheelVelocityCmd_rpm = 0;
 	static double autonDtrearLeftWheelVelocityCmd_rpm = 0;
@@ -43,12 +44,14 @@ public class RobotState {
 	static double robotNetSpeed_ftpers = 0; //Present total translational speed in ft/sec
 	
 	//Wheel velocities (measured from drivetrain encoders) (Outputs from Drivetrain class)
+	//Positive is forward rotation, negative is backward rotation
 	static double frontLeftWheelVelocity_rpm = 0;
 	static double frontRightWheelVelocity_rpm = 0;
 	static double rearLeftWheelVelocity_rpm = 0;
 	static double rearRightWheelVelocity_rpm = 0;
 	
 	//Wheel total distance
+	//Positive is foward rotation, negative is backward rotation
 	static double frontLeftWheelDistance_ft = 0;
 	static double frontRightWheelDistance_ft= 0;
 	static double rearLeftWheelDistance_ft = 0;
