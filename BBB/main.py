@@ -133,10 +133,17 @@ def img_process(img):
 
     contours, hierarchy = cv2.findContours(hsv_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
-        x, y, w, h = cv2.boundingRect(c)
+        #Calcualte unrotated bounding rectangle (top left corner x/y, plus width and height)
+        br_x, br_y, w, h = cv2.boundingRect(c)
+        #Calcualte total filled in area
+        area = cv2.contourArea(c)
+        #Calculate centroid X and Y
+        moments = cv2.moments(c)
+        c_x = int(moments['m10']/moments['m00'])
+        c_y = int(moments['m01']/moments['m00'])
         #minimal amount of qualification on targets
         if(w > 10 and h > 3): 
-            curObservation.addTarget(x, y, 0, w, h) #area unused for now.
+            curObservation.addTarget(c_x, c_y, area, w, h) 
 
 
 
@@ -149,7 +156,7 @@ ledStatus = False
 indicateLEDsNotRunning()
 
  
-subprocess.call(['./LifeCamSettings.sh']) # Thanks @Jim Dennis for suggesting the []
+#subprocess.call(['./LifeCamSettings.sh']) # Thanks @Jim Dennis for suggesting the []
 
 
 
