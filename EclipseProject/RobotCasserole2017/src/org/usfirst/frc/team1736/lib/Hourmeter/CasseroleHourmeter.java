@@ -1,12 +1,9 @@
 package org.usfirst.frc.team1736.lib.Hourmeter;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.lang.Thread.State;
 import java.util.TimerTask;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;

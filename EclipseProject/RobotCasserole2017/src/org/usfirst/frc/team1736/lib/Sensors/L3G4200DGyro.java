@@ -63,6 +63,7 @@ public class L3G4200DGyro {
     private static final int CTRL_REG4_ADDR = 0x23;
     private static final int CTRL_REG5_ADDR = 0x24;
     private static final int OUTZ_L_REG_ADDR = 0x2C;
+    @SuppressWarnings("unused")
     private static final int OUTZ_H_REG_ADDR = 0x2D;
 
     // desired gyro settings
@@ -133,14 +134,6 @@ public class L3G4200DGyro {
     private boolean gyro_initalized = false;
 
     private long system_time_at_last_call = 0;
-
-    // To calculate the integral, we have a small state machine. In order to
-    // make sure the state machine gets properly initalize, we will need to
-    // run some special code the first time the periodic update funciton is called.
-    // This variable keeps track of whether we've called the code or not yet.
-    // It starts false, and then gets set to true as soon as we've run the periodic
-    // code once. It stays true until the software is restarted.
-    private boolean periodic_called_once = false;
 
     // Gyro integration mode: 0 = linear interpolation, 1 = simpson's method
     private static final int integration_method = 1;
@@ -470,7 +463,7 @@ public class L3G4200DGyro {
     // It commands a gyro read, scales the raw data to degrees/sec, and then calculates the current
     // angle
     // using the desired integration method
-    @SuppressWarnings("unused") // suppress compiler warnings because I swear, we do actually use
+    @SuppressWarnings("all")    // suppress compiler warnings because I swear, we do actually use
                                 // this function.
     private void periodic_update() {
         long cur_period_start_time = System.nanoTime(); // Record the time the current sample is

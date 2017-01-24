@@ -6,7 +6,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import java.util.Timer;
 
 /**
  * DESCRIPTION: <br>
@@ -61,7 +60,8 @@ public class CasseroleStateStreamerSocket extends WebSocketAdapter {
     /**
      * send socket data out to client
      */
-    public void broadcastData() {
+    @SuppressWarnings("unchecked")
+	public void broadcastData() {
         if (isConnected()) {
             try {
                 JSONObject full_obj = new JSONObject();

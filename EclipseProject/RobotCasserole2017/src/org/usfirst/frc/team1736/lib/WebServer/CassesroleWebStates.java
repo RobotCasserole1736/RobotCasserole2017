@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import org.json.simple.JSONObject;
-import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 
 /**
  * DESCRIPTION: <br>
@@ -83,8 +82,8 @@ public class CassesroleWebStates {
     }
 
 
-    private static void putGeneric(String name, String value) {
-        boolean is_new = true;
+    @SuppressWarnings("unchecked")
+	private static void putGeneric(String name, String value) {
 
         if (data_array_elements.containsKey(name)) {
             data_array_elements.get(name).put("value", value);

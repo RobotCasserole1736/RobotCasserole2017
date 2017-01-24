@@ -8,7 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 class CasseroleBasicServlet extends HttpServlet {
 
-    @Override
+    /**
+	 * This prevents warnings. I do not know why. Eclipse did this. Not me.
+	 */
+	private static final long serialVersionUID = -5455816632333702006L;
+
+	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
