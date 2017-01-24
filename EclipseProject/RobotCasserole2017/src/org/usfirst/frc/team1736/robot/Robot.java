@@ -169,9 +169,8 @@ public class Robot extends IterativeRobot {
 	 * This method gets run right before the robot starts running autonomous mode.
 	 */
 	@Override
-	public void autonomousInit() {
-		//Prevent warning if init takes too long
-		myRobot.myDrive.setSafetyEnabled(false);		
+	public void autonomousInit() {	
+		myRobot.myDrive.setSafetyEnabled(false);
 		
 		loop_time_elapsed = 0;
 
@@ -246,7 +245,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		//Prevent warning if init takes too long
 		myRobot.myDrive.setSafetyEnabled(false);
 
 		loop_time_elapsed = 0;
@@ -412,6 +410,9 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", RobotState.visionCoProcessorCPULoad_pct);
 		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", RobotState.visionCoProcessorMemLoad_pct);
 		CassesroleWebStates.putDouble("Vision Num Contours Observed", VisionProk.VL.getNumTargetsObserved());
+		CassesroleWebStates.putBoolean("Vision Target Seen", RobotState.visionTargetFound);
+		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", RobotState.visionTopTgtXPixelPos);
+		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", RobotState.visionTopTgtYPixelPos);
 		
 	}
 	

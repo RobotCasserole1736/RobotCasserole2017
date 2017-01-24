@@ -74,9 +74,9 @@ public class DriveTrain{
     	
     	//Set up autonomous PI controllers
     	frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(frontLeftMotor,  frontLeftEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
-    	frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(frontRightMotor, frontRightEncoder, dtFGainCal, dtPGainCal, dtIGainCal);
-    	frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(rearLeftMotor,   rearLeftEncoder,   dtFGainCal, dtPGainCal, dtIGainCal);
-    	frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(rearRightMotor,  rearRightEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
+    	frontRightAutonCtrl = new DriveTrainWheelSpeedPI(frontRightMotor, frontRightEncoder, dtFGainCal, dtPGainCal, dtIGainCal);
+    	rearLeftAutonCtrl = new DriveTrainWheelSpeedPI(rearLeftMotor,   rearLeftEncoder,   dtFGainCal, dtPGainCal, dtIGainCal);
+    	rearRightAutonCtrl = new DriveTrainWheelSpeedPI(rearRightMotor,  rearRightEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
     	
     	runningClosedLoop = false;
 	}
@@ -131,9 +131,12 @@ public class DriveTrain{
 		rearLeftAutonCtrl.updateCal();
 		rearRightAutonCtrl.updateCal();
 		
-		dtPGainCal.acknowledgeValUpdate();
-		dtIGainCal.acknowledgeValUpdate();
-		dtFGainCal.acknowledgeValUpdate();
+		if(dtPGainCal.isChanged())
+			dtPGainCal.acknowledgeValUpdate();
+		if(dtIGainCal.isChanged())
+			dtIGainCal.acknowledgeValUpdate();
+		if(dtFGainCal.isChanged())
+			dtFGainCal.acknowledgeValUpdate();
 	}
 
 	public void autonomousControl() {
