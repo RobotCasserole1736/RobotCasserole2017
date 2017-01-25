@@ -377,6 +377,8 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
 		CasseroleDriverView.newBoolean("Target in View", "green");
 		CasseroleDriverView.newStringBox("Orientation deg");
+		CasseroleDriverView.newWebcam("VisionProc_cam", "http://10.17.36.11/mjpg/video.mjpg", 50, 50, 0);
+		
 
 	}
 	
