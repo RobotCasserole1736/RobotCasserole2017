@@ -135,15 +135,16 @@ def img_process(img):
     for c in contours:
         #Calcualte unrotated bounding rectangle (top left corner x/y, plus width and height)
         br_x, br_y, w, h = cv2.boundingRect(c)
-        #Calcualte total filled in area
-        area = cv2.contourArea(c)
-        #Calculate centroid X and Y
-        moments = cv2.moments(c)
-        c_x = int(moments['m10']/moments['m00'])
-        c_y = int(moments['m01']/moments['m00'])
         #minimal amount of qualification on targets
         if(w > 10 and h > 3): 
+            #Calcualte total filled in area
+            area = cv2.contourArea(c)
+            #Calculate centroid X and Y
+            moments = cv2.moments(c)
+            c_x = int(moments['m10']/moments['m00'])
+            c_y = int(moments['m01']/moments['m00'])
             curObservation.addTarget(c_x, c_y, area, w, h) 
+            
 
 
 

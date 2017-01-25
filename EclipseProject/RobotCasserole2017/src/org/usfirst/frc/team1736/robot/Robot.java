@@ -415,6 +415,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putBoolean("Vision Target Seen", RobotState.visionTargetFound);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", RobotState.visionTopTgtXPixelPos);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", RobotState.visionTopTgtYPixelPos);
+		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
+		
 		
 	}
 	

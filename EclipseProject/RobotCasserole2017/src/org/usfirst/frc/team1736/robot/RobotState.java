@@ -65,6 +65,7 @@ public class RobotState {
 	static double  visionEstTargetDist_ft = 0; //Estimated distance of the front bumper of the robot from the base of the boiler (from observed vision target)
 	static double  visionTopTgtXPixelPos = 0; //pixel location of the X target coordinate
 	static double  visionTopTgtYPixelPos = 0; //pixel location of the X target coordinate
+	static double  visionHeuristicVal = 0;
 	static double  visionEstCaptureTime = 0; //Estimated capture time (WRT getFPGATimestamp's timebase) of the present processed image. Should account for processing time (variable, but reported by coprocessor) as well as assumed fixed data transport times over ethernet.
 	static double  visionCoProcessorFPS = 0; //system processing Frames-per-second reported by the coprocessor
 	static double  visionCoProcessorCPULoad_pct = 0; //Coprocessor reported processor load

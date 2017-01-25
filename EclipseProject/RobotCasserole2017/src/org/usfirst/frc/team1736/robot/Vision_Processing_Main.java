@@ -11,8 +11,9 @@ public class Vision_Processing_Main {
 	ArrayList<Integer> ArrayList_Bottom = new ArrayList<Integer>(15);
 	
 	//Constants
-	private final double Exp_AspectRatio_Top=15.0/4.0;
-	private final double Exp_AspectRatio_Bottom=15.0/2.0;
+	private final double CURVATURE_FUDGE_FACTOR = 1.5;
+	private final double Exp_AspectRatio_Top=15.0/(4.0*CURVATURE_FUDGE_FACTOR);
+	private final double Exp_AspectRatio_Bottom=15.0/(2.0*CURVATURE_FUDGE_FACTOR);
 
 	public Vision_Processing_Main(){
 		VL = new VisionListener("10.17.36.20", 5800);
@@ -21,9 +22,22 @@ public class Vision_Processing_Main {
 
 	public void update(){
 
+		VL.sampleLatestData();
+		
+		//alg0();
+		alg1();
+
+		
+		RobotState.visionOnline = VL.isCoProcessorAlive();
+		RobotState.visionCoProcessorFPS = VL.getFPS();
+		RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
+		RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
+	}
+	
+	private void alg0(){
 		ArrayList_Top.clear();
 		ArrayList_Bottom.clear();
-
+		
 		double AspectRatio;
 		double Pct_Error_Top;
 		double Pct_Error_Bottom;
@@ -31,8 +45,6 @@ public class Vision_Processing_Main {
 		int Best_Top=-1;
 		int Best_Bottom=-1;
 		double Best_Heuristic=9001;
-
-		VL.sampleLatestData();
 		
 		for(int i=0; i<VL.getNumTargetsObserved();i++){
 			AspectRatio=VL.getWidth(i)/VL.getHeight(i);
@@ -59,7 +71,6 @@ public class Vision_Processing_Main {
 				}
 			}
 		}
-
 		
 		//Update all outputs
 		if(Best_Top != -1 & Best_Bottom != -1){
@@ -71,10 +82,61 @@ public class Vision_Processing_Main {
 		}
 
 		
-		RobotState.visionOnline = VL.isCoProcessorAlive();
-		RobotState.visionCoProcessorFPS = VL.getFPS();
-		RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
-		RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
+	}
+	
+	private void alg1(){
+
+		double Heuristic;
+		int Best_Top=-1;
+		int Best_Bottom=-1;
+		double Best_Heuristic=Double.MAX_VALUE;
+		
+		double x_pos_error;
+		double top_ar_error;
+		double bottom_ar_error;
+		double width_error;
+		double height_error;
+
+		for(int i=0; i<VL.getNumTargetsObserved();i++){ //i is top target iter
+			for(int j=0; j<VL.getNumTargetsObserved();j++){ //j is bottom target iter
+				
+				if(i == j){
+					//Cannot compare a target to itself
+					continue;
+				}
+				
+				x_pos_error = Math.abs(VL.getX(i)-VL.getX(j)); //expect X positions to be aligned
+				width_error = Math.abs(VL.getWidth(i)-VL.getWidth(j)); //Expect same width
+				height_error = Math.abs(VL.getHeight(i)-VL.getHeight(j)*2.0); //expect top height to be double bottom height
+				top_ar_error = Math.abs((VL.getWidth(i)/VL.getHeight(i))-Exp_AspectRatio_Top); //Expect certain aspect ratios
+				bottom_ar_error = Math.abs((VL.getWidth(j)/VL.getHeight(j))-Exp_AspectRatio_Bottom);
+						
+				
+				Heuristic= x_pos_error  * 10.0 +
+						   width_error  * 5.0  +
+						   height_error * 5.0  +	
+						   top_ar_error * 1.0  +
+						   bottom_ar_error * 1.0;
+
+				if (Heuristic<Best_Heuristic){
+					Best_Heuristic=Heuristic;
+					Best_Top=i;
+					Best_Bottom=j;		
+				}
+			}
+		}
+		
+		//Update all outputs
+		if(Best_Top != -1 & Best_Bottom != -1){
+			RobotState.visionTargetFound = true;
+			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
+			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
+			RobotState.visionHeuristicVal = Best_Heuristic;
+		} else {
+			RobotState.visionTargetFound = false;
+		}
+
+		
 	}
 }
 

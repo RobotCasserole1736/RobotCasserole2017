@@ -90,7 +90,7 @@ if("unreachable" in retstr):
     
 
 #Pre-steps: Make directory on target if not already existing
-cmd = ssh_exe + " root@" + TARGET_IP_ADDRESS + " journalctl -b | grep python "
+cmd = ssh_exe + " root@" + TARGET_IP_ADDRESS + " journalctl -b | grep CasseroleVision "
 print("Querying for info about python scripts...")
 runCmd(cmd, True, "\n")
 
