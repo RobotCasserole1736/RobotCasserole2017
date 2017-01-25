@@ -6,6 +6,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import edu.wpi.first.wpilibj.Timer;
+
 ///////////////////////////////////////////////////////////////////////////////
 //Copyright (c) FRC Team 1736 2016. See the License file.
 //
@@ -59,11 +61,12 @@ public class VisionListener {
     // we must LOCK that critical section so other threads which access either observation. 
     private JSONObject currObservation;
     private ReentrantLock observationLock;
-    private long mostRecentPacketTime;
+    private double mostRecentPacketTime;
     
     //This is the json object which the control system considers as "current". Other observations will continue to be gathered in the background,
     //but this object will not be updated until the control system thread calls the sampleLatestData() method.
     private JSONObject userCurrObservation;
+    private double userCurrPacketRxTime_sys_sec;
     
     //Values used for axis M1011
     double targetWidthFeet = 1.25;
@@ -127,8 +130,8 @@ public class VisionListener {
             while(observationLock.tryLock()==false){} //lazy man's spinlock
             //Begin critical section
             try {
-                currObservation = (JSONObject) parser.parse(rx_data);
-                mostRecentPacketTime = System.currentTimeMillis();
+            	mostRecentPacketTime = Timer.getFPGATimestamp();
+                currObservation = (JSONObject) parser.parse(rx_data); 
             } catch (ParseException e) {
                 System.out.println("Error: Cannot parse recieved UDP json data: " + e.toString());
                 e.printStackTrace();
@@ -154,13 +157,14 @@ public class VisionListener {
     public void sampleLatestData(){
         while(observationLock.tryLock()==false){} //lazy man's spinlock
         userCurrObservation = currObservation;
-        observationLock.unlock();
+        userCurrPacketRxTime_sys_sec = mostRecentPacketTime;
         
-        if(System.currentTimeMillis() > (mostRecentPacketTime + COPROCESSOR_ACTIIVE_TIMEOUT_MS)){
+        if(Timer.getFPGATimestamp() > (mostRecentPacketTime + COPROCESSOR_ACTIIVE_TIMEOUT_MS)){
             coprocessorActive = false;
         } else {
             coprocessorActive = true;
         }
+        observationLock.unlock();
     }
     
     private double genericDoubleGet(String objname){
@@ -185,6 +189,18 @@ public class VisionListener {
             JSONArray tmp = (JSONArray) userCurrObservation.get(objname);
             if(tmp.size() > idx){
                 val = ((Long)tmp.get(idx)).doubleValue();
+            }
+        } 
+        return val;
+    }
+    
+    private double genericAlreadyDouble1DArrayIndexGet(String objname, int idx){
+        double val = -1.0;
+        
+        if(userCurrObservation.containsKey(objname)){
+            JSONArray tmp = (JSONArray) userCurrObservation.get(objname);
+            if(tmp.size() > idx){
+                val = (double)tmp.get(idx);
             }
         } 
         return val;
@@ -239,7 +255,7 @@ public class VisionListener {
      * @return Enclosed area of the specified target observed in frame, or -1 if no target matches provided index.
      */
     public double getArea(int tgt_idx){
-        return genericDouble1DArrayIndexGet("boundedAreas",tgt_idx);
+        return genericAlreadyDouble1DArrayIndexGet("boundedAreas",tgt_idx);
     }
 
     /**
@@ -291,6 +307,13 @@ public class VisionListener {
      */
     public double getMemLoad(){
         return genericDoubleGet("memLoad");
+    }
+    
+    /**
+     * @return RIO System time when the most recent packet was received.
+     */
+    public double getPacketRxSystemTime(){
+    	return (double)userCurrPacketRxTime_sys_sec;
     }
     
     ///////////////////////////////////////////////////////////////////////////
