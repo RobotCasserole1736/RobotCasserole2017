@@ -51,7 +51,7 @@ public class VisionListener {
     private double EXPECTED_MAX_UPDATE_RATE_HZ = 35.0;
     
     //If this much time goes by without getting a packet, we will start to say the processor is no longer turned on.
-    private long COPROCESSOR_ACTIIVE_TIMEOUT_MS = 3000;
+    private static final double COPROCESSOR_ACTIIVE_TIMEOUT_SEC = 2.0;
     
     // Mutithreading academic dissertation time! 
     // The present and previous observations represent a total set of data which must be updated atomically. 
@@ -126,11 +126,12 @@ public class VisionListener {
     private void update(){
         String rx_data = listenClient.getPacket();
         
+        
         if(rx_data.length() != 0){
+        	mostRecentPacketTime = Timer.getFPGATimestamp();
             while(observationLock.tryLock()==false){} //lazy man's spinlock
             //Begin critical section
             try {
-            	mostRecentPacketTime = Timer.getFPGATimestamp();
                 currObservation = (JSONObject) parser.parse(rx_data); 
             } catch (ParseException e) {
                 System.out.println("Error: Cannot parse recieved UDP json data: " + e.toString());
@@ -159,7 +160,7 @@ public class VisionListener {
         userCurrObservation = currObservation;
         userCurrPacketRxTime_sys_sec = mostRecentPacketTime;
         
-        if(Timer.getFPGATimestamp() > (mostRecentPacketTime + COPROCESSOR_ACTIIVE_TIMEOUT_MS)){
+        if(Timer.getFPGATimestamp() > (mostRecentPacketTime + COPROCESSOR_ACTIIVE_TIMEOUT_SEC)){
             coprocessorActive = false;
         } else {
             coprocessorActive = true;

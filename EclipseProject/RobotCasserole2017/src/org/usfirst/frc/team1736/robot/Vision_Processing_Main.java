@@ -11,7 +11,7 @@ public class Vision_Processing_Main {
 	ArrayList<Integer> ArrayList_Bottom = new ArrayList<Integer>(15);
 	
 	//Constants
-	private final double CURVATURE_FUDGE_FACTOR = 1.5;
+	private final double CURVATURE_FUDGE_FACTOR = 1.75;
 	private final double Exp_AspectRatio_Top=15.0/(4.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_AspectRatio_Bottom=15.0/(2.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_InfillRatio_Top = 0.75;
@@ -35,9 +35,10 @@ public class Vision_Processing_Main {
 		RobotState.visionCoProcessorFPS = VL.getFPS();
 		RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
 		RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
-		RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs();
+		RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - Exp_network_latency_sec;
 	}
 	
+	@SuppressWarnings("unused")
 	private void alg0(){
 		ArrayList_Top.clear();
 		ArrayList_Bottom.clear();
@@ -104,6 +105,7 @@ public class Vision_Processing_Main {
 		double height_error;
 		double top_infill_error;
 		double bottom_infill_error;
+		double i_like_big_targets_and_i_cannot_lie;
 
 		for(int i=0; i<VL.getNumTargetsObserved();i++){ //i is top target iter
 			for(int j=0; j<VL.getNumTargetsObserved();j++){ //j is bottom target iter
@@ -113,7 +115,7 @@ public class Vision_Processing_Main {
 					continue;
 				}
 				x_pos_error = Math.abs(VL.getX(i)-VL.getX(j)); //expect X positions to be aligned
-				y_sep_exp = (double)Math.round((VL.getHeight(i)*3.0/2.0 + VL.getHeight(j))/CURVATURE_FUDGE_FACTOR);
+				y_sep_exp = (double)Math.round((VL.getHeight(i)*3.0/2.0 + VL.getHeight(j)/2)/CURVATURE_FUDGE_FACTOR);
 				y_pos_error = Math.abs((VL.getY(j)-VL.getY(i))-y_sep_exp); //Expect Top to be above Bottom (top's y < bottom's y) by an assumed distance
 				width_error = Math.abs(VL.getWidth(i)-VL.getWidth(j)); //Expect same width
 				height_error = Math.abs(VL.getHeight(i)-VL.getHeight(j)*2.0); //expect top height to be double bottom height
@@ -121,16 +123,17 @@ public class Vision_Processing_Main {
 				bottom_ar_error = Math.abs((VL.getWidth(j)/VL.getHeight(j))-Exp_AspectRatio_Bottom);
 				top_infill_error = Math.abs((VL.getArea(i)/(VL.getWidth(i)*VL.getHeight(i))) - Exp_InfillRatio_Top);
 				bottom_infill_error = Math.abs((VL.getArea(j)/(VL.getWidth(j)*VL.getHeight(j))) - Exp_InfillRatio_Bottom);
-						
+				i_like_big_targets_and_i_cannot_lie = 100000 * 1/(VL.getArea(i) + VL.getArea(j));
 				
 				Heuristic= x_pos_error     * 10.0 +
-						   y_pos_error     * 5.0  +
-						   width_error     * 5.0  +
+						   y_pos_error     * 10.0 +
+						   width_error     * 10.0 +
 						   height_error    * 5.0  +	
 						   top_ar_error    * 1.0  +
 						   bottom_ar_error * 1.0  +
 						   top_infill_error * 1.0 + 
-						   bottom_infill_error * 1.0;
+						   bottom_infill_error * 1.0 +
+						   i_like_big_targets_and_i_cannot_lie;
 
 				if (Heuristic<Best_Heuristic){
 					Best_Heuristic=Heuristic;
@@ -140,7 +143,7 @@ public class Vision_Processing_Main {
 			}
 		}
 		
-
+		
 		//Update all outputs
 		if(Best_Top != -1 & Best_Bottom != -1){
 			RobotState.visionTargetFound = true;

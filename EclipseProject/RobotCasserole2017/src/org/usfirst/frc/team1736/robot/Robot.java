@@ -223,7 +223,7 @@ public class Robot extends IterativeRobot {
 		
 		//Log & display present state data
 		updateDriverView();
-		CsvLogger.logData(false);
+		//CsvLogger.logData(false);
 		updateWebStates();
 
 		//Mark end of loop and Calculate Loop Time
@@ -416,6 +416,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", RobotState.visionTopTgtXPixelPos);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", RobotState.visionTopTgtYPixelPos);
 		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
+		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
 		
 		
 	}
