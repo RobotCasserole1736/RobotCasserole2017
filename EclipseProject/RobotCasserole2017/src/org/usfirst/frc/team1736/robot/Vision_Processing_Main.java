@@ -10,44 +10,60 @@ public class Vision_Processing_Main {
 	ArrayList<Integer> ArrayList_Top = new ArrayList<Integer>(15);
 	ArrayList<Integer> ArrayList_Bottom = new ArrayList<Integer>(15);
 	
+	private double prevFrameCount;
+	
 	//Constants
 	private final double CAMERA_PIXELS_X = 640;
-	private final double CAMERA_PIXELS_Y = 480;
+	//private final double CAMERA_PIXELS_Y = 480; //Not yet used
 	private final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
-	private final double CAMERA_FOV_Y_DEG = 48;
-	private final double CURVATURE_FUDGE_FACTOR = 1.75;
+	//private final double CAMERA_FOV_Y_DEG = 48; //not yet used
+	private final double CURVATURE_FUDGE_FACTOR = 1.75; //Accounts for the fact the camera angle plus cylinder shape makes for a curved (not rectangular) target. I feel like this is dubious math, but it seems to help for now....
 	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(CAMERA_FOV_X_DEG/2.0));
 	
 	private final double TGT_WIDTH_FT = 1.0 + (3.0/12.0); //Actual target (1 ft 3 in, per game manual)
 	//private final double TGT_WIDTH_FT = (6.0+5.0/16.0)/12.0; //SW test target (6 and 5/16ths inches)
-	
 
 	
 	private final double Exp_AspectRatio_Top=15.0/(4.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_AspectRatio_Bottom=15.0/(2.0*CURVATURE_FUDGE_FACTOR);
-	private final double Exp_InfillRatio_Top = 0.75;
-	private final double Exp_InfillRatio_Bottom = 0.75;
-	private final double Exp_network_latency_sec = 0.01;
+	private final double Exp_InfillRatio_Top = 0.75; //An educated guess
+	private final double Exp_InfillRatio_Bottom = 0.75; //An educated guess
+	private final double Exp_network_latency_sec = 0.01; //An educated guess
 
+	//Connection parameters for listening for coprocessor results
+	private final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.20";
+	private final int COPROCESSOR_LISTEN_PORT = 5800;
 
 	public Vision_Processing_Main(){
-		VL = new VisionListener("10.17.36.20", 5800);
+		prevFrameCount = 0;
+		
+		VL = new VisionListener(COPPROCESSOR_LISTEN_ADDRESS, COPROCESSOR_LISTEN_PORT);
 		VL.start();
 	}
 
+	/**
+	 * Should be called during the periodic update method to evaluate the new info from the coprocessor
+	 */
 	public void update(){
 
+		//Sample latest available data
 		VL.sampleLatestData();
 		
-		//alg0();
-		alg1();
-
+		if(prevFrameCount != VL.getFrameCounter()){
+			//If we have a new frame since the last time we processed, run the processing algorithm.
+			
+			alg1();
+	
+			//Update performance outputs
+			RobotState.visionCoProcessorFPS = VL.getFPS();
+			RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
+			RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
+			RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - Exp_network_latency_sec;
+			prevFrameCount = VL.getFrameCounter();
+		}
 		
+		//Always report on alive/dead state of vision system
 		RobotState.visionOnline = VL.isCoProcessorAlive();
-		RobotState.visionCoProcessorFPS = VL.getFPS();
-		RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
-		RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
-		RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - Exp_network_latency_sec;
 	}
 	
 	/**

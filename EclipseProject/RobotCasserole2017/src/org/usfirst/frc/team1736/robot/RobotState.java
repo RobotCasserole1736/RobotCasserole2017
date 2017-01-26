@@ -61,11 +61,11 @@ public class RobotState {
 	//Vision Target Qualification System (Outputs from vision targeting system)
 	static boolean visionOnline = false; //True if information is being received from the coprocessor, false if the system is down. All other variables should only be considered valid if this field is true.
 	static boolean visionTargetFound = false; //True if a qualified (valid) target is found in the most recent camera image, false if not
-	static double  visionTargetOffset_deg = 0; //Offset from center of image of the located target. 0 degrees means the target is right in front of the robot, positive degrees means the target is to the right, negative degrees means the target is to the left.
-	static double  visionEstTargetDist_ft = 0; //Estimated distance of the front bumper of the robot from the base of the boiler (from observed vision target)
+	static double  visionTargetOffset_deg = 0; //Offset from center of image of the located target. 0 degrees means the target is right in front of the camera, positive degrees means the target is to the right, negative degrees means the target is to the left.
+	static double  visionEstTargetDist_ft = 0; //Estimated distance from the camera lens to the top vision target (hypotenuse)
 	static double  visionTopTgtXPixelPos = 0; //pixel location of the X target coordinate
-	static double  visionTopTgtYPixelPos = 0; //pixel location of the X target coordinate
-	static double  visionHeuristicVal = 0;
+	static double  visionTopTgtYPixelPos = 0; //pixel location of the Y target coordinate
+	static double  visionHeuristicVal = 0;    //Evaluation of how good the located target is. Small numbers mean it is likely the target, large numbers mean it does not match what a target should look like much at all.
 	static double  visionEstCaptureTime = 0; //Estimated capture time (WRT getFPGATimestamp's timebase) of the present processed image. Should account for processing time (variable, but reported by coprocessor) as well as assumed fixed data transport times over ethernet.
 	static double  visionCoProcessorFPS = 0; //system processing Frames-per-second reported by the coprocessor
 	static double  visionCoProcessorCPULoad_pct = 0; //Coprocessor reported processor load
