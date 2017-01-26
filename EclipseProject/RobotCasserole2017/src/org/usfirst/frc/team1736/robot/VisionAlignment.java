@@ -39,8 +39,8 @@ public class VisionAlignment {
 		// if alignment is possible and alignment is desired
 		// then on the first loop reset the integrators on both angle and distance pids
 		
-		// if angle and distance are correct then
-		// indicate that we are on target
+		/* if angle and distance are correct then
+		 indicate that we are on target */
 		
 		// drive outputs
 		
