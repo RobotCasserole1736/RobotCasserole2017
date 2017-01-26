@@ -50,6 +50,9 @@ public class Vision_Processing_Main {
 		RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - Exp_network_latency_sec;
 	}
 	
+	/**
+	 * Simple heuristic algorithm, assumes both a top and bottom can be located.
+	 */
 	@SuppressWarnings("unused")
 	private void alg0(){
 		ArrayList_Top.clear();
@@ -94,6 +97,8 @@ public class Vision_Processing_Main {
 			RobotState.visionTargetFound = true;
 			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
 			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
+			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*CAMERA_PIXELS_X)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
+			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - CAMERA_PIXELS_X/2) * (CAMERA_FOV_X_DEG/CAMERA_PIXELS_X);
 		} else {
 			RobotState.visionTargetFound = false;
 		}
@@ -101,6 +106,10 @@ public class Vision_Processing_Main {
 		
 	}
 	
+	/**
+	 * More-advanced heuristic calculation, which does not try to sort by upper/lower target first
+	 * Note this is O(n^2) complexity (actually n*n-1 calculation cycles for n targets), so use caution if many targets are visible.
+	 */
 	private void alg1(){
 
 		double Heuristic;
@@ -138,16 +147,17 @@ public class Vision_Processing_Main {
 				i_like_big_targets_and_i_cannot_lie = 100000 * 1/(VL.getArea(i) + VL.getArea(j));
 				
 				//The better the target is, the smaller Heuristic should be
-				Heuristic= x_pos_error     * 10.0 +
-						   y_pos_error     * 10.0 +
-						   width_error     * 10.0 +
-						   height_error    * 5.0  +	
-						   top_ar_error    * 1.0  +
-						   bottom_ar_error * 1.0  +
-						   top_infill_error * 1.0 + 
-						   bottom_infill_error * 1.0 +
-						   i_like_big_targets_and_i_cannot_lie;
+				Heuristic= x_pos_error     * 10.0 + //We want the top/bottom centroids to be aligned in the X direction
+						   y_pos_error     * 10.0 + //Given the heights of the top/bottom, we expect a certain offset in the centroids in the Y direction
+						   width_error     * 10.0 + //We expect the top/bottom to have the same width
+						   height_error    * 5.0  +	//We expect the top to have twice the height of the bottom
+						   top_ar_error    * 1.0  + //We expect the top to have a certain aspect ratio
+						   bottom_ar_error * 1.0  + //We expect the bottom to have a certain aspect ratio
+						   top_infill_error * 1.0 +  //We expect the top to have a certain infill percentage
+						   bottom_infill_error * 1.0 + //We expect the bottom to have a certain infill percentage
+						   i_like_big_targets_and_i_cannot_lie; //Bigger targets are better.
 
+				//We expect only one target possible. Pick the best.
 				if (Heuristic<Best_Heuristic){
 					Best_Heuristic=Heuristic;
 					Best_Top=i;
@@ -159,6 +169,7 @@ public class Vision_Processing_Main {
 		
 		//Update all outputs
 		if(Best_Top != -1 & Best_Bottom != -1){
+			//If we've seen a target, calculate stuff
 			RobotState.visionTargetFound = true;
 			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
 			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
@@ -166,6 +177,7 @@ public class Vision_Processing_Main {
 			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*CAMERA_PIXELS_X)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
 			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - CAMERA_PIXELS_X/2) * (CAMERA_FOV_X_DEG/CAMERA_PIXELS_X);
 		} else {
+			//If there's no target seen, say so.
 			RobotState.visionTargetFound = false;
 		}
 
