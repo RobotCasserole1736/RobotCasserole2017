@@ -122,4 +122,14 @@ public class VisionAlignment {
 			}
 		}				
 	}
+	
+	public double getVisionAlignState() {
+		if(visionAlignState == VisionAlignStates.sOnTarget){
+			return 2.0;
+		}else if(visionAlignState == VisionAlignStates.sAligning){
+			return 1.0;
+		}else{ //visionAlignState == VisionAlignStates.sNotControlling
+			return 0.0;
+		}
+	}
 }

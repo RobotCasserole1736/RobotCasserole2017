@@ -350,6 +350,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getVisionDtFwdRevCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Vision Align State", "states", "getVisionAlignState", VisionAlignment.class);
 	
 	}
 	
