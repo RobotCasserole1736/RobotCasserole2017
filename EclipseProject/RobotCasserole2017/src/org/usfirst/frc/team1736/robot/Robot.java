@@ -223,7 +223,7 @@ public class Robot extends IterativeRobot {
 		
 		//Log & display present state data
 		updateDriverView();
-		//CsvLogger.logData(false);
+		CsvLogger.logData(false);
 		updateWebStates();
 
 		//Mark end of loop and Calculate Loop Time
