@@ -73,7 +73,7 @@ public class RobotState {
 	
 	
 	//Vision Align system (mostly outputs from vision-based alignment system)
-	static boolean visionAlignmentPossible = false; //True if the vision system is capiable of auto-aligning the robot, false if not. False should happen if the vision system is offline, or no target can be seen.
+	static boolean visionAlignmentPossible = false; //True if the vision system is capable of auto-aligning the robot, false if not. False should happen if the vision system is offline, or no target can be seen.
 	static double  visionDtFwdRevCmd = 0; //Forward/reverse command from vision alignment system to get the robot aligned for a shot. (-1 = full reverse, 0 = stop, 1 = full forward)
 	static double  visionDtRotateCmd = 0; //Rotation command from vision alignment system to get the robot aligned for a shot. (-1 = full reverse, 0 = stop, 1 = full forward)
 	static boolean visionAlignmentOnTarget = false; //True if we know for sure the robot is aligned sufficiently to make shots, false if not.
@@ -96,11 +96,11 @@ public class RobotState {
 	static double rearRightDriveMotorCmd = 0;
 	
 	//Climber Commands
-	static boolean climbEnable = false;
-	static double climbSpeedCmd = 0.0;
+	static boolean climbEnable = false; //True if climing functionality is allwoed, false if not
+	static double climbSpeedCmd = 0.0; //Motor command to be sent to the climber motor. Note this can only run one direction due to ratchets
 	
 	//Intake Command
-	static double intakeSpeedCmd = 0.0;
+	static double intakeSpeedCmd = 0.0; //Motor command to be sent to the intake motor. 
 	
 	//Getters and Setters for select globals
 	public static double getopShotCTRLOrdinal(){
