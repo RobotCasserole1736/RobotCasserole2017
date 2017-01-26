@@ -9,10 +9,6 @@ public class VisionAlignDistPID extends CasserolePID {
 		// TODO Auto-generated constructor stub
 	}
 	public void setDist(double dist){
-		if(dist == 0.0){
-			resetIntegrators();
-		}
-		
 		setSetpoint(dist);
 	}
 	

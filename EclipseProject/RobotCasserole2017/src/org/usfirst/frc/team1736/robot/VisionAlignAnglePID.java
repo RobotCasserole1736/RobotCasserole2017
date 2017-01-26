@@ -9,11 +9,7 @@ public class VisionAlignAnglePID extends CasserolePID {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void setAngle(double angle){
-		if(angle == 0.0){
-			resetIntegrators();
-		}
-		
+	public void setAngle(double angle){		
 		setSetpoint(angle);
 	}
 	

@@ -26,13 +26,18 @@ public class VisionAlignment {
 	Calibration dist_Ki = new Calibration("Alignment Dist Control Ki", 1.0/7.0/(3*50), 0.0, 1.0);
 	Calibration dist_Kd = new Calibration("Alignment Dist Control Kd", 0.0, 0.0, 1.0);
 	
+	//Desired angle and distance
+	Calibration angleDesired = new Calibration("Desired Angle Alignment Offset", 0.0, -40.0, 40.0);
+	Calibration distDesired = new Calibration("Desired Distance Alignment", 10.0, 0.0, 50.0);
+	
 	VisionAlignStates visionAlignState = VisionAlignStates.sNotControlling;
 	
 	public VisionAlignment(){
 		anglePID = new VisionAlignAnglePID(angle_Kp.get(), angle_Ki.get(), angle_Kd.get());
 		distPID = new VisionAlignDistPID(dist_Kp.get(), dist_Ki.get(), dist_Kd.get());
 		
-		//Make sure neither pid is running and outputs are 0
+		//Make sure neither pid is running
+		//CasserolePID is not running after construction
 		
 		//Make sure controller is off
 		RobotState.visionAlignmentOnTarget = false;
@@ -47,7 +52,11 @@ public class VisionAlignment {
 		
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
-			if(!(RobotState.visionTargetOffset_deg == 0.0 && RobotState.visionEstTargetDist_ft == 0.0)){
+			//Set Desired
+			anglePID.setAngle(angleDesired.get());
+			distPID.setDist(distDesired.get());
+			
+			if(!(RobotState.visionTargetOffset_deg == angleDesired.get() && RobotState.visionEstTargetDist_ft == distDesired.get())){
 				//Set Off Target
 				RobotState.visionAlignmentOnTarget = false;
 				
@@ -60,6 +69,8 @@ public class VisionAlignment {
 				RobotState.visionDtRotateCmd = 0.0;
 
 				//Turn off pids
+				anglePID.stop();
+				distPID.stop();
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sNotControlling;
@@ -68,7 +79,11 @@ public class VisionAlignment {
 			}
 			
 		}else if(visionAlignState == VisionAlignStates.sAligning){
-			if(RobotState.visionTargetOffset_deg == 0.0 && RobotState.visionEstTargetDist_ft == 0.0){
+			//Set Desired
+			anglePID.setAngle(angleDesired.get());
+			distPID.setDist(distDesired.get());
+			
+			if(RobotState.visionTargetOffset_deg == angleDesired.get() && RobotState.visionEstTargetDist_ft == distDesired.get()){
 				//Set On Target
 				RobotState.visionAlignmentOnTarget = true;
 				
@@ -81,6 +96,8 @@ public class VisionAlignment {
 				RobotState.visionDtRotateCmd = 0.0;
 
 				//Turn off pids
+				anglePID.stop();
+				distPID.stop();
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sNotControlling;
@@ -95,6 +112,8 @@ public class VisionAlignment {
 			
 			if(RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible){
 				//Reset integrators and start pids 
+				anglePID.start();
+				distPID.start();
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
