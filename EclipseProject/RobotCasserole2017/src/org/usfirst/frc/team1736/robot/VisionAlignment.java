@@ -123,6 +123,43 @@ public class VisionAlignment {
 		}				
 	}
 	
+	/**
+	 * Update all calibrations. Should only be called if pid's are not in use
+	 * soooo, during disabled periodic.
+	 */
+	public void updateGains(){
+		if(angle_Kp.isChanged()){
+			anglePID.setKp(angle_Kp.get());
+			angle_Kp.acknowledgeValUpdate();
+		}
+		
+		if(angle_Ki.isChanged()){
+			anglePID.setKi(angle_Ki.get());
+			angle_Ki.acknowledgeValUpdate();
+		}
+		
+		if(angle_Kd.isChanged()){
+			anglePID.setKd(angle_Kd.get());
+			angle_Kd.acknowledgeValUpdate();
+		}
+		
+		if(dist_Kp.isChanged()){
+			distPID.setKp(dist_Kp.get());
+			dist_Kp.acknowledgeValUpdate();
+		}
+		
+		if(dist_Ki.isChanged()){
+			distPID.setKi(dist_Ki.get());
+			dist_Ki.acknowledgeValUpdate();
+		}
+		
+		if(dist_Kd.isChanged()){
+			distPID.setKd(dist_Kd.get());
+			dist_Kd.acknowledgeValUpdate();
+		}
+		
+	}
+	
 	public double getVisionAlignState() {
 		if(visionAlignState == VisionAlignStates.sOnTarget){
 			return 2.0;

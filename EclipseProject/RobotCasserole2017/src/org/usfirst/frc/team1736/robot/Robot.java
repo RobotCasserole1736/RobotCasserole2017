@@ -138,13 +138,11 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
-		if(RobotState.visionAlignmentDesiried){
-			VisionAlign.GetAligned();
-		}
 		
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterControl.updateGains();
 		myRobot.updateAllCals();
+		VisionAlign.updateGains();
 		
 		updateDriverView();
 		updateWebStates();
