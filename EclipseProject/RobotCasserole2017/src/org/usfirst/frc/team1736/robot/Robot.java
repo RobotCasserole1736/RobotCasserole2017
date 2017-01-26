@@ -125,6 +125,9 @@ public class Robot extends IterativeRobot {
 		CsvLogger.close();
 	}
 	
+	/**
+	 * This function is called periodically while disabled. Note no motors should be commanded on while in this state.
+	 */
 	@Override
 	public void disabledPeriodic() {
 		
@@ -175,6 +178,7 @@ public class Robot extends IterativeRobot {
 		//Assume starting at 0 degrees
 		gyro.reset();
 		
+		//Presume autonomous starts at zero distance (robot initial orientation is origin)
 		myRobot.resetAllEncoders();
 		myRobot.resetAllIntegrators();
 		
@@ -201,10 +205,14 @@ public class Robot extends IterativeRobot {
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
 		
+		//Run vision alignment algorithm based on vision processing results
 		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
 		}
+		
+		//Update shot control management subsystem
 		shotCTRL.update();
+		
 		//Update Hopper Control
 		hopControl.update();
 		
@@ -214,9 +222,10 @@ public class Robot extends IterativeRobot {
 		//Update shooter wheel control
 		shooterControl.update();
 		
+		//Run drivetrain in autonomous
 		myRobot.autonomousControl();
 		
-		//Update Climber Control
+		//Update Climber Control 
 		climbControl.update();
 		
 		//Log & display present state data
@@ -269,13 +278,18 @@ public class Robot extends IterativeRobot {
 		chris.update();
 		myRobot.readEncoders();
 		
+		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
+		
+		//Run vision alignment algorithm based on vision processing results
 		if(RobotState.visionAlignmentDesiried){
 			VisionAlign.GetAligned();
-			
 		}
+		
+		//Update shot control management subsystem
 		shotCTRL.update();
+		
 		//Update Hopper Control
 		hopControl.update();
 		
@@ -285,11 +299,11 @@ public class Robot extends IterativeRobot {
 		//Update shooter wheel control
 		shooterControl.update();
 		
-		//Update Climber Control
-		climbControl.update();
-		
-		//Run Drivietrain periodic loop
+		//Run drivetrain in operator control
 		myRobot.operatorControl();
+		
+		//Update Climber Control 
+		climbControl.update();
 		
 		//Log & display present state data
 		updateDriverView();
@@ -368,8 +382,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision Align State", "states", "getVisionAlignState", VisionAlignment.class);
-	
 	}
+	
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
@@ -377,6 +391,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Target in View", "green");
 		CasseroleDriverView.newStringBox("Orientation deg");
 		CasseroleDriverView.newWebcam("VisionProc_cam", "http://10.17.36.11/mjpg/video.mjpg", 50, 50, 0);
+		//CasseroleDriverView.newWebcam("Driver_cam", "http://10.17.36.12/mjpg/video.mjpg", 50, 50, 0);
 		
 
 	}
@@ -418,8 +433,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Target Offset (deg)", RobotState.visionTargetOffset_deg);
 		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
-		
-		
 	}
 	
 	public void updateDriverView(){
