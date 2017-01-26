@@ -11,12 +11,24 @@ public class Vision_Processing_Main {
 	ArrayList<Integer> ArrayList_Bottom = new ArrayList<Integer>(15);
 	
 	//Constants
+	private final double CAMERA_PIXELS_X = 640;
+	private final double CAMERA_PIXELS_Y = 480;
+	private final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
+	private final double CAMERA_FOV_Y_DEG = 48;
 	private final double CURVATURE_FUDGE_FACTOR = 1.75;
+	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(CAMERA_FOV_X_DEG/2.0));
+	
+	private final double TGT_WIDTH_FT = 1.0 + (3.0/12.0); //Actual target (1 ft 3 in, per game manual)
+	//private final double TGT_WIDTH_FT = (6.0+5.0/16.0)/12.0; //SW test target (6 and 5/16ths inches)
+	
+
+	
 	private final double Exp_AspectRatio_Top=15.0/(4.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_AspectRatio_Bottom=15.0/(2.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_InfillRatio_Top = 0.75;
 	private final double Exp_InfillRatio_Bottom = 0.75;
 	private final double Exp_network_latency_sec = 0.01;
+
 
 	public Vision_Processing_Main(){
 		VL = new VisionListener("10.17.36.20", 5800);
@@ -125,6 +137,7 @@ public class Vision_Processing_Main {
 				bottom_infill_error = Math.abs((VL.getArea(j)/(VL.getWidth(j)*VL.getHeight(j))) - Exp_InfillRatio_Bottom);
 				i_like_big_targets_and_i_cannot_lie = 100000 * 1/(VL.getArea(i) + VL.getArea(j));
 				
+				//The better the target is, the smaller Heuristic should be
 				Heuristic= x_pos_error     * 10.0 +
 						   y_pos_error     * 10.0 +
 						   width_error     * 10.0 +
@@ -150,6 +163,8 @@ public class Vision_Processing_Main {
 			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
 			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
 			RobotState.visionHeuristicVal = Best_Heuristic;
+			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*CAMERA_PIXELS_X)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
+			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - CAMERA_PIXELS_X/2) * (CAMERA_FOV_X_DEG/CAMERA_PIXELS_X);
 		} else {
 			RobotState.visionTargetFound = false;
 		}

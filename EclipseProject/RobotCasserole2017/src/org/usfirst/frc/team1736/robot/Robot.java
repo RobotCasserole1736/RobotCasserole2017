@@ -415,6 +415,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putBoolean("Vision Target Seen", RobotState.visionTargetFound);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", RobotState.visionTopTgtXPixelPos);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", RobotState.visionTopTgtYPixelPos);
+		CassesroleWebStates.putDouble("Vision Target Range (ft)", RobotState.visionEstTargetDist_ft);
+		CassesroleWebStates.putDouble("Vision Target Offset (deg)", RobotState.visionTargetOffset_deg);
 		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
 		
