@@ -6,6 +6,10 @@ public class VisionAlignment {
 	VisionAlignAnglePID anglePID;
 	VisionAlignDistPID distPID;
 	
+	//Tolerances
+	double angleTol = 1.0;
+	double distTol = 1.0;
+	
 	//States of the vision align subsystem
 	public enum VisionAlignStates {
 		sNotControlling(0), sAligning(1), sOnTarget(2);
@@ -56,7 +60,8 @@ public class VisionAlignment {
 			anglePID.setAngle(angleDesired.get());
 			distPID.setDist(distDesired.get());
 			
-			if(!(RobotState.visionTargetOffset_deg == angleDesired.get() && RobotState.visionEstTargetDist_ft == distDesired.get())){
+			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol
+					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol)){
 				//Set Off Target
 				RobotState.visionAlignmentOnTarget = false;
 				
@@ -83,7 +88,8 @@ public class VisionAlignment {
 			anglePID.setAngle(angleDesired.get());
 			distPID.setDist(distDesired.get());
 			
-			if(RobotState.visionTargetOffset_deg == angleDesired.get() && RobotState.visionEstTargetDist_ft == distDesired.get()){
+			if(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol
+					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol){
 				//Set On Target
 				RobotState.visionAlignmentOnTarget = true;
 				

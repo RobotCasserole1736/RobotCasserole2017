@@ -47,9 +47,6 @@ public class Robot extends IterativeRobot {
 	//Vision Processing Algorithm
     Vision_Processing_Main VisionProk;
     
-    //Use Vision output to get drive settings to reach alignment
-    VisionAlignment VisionAlign;
-    
     //Software utilities
     RobotSpeedomitar chris;
     CalWrangler wrangler;
@@ -71,11 +68,17 @@ public class Robot extends IterativeRobot {
     //Climber Control
     ClimberControl climbControl;
     
+
     //Camera gimbal mount
     CameraServoMount camGimbal;
     
     //Shooter control
     Sht_ctrl shotCTRL;
+
+    //Vision Alignment Control
+    VisionAlignment visionAlignCTRL;
+
+    
     
     //State variable for interpreting operator shooter commands
     boolean pev_State;
@@ -99,7 +102,8 @@ public class Robot extends IterativeRobot {
 		pdp = new PowerDistributionPanel();
 		gyro =new ADXRS453_Gyro();
 		VisionProk = new Vision_Processing_Main(); 
-		VisionAlign = new VisionAlignment();
+		visionAlignCTRL = new VisionAlignment();
+
 		ecuStats = new CasseroleRIOLoadMonitor();
 		chris = new RobotSpeedomitar();
 		shotCTRL = new Sht_ctrl();
@@ -107,11 +111,14 @@ public class Robot extends IterativeRobot {
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
+
 		camGimbal = new CameraServoMount();
 		
 		comp = new Compressor();
 		comp.setClosedLoopControl(true); //ensure we are running
 		gearSolenoid = new Solenoid(RobotIOMap.GEAR_SOLENOID_PORT);
+
+		
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -161,7 +168,7 @@ public class Robot extends IterativeRobot {
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterControl.updateGains();
 		myRobot.updateAllCals();
-		VisionAlign.updateGains();
+		visionAlignCTRL.updateGains();
 		
 		updateDriverView();
 		updateWebStates();
@@ -223,7 +230,7 @@ public class Robot extends IterativeRobot {
 		
 		//Run vision alignment algorithm based on vision processing results
 		if(RobotState.visionAlignmentDesiried){
-			VisionAlign.GetAligned();
+			visionAlignCTRL.GetAligned();
 		}
 		
 		//Update shot control management subsystem
@@ -243,6 +250,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update Climber Control 
 		climbControl.update();
+		
+		//Update Vision Align Control
+		visionAlignCTRL.GetAligned();
 		
 		//Log & display present state data
 		updateDriverView();
@@ -300,7 +310,7 @@ public class Robot extends IterativeRobot {
 		
 		//Run vision alignment algorithm based on vision processing results
 		if(RobotState.visionAlignmentDesiried){
-			VisionAlign.GetAligned();
+			visionAlignCTRL.GetAligned();
 		}
 		
 		//Update shot control management subsystem
@@ -321,8 +331,13 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control 
 		climbControl.update();
 		
+
 		//Update user camera
 		camGimbal.update();
+
+		//Update Vision Align Control
+		visionAlignCTRL.GetAligned();
+
 		
 		//Log & display present state data
 		updateDriverView();
@@ -400,7 +415,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getVisionDtFwdRevCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", VisionAlign);
+		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
+
 	}
 	
 	
@@ -470,6 +486,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Target Offset (deg)", RobotState.visionTargetOffset_deg);
 		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
+		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", RobotState.visionDtFwdRevCmd);
+		CassesroleWebStates.putDouble("Vision Rotate Cmd", RobotState.visionDtRotateCmd);
 	}
 
 
