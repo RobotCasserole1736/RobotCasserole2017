@@ -12,10 +12,10 @@ import org.usfirst.frc.team1736.lib.HAL.JoyStickScaler;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 import org.usfirst.frc.team1736.robot.RobotState;
 
-
-
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
 
@@ -74,8 +74,16 @@ public class Robot extends IterativeRobot {
     //Camera gimbal mount
     CameraServoMount camGimbal;
     
-    boolean pev_State;
+    //Shooter control
     Sht_ctrl shotCTRL;
+    
+    //State variable for interpreting operator shooter commands
+    boolean pev_State;
+    
+    //Gear control subsystem (kinda mashed in here just cuz we're lazy)
+    Compressor comp;
+    Solenoid gearSolenoid;
+    
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -100,6 +108,9 @@ public class Robot extends IterativeRobot {
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
 		camGimbal = new CameraServoMount();
+		
+		comp = new Compressor();
+		gearSolenoid = new Solenoid(RobotIOMap.GEAR_SOLENOID_PORT);
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -309,6 +320,9 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control 
 		climbControl.update();
 		
+		//Update user camera
+		camGimbal.update();
+		
 		//Log & display present state data
 		updateDriverView();
 		CsvLogger.logData(false);
@@ -486,6 +500,13 @@ public class Robot extends IterativeRobot {
 		
 		RobotState.opIntakeDesired = operatorCTRL.LB();
 		RobotState.opEjectDesired = operatorCTRL.B();
+		
+		//Gear control (done here cuz we're lazy)
+		if(operatorCTRL.RTrigger() > 0.5){
+			gearSolenoid.set(true);
+		} else {
+			gearSolenoid.set(false);
+		}
 		
 		if( operatorCTRL.Y()){
 			RobotState.opShotCTRL=Shooter_States.PREP_TO_SHOOT;

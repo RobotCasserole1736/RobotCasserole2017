@@ -11,8 +11,8 @@ public class RobotIOMap {
 	public static final int CLIMBER_MOTOR_PWM_PORT = 5;
 	public static final int INTAKE_MOTOR_PWM_PORT  = 6;
 
-	public static final int CAMERA_PAN_SERVO_PWM_PORT = 8; 
-	public static final int CAMERA_TILT_SERVO_PWM_PORT = 9; 
+	public static final int CAMERA_TILT_SERVO_PWM_PORT = 8; 
+	public static final int CAMERA_PAN_SERVO_PWM_PORT = 9; 
 	
 	//Motor PDP channel mappings
 	public static final int DRIVETRAIN_FRONT_RIGHT_PDP_CH = 0;
@@ -36,5 +36,8 @@ public class RobotIOMap {
 	public static final int DRIVETRAIN_REAR_LEFT_ENCODER_B = 5;
 	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_A = 6;
 	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_B = 7;
+	
+	//Solenoid Ports
+	public static final int GEAR_SOLENOID_PORT = 4;
 
 }
