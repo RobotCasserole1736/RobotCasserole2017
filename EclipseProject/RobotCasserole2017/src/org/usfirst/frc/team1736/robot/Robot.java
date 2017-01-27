@@ -406,7 +406,7 @@ public class Robot extends IterativeRobot {
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
-		CasseroleDriverView.newDial("Shooter Wheel Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterControl.ErrorRange.get(), 
+		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterControl.ErrorRange.get(), 
 				                                                             shotCTRL.wheel_Set_Point_rpm.get() + shooterControl.ErrorRange.get());
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
 		CasseroleDriverView.newBoolean("Target in View", "green");
@@ -420,7 +420,7 @@ public class Robot extends IterativeRobot {
 	
 	public void updateDriverView(){
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
-		CasseroleDriverView.setDialValue("Shooter Wheel Speed RPM", RobotState.shooterActualVelocity_rpm);
+		CasseroleDriverView.setDialValue("Shooter Speed RPM", RobotState.shooterActualVelocity_rpm);
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
 		CasseroleDriverView.setBoolean("Vision Aligning", RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible && !RobotState.visionAlignmentOnTarget);

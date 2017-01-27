@@ -20,14 +20,15 @@ public class CameraServoMount {
 	private static final CamPos startupPos = CamPos.SHOOT;
 	
 	//Position constants (in degrees)
+	//Bigger tilt makes the camera look up
 	private static final double GEAR_PAN_ANGLE = 180;
-	private static final double GEAR_TILT_ANGLE = -10;
+	private static final double GEAR_TILT_ANGLE = 30;
 	
-	private static final double SHOOT_PAN_ANGLE = 0;
-	private static final double SHOOT_TILT_ANGLE = 65;
+	private static final double SHOOT_PAN_ANGLE = 90;
+	private static final double SHOOT_TILT_ANGLE = 30;
 	
-	private static final double INTAKE_PAN_ANGLE = -180;
-	private static final double INTAKE_TILT_ANGLE = -20;
+	private static final double INTAKE_PAN_ANGLE = 0;
+	private static final double INTAKE_TILT_ANGLE = 0;
 	
 
 	
