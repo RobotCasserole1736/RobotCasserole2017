@@ -406,13 +406,31 @@ public class Robot extends IterativeRobot {
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
+		CasseroleDriverView.newDial("Shooter Wheel Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterControl.ErrorRange.get(), 
+				                                                             shotCTRL.wheel_Set_Point_rpm.get() + shooterControl.ErrorRange.get());
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
 		CasseroleDriverView.newBoolean("Target in View", "green");
+		CasseroleDriverView.newBoolean("Vision Aligning", "yellow");
+		CasseroleDriverView.newBoolean("Shooter Spoolup", "yellow");
 		CasseroleDriverView.newStringBox("Orientation deg");
 		CasseroleDriverView.newWebcam("VisionProc_cam", "http://10.17.36.11/mjpg/video.mjpg", 50, 50, 0);
-		//CasseroleDriverView.newWebcam("Driver_cam", "http://10.17.36.12/mjpg/video.mjpg", 50, 50, 0);
-		
+		CasseroleDriverView.newWebcam("Driver_cam", "http://10.17.36.12/mjpg/video.mjpg", 50, 50, 0);
 
+	}
+	
+	public void updateDriverView(){
+		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
+		CasseroleDriverView.setDialValue("Shooter Wheel Speed RPM", RobotState.shooterActualVelocity_rpm);
+		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
+		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
+		CasseroleDriverView.setBoolean("Vision Aligning", RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible && !RobotState.visionAlignmentOnTarget);
+		CasseroleDriverView.setBoolean("Shooter Spoolup", (RobotState.shooterDesiredVelocity_rpm > 100) && !(RobotState.shooterVelocityOk));
+		
+		String temp = String.format("%.1f", RobotState.robotPoseAngle_deg % 360.0);
+		for(int ii = 0; ii < 5 - temp.length(); ii++){
+			temp = " " + temp; 
+		}
+		CasseroleDriverView.setStringBox("Orientation deg", temp);
 	}
 	
 	//Puts all relevant data to the robot State webpage
@@ -453,18 +471,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
 	}
-	
-	public void updateDriverView(){
-		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
-		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
-		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
-		
-		String temp = String.format("%.1f", RobotState.robotPoseAngle_deg % 360.0);
-		for(int ii = 0; ii < 5 - temp.length(); ii++){
-			temp = " " + temp; 
-		}
-		CasseroleDriverView.setStringBox("Orientation deg", temp);
-	}
+
 
 	//Updates all relevant robot inputs. Should be called during periodic loops
 	public void updateDriverInputs(){
