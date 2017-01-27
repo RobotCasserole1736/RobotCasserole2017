@@ -71,6 +71,9 @@ public class Robot extends IterativeRobot {
     //Climber Control
     ClimberControl climbControl;
     
+    //Vision Alignment Control
+    VisionAlignment visionAlignCTRL;
+    
     boolean pev_State;
     Sht_ctrl shotCTRL;
     
@@ -96,6 +99,7 @@ public class Robot extends IterativeRobot {
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
+		visionAlignCTRL = new VisionAlignment();
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
@@ -228,6 +232,9 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control 
 		climbControl.update();
 		
+		//Update Vision Align Control
+		visionAlignCTRL.GetAligned();
+		
 		//Log & display present state data
 		updateDriverView();
 		CsvLogger.logData(false);
@@ -305,6 +312,9 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control 
 		climbControl.update();
 		
+		//Update Vision Align Control
+		visionAlignCTRL.GetAligned();
+		
 		//Log & display present state data
 		updateDriverView();
 		CsvLogger.logData(false);
@@ -381,7 +391,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getVisionDtFwdRevCmd", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision Align State", "states", "getVisionAlignState", VisionAlignment.class);
+		//CsvLogger.addLoggingFieldDouble("Vision Align State", "states", "getVisionAlignState", VisionAlignment.class);
 	}
 	
 	
@@ -433,6 +443,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Target Offset (deg)", RobotState.visionTargetOffset_deg);
 		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
+		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", RobotState.visionDtFwdRevCmd);
+		CassesroleWebStates.putDouble("Vision Rotate Cmd", RobotState.visionDtRotateCmd);
 	}
 	
 	public void updateDriverView(){
