@@ -110,6 +110,7 @@ public class Robot extends IterativeRobot {
 		camGimbal = new CameraServoMount();
 		
 		comp = new Compressor();
+		comp.setClosedLoopControl(true); //ensure we are running
 		gearSolenoid = new Solenoid(RobotIOMap.GEAR_SOLENOID_PORT);
 
 		driverCTRL = new Xbox360Controller(0);
@@ -478,7 +479,7 @@ public class Robot extends IterativeRobot {
 		RobotState.intakeCamAlign = driverCTRL.X();
 		RobotState.shooterCamAlign = driverCTRL.Y();
 		
-		//gyro align commands
+		//gyro align commands TODO
 //		boolean newR = driverCTRL.DPadRight();
 //		boolean newD = driverCTRL.DPadDown();
 //		boolean newL = driverCTRL.DPadLeft();
@@ -506,6 +507,12 @@ public class Robot extends IterativeRobot {
 			gearSolenoid.set(true);
 		} else {
 			gearSolenoid.set(false);
+		}
+		if(operatorCTRL.StartButton()){
+			comp.setClosedLoopControl(true);
+		} else if(operatorCTRL.BackButton()){
+			comp.setClosedLoopControl(false);
+			comp.stop();
 		}
 		
 		if( operatorCTRL.Y()){
