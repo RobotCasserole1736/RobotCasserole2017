@@ -10,6 +10,9 @@ public class RobotIOMap {
 	public static final int HOPPER_MOTOR_PWM_PORT  = 4;
 	public static final int CLIMBER_MOTOR_PWM_PORT = 5;
 	public static final int INTAKE_MOTOR_PWM_PORT  = 6;
+
+	public static final int CAMERA_PAN_SERVO_PWM_PORT = 8; 
+	public static final int CAMERA_TILT_SERVO_PWM_PORT = 9; 
 	
 	//Motor PDP channel mappings
 	public static final int DRIVETRAIN_FRONT_RIGHT_PDP_CH = 0;
@@ -19,6 +22,7 @@ public class RobotIOMap {
 	public static final int HOPPER_MOTOR_PDP_CH   = 4;
 	public static final int CLIMBER_MOTOR_PDP_CH  = 5;
 	public static final int INTAKE_MOTOR_PDP_CH   = 6;
+
 	
 	//CAN Device ID's
 	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 1;

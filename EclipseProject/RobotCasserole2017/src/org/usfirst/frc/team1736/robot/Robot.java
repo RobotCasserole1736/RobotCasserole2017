@@ -71,6 +71,9 @@ public class Robot extends IterativeRobot {
     //Climber Control
     ClimberControl climbControl;
     
+    //Camera gimbal mount
+    CameraServoMount camGimbal;
+    
     boolean pev_State;
     Sht_ctrl shotCTRL;
     
@@ -96,6 +99,7 @@ public class Robot extends IterativeRobot {
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
+		camGimbal = new CameraServoMount();
 
 		driverCTRL = new Xbox360Controller(0);
 		operatorCTRL = new Xbox360Controller(1);
