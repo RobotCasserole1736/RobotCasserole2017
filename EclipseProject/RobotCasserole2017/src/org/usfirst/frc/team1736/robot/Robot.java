@@ -488,6 +488,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
 		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", RobotState.visionDtFwdRevCmd);
 		CassesroleWebStates.putDouble("Vision Rotate Cmd", RobotState.visionDtRotateCmd);
+		CassesroleWebStates.putDouble("Vision_Align_State", visionAlignCTRL.getVisionAlignState());
 	}
 
 

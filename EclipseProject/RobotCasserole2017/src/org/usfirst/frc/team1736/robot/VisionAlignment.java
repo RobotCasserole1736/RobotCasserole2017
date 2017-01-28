@@ -66,14 +66,14 @@ public class VisionAlignment {
 			anglePID.setAngle(angleDesired.get());
 			distPID.setDist(distDesired.get());
 			
-			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst
-					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol + angleTolHyst)){
+			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst)
+					|| !(Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol + angleTolHyst)){
 				//Set Off Target
 				RobotState.visionAlignmentOnTarget = false;
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
-			}else if(!RobotState.visionAlignmentDesiried){
+			}else if(!RobotState.visionAlignmentDesiried || !RobotState.visionAlignmentPossible){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
@@ -101,7 +101,7 @@ public class VisionAlignment {
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
-			}else if(!RobotState.visionAlignmentDesiried){
+			}else if(!RobotState.visionAlignmentDesiried || !RobotState.visionAlignmentPossible){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
