@@ -156,8 +156,6 @@ public abstract class CasserolePID {
 
         setpoint = 0;
 
-        timerThread = new java.util.Timer();
-
     }
 
 
@@ -184,7 +182,6 @@ public abstract class CasserolePID {
      */
     public void stop() {
         timerThread.cancel();
-        timerThread.purge();
     }
 
 
