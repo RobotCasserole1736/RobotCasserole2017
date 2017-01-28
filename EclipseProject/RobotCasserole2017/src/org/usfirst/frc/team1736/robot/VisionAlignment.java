@@ -8,7 +8,9 @@ public class VisionAlignment {
 	
 	//Tolerances
 	double angleTol = 1.0;
-	double distTol = 1.0;
+	double distTol = 0.5;
+	double angleTolHyst = 0.5;
+	double distTolHyst = 0.25;
 	
 	//States of the vision align subsystem
 	public enum VisionAlignStates {
@@ -20,7 +22,6 @@ public class VisionAlignment {
 			this.value = value;
 		}
 	}
-
 	
 	//PID Gains 
 	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 1.0/40.0, 0.0, 1.0);
@@ -37,8 +38,13 @@ public class VisionAlignment {
 	VisionAlignStates visionAlignState = VisionAlignStates.sNotControlling;
 	
 	public VisionAlignment(){
+		// Instantiate angle and distance PIDs
 		anglePID = new VisionAlignAnglePID(angle_Kp.get(), angle_Ki.get(), angle_Kd.get());
 		distPID = new VisionAlignDistPID(dist_Kp.get(), dist_Ki.get(), dist_Kd.get());
+		
+		// Set max and min commands
+		anglePID.setOutputRange(-1.0, 1.0);
+		distPID.setOutputRange(-1.0, 1.0);
 		
 		//Make sure neither pid is running
 		//CasserolePID is not running after construction
@@ -60,8 +66,8 @@ public class VisionAlignment {
 			anglePID.setAngle(angleDesired.get());
 			distPID.setDist(distDesired.get());
 			
-			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol
-					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol)){
+			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst
+					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol + angleTolHyst)){
 				//Set Off Target
 				RobotState.visionAlignmentOnTarget = false;
 				
