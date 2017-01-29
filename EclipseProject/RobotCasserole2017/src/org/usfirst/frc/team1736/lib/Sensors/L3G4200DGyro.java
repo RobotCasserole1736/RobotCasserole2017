@@ -347,7 +347,7 @@ public class L3G4200DGyro {
         // Will start calling the periodic update function at an interval of m_sample_period_ms,
         // asynchronously from any other code.
         // Java magic here, don't touch!
-        timerThread = new java.util.Timer();
+        timerThread = new java.util.Timer("L3G4200D Gyro Driver");
         timerThread.schedule(new GyroTask(this), 0L, (long) (m_sample_period_ms));
 
 

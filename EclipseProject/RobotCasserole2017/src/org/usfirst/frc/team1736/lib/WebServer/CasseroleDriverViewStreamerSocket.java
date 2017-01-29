@@ -14,7 +14,7 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
  */
 
 public class CasseroleDriverViewStreamerSocket extends WebSocketAdapter {
-    private java.util.Timer updater = new java.util.Timer();
+    private java.util.Timer updater = new java.util.Timer("Driver View Webpage Update");
     private int updatePeriodMS = 100; // default update rate of 0.1s
     volatile int test_data;
 

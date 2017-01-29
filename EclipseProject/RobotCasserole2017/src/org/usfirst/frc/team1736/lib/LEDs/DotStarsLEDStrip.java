@@ -35,15 +35,11 @@ import edu.wpi.first.wpilibj.SPI;
  */
 
 
-public class DotStarsLEDStrip {
+public class DotStarsLEDStrip implements CasseroleLEDInterface {
 
     // Thread stuff
     // Thread to run the periodic update function on
     java.util.Timer timerThread;
-
-    // period between periodic function calls
-    // in milliseconds
-    double m_update_period_ms = 100;
 
     // Constant values for fixed things in the serial data stream
     static byte[] startFrame = {0x00, 0x00, 0x00, 0x00};
@@ -116,7 +112,7 @@ public class DotStarsLEDStrip {
         spi.setClockRate(SPI_CLK_RATE);
         spi.setSampleDataOnFalling();
 
-        timerThread = new java.util.Timer();
+        timerThread = new java.util.Timer("DotStar LED Strip Control");
         timerThread.schedule(new DotStarsTask(this), (long) (m_update_period_ms), (long) (m_update_period_ms));
 
     }

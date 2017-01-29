@@ -156,7 +156,7 @@ public abstract class CasserolePID {
 
         setpoint = 0;
 
-        timerThread = new java.util.Timer();
+        timerThread = new java.util.Timer("Casserole PID Update");
 
     }
 
