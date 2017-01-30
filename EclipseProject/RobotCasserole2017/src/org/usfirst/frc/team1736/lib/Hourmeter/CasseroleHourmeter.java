@@ -53,7 +53,7 @@ public class CasseroleHourmeter {
         int ret_val;
         isRunning = false;
 
-        updater = new java.util.Timer();
+        updater = new java.util.Timer("Hourmeter Update");
         updater_task = new HourmeterUpdater();
 
         ds = DriverStation.getInstance();

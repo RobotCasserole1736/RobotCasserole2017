@@ -170,7 +170,7 @@ public abstract class CasserolePID {
         // Will start calling the periodic update function at an interval of pidSamplePeriod_ms,
         // asynchronously from any other code.
         // Java magic here, don't touch!
-        timerThread = new java.util.Timer();
+        timerThread = new java.util.Timer("Casserole PID Update");
         timerThread.scheduleAtFixedRate(new PIDTask(this), 0L, (long) (pidSamplePeriod_ms));
     }
 

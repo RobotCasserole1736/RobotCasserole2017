@@ -86,7 +86,7 @@ public class FIRFilter {
         // Will start calling the periodic update function at an interval of m_sample_period_ms,
         // asynchronously from any other code.
         // Java magic here, don't touch!
-        timerThread = new java.util.Timer();
+        timerThread = new java.util.Timer("Casserole FIR Filter Update");
         timerThread.schedule(new FilterTask(this), 0L, (long) (m_sample_period_ms));
 
     }

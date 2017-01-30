@@ -67,26 +67,26 @@ public class Robot extends IterativeRobot {
     
     //Climber Control
     ClimberControl climbControl;
-    
 
     //Camera gimbal mount
-    CameraServoMount camGimbal;
+    CameraServoMount camGimbal;    
+
+    //Operator shooter command interpretation variables
+    boolean pev_State;
     
-    //Shooter control
+  //Shooter control
     Sht_ctrl shotCTRL;
 
     //Vision Alignment Control
     VisionAlignment visionAlignCTRL;
-
-    
-    
-    //State variable for interpreting operator shooter commands
-    boolean pev_State;
     
     //Gear control subsystem (kinda mashed in here just cuz we're lazy)
     Compressor comp;
     Solenoid gearSolenoid;
     
+    
+    //LED's 
+    LEDSequencer LEDseq;
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -124,6 +124,8 @@ public class Robot extends IterativeRobot {
 		operatorCTRL = new Xbox360Controller(1);
 		driverCTRL.setDeadzone(0.175);
 		operatorCTRL.setDeadzone(0.175);
+		
+		LEDseq = new LEDSequencer();
 		
 
 		initLoggingChannels();
