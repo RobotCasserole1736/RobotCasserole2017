@@ -71,8 +71,12 @@ public class Robot extends IterativeRobot {
     //Climber Control
     ClimberControl climbControl;
     
+    //Operator shooter command interpretation variables
     boolean pev_State;
     Sht_ctrl shotCTRL;
+    
+    //LED's 
+    LEDSequencer LEDseq;
     
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -101,6 +105,8 @@ public class Robot extends IterativeRobot {
 		operatorCTRL = new Xbox360Controller(1);
 		driverCTRL.setDeadzone(0.175);
 		operatorCTRL.setDeadzone(0.175);
+		
+		LEDseq = new LEDSequencer();
 		
 
 		initLoggingChannels();
