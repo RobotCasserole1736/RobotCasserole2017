@@ -41,6 +41,9 @@ public class Robot extends IterativeRobot {
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
 	
+	// Air pressure
+	double currAirPress;
+	
 	ADXRS453_Gyro gyro;
 	DriveTrain myRobot;
 
@@ -88,6 +91,9 @@ public class Robot extends IterativeRobot {
     //LED's 
     LEDSequencer LEDseq;
     
+    //Air Pressure Monitor
+    AirPressMonitor airPress;
+    
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -111,6 +117,7 @@ public class Robot extends IterativeRobot {
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
+		airPress = new AirPressMonitor();
 
 		camGimbal = new CameraServoMount();
 		
@@ -420,6 +427,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airPress);
 
 	}
 	
@@ -428,6 +436,8 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
 		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterControl.ErrorRange.get(), 
 				                                                             shotCTRL.wheel_Set_Point_rpm.get() + shooterControl.ErrorRange.get());
+		CasseroleDriverView.newDial("AirPressure Psi", 0, 130, 10, 100, 120);
+		
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
 		CasseroleDriverView.newBoolean("Target in View", "green");
 		CasseroleDriverView.newBoolean("Vision Aligning", "yellow");
@@ -441,6 +451,7 @@ public class Robot extends IterativeRobot {
 	public void updateDriverView(){
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
 		CasseroleDriverView.setDialValue("Shooter Speed RPM", RobotState.shooterActualVelocity_rpm);
+		CasseroleDriverView.setDialValue("AirPressure Psi", airPress.getPress());
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
 		CasseroleDriverView.setBoolean("Vision Aligning", RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible && !RobotState.visionAlignmentOnTarget);

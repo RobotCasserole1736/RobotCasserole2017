@@ -41,4 +41,9 @@ public class RobotIOMap {
 	public static final int GEAR_SOLENOID_PORT = 4; 
 	public static final int INTAKE_EXTEND_SOLENOID_PORT = 2; 
 
+	
+	//Analog Inputs
+	public static final int AIR_PRESSURE_SYSTEM = 1;
+
+
 }
