@@ -2,10 +2,10 @@
 var global_chart;
 
 //this set of presets is specific to 2015 - update as needed!
-var presets = [["PDBMeasVoltage (V)", "PDBMeasCurrent (A)"],
-               ["LaunchWheelCurrent (cmd)", "LaunchWheelActSpeed (RPM)", "LaunchWheelDesSpeed (RPM)"],
-			   ["PneumaticPress (PSI)", "CompressorCurrent (A)"],
-			   ["BattEstVoc (V)", "BattEstESR (ohm)"]];
+var presets = [["PDP_Voltage (V)", "PDP_Total_Current (A)"],
+               ["PDP_Total_Current (A)", "PDP_DT_FL_Current (A)",  "PDP_DT_FR_Current (A)",  "PDP_DT_RL_Current (A)",  "PDP_DT_RR_Current (A)", "Hopper_Motor_Current (A)", "Climber_Motor_Current (A)", "Intake_Motor_Current (A)", "Shooter_Motor_Current (A)"],
+			   ["Shooter_Motor_Current (A)", "Shooter_Desired_Velocity (rpm)", "Shooter_Actual_Velocity(rpm)", "Shooter_Motor_Cmd (rpm)", "Shooter_Velocity_OK (bit)"],
+			   ["PDP_DT_FL_Current (A)",  "PDP_DT_FR_Current (A)",  "PDP_DT_RL_Current (A)",  "PDP_DT_RR_Current (A)", "Driver_FwdRev_cmd (cmd)", "Driver_Strafe_cmd (cmd)", "Driver_Rotate_cmd (cmd)", "Driver_Vision_Align_Desired (bit)", "FL_Motor_Cmd (cmd)", "FR_Motor_Cmd (cmd)", "RL_Motor_Cmd (cmd)", "RR_Motor_Cmd (cmd)", "FL_Wheel_Velocity (rpm)", "FR_Wheel_Velocity (rpm)", "RL_Wheel_Velocity (rpm)", "RR_Wheel_Velocity (rpm)"]];
 
 var dflt_options =  {    
 
