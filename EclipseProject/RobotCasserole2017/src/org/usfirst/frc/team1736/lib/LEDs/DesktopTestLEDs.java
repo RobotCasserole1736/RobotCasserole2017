@@ -37,8 +37,8 @@ public class DesktopTestLEDs extends JPanel implements CasseroleLEDInterface  {
     public final int LED_RADIUS_PX = 10;
     public final int LED_SPACING_PX = 30;
     
-    public final int UPPER_LED_COUNT = 20;
-    public final int LOWER_LED_COUNT = 20;
+    public final int UPPER_LED_COUNT = 26;
+    public final int LOWER_LED_COUNT = 26;
     
     Timer timerThread;
     JTextArea timereadout;

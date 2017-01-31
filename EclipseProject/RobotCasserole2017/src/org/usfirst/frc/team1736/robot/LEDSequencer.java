@@ -17,7 +17,7 @@ public class LEDSequencer {
 	static CasseroleLEDInterface ledstrip;
     Timer timerThread;
 	
-    public final int NUM_LEDS_TOTAL = 40;
+    public final int NUM_LEDS_TOTAL = 52;
     
     int loop_counter;
     
@@ -288,7 +288,7 @@ public class LEDSequencer {
 		LEDSequencer seq = new LEDSequencer();
 		
 	    JFrame frame = new JFrame("LED Test");
-	    frame.setSize(750, 200);
+	    frame.setSize(850, 200);
 	    frame.setVisible(true);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    if(desktop_sim){
