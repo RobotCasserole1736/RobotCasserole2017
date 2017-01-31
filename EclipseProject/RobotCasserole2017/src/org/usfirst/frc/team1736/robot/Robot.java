@@ -125,7 +125,7 @@ public class Robot extends IterativeRobot {
 		driverCTRL.setDeadzone(0.175);
 		operatorCTRL.setDeadzone(0.175);
 		
-		LEDseq = new LEDSequencer();
+		//LEDseq = new LEDSequencer();
 		
 
 		initLoggingChannels();
@@ -209,6 +209,8 @@ public class Robot extends IterativeRobot {
 		
 		//Open a new log
 		CsvLogger.init();
+		
+		
 
 	}
 

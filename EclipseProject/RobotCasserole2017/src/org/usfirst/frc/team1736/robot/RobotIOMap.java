@@ -38,6 +38,7 @@ public class RobotIOMap {
 	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_B = 7;
 	
 	//Solenoid Ports
-	public static final int GEAR_SOLENOID_PORT = 4;
+	public static final int GEAR_SOLENOID_PORT = 4; 
+	public static final int INTAKE_EXTEND_SOLENOID_PORT = 2; 
 
 }
