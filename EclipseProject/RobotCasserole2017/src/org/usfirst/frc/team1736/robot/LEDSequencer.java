@@ -7,10 +7,12 @@ import javax.swing.JFrame;
 
 import org.usfirst.frc.team1736.lib.LEDs.CasseroleLEDInterface;
 import org.usfirst.frc.team1736.lib.LEDs.DesktopTestLEDs;
+import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
 
-	static DesktopTestLEDs ledstrip;
+	//static DesktopTestLEDs ledstrip;
+	DotStarsLEDStrip ledstrip;
     Timer timerThread;
 	
     public final int NUM_LEDS_TOTAL = 40;
@@ -18,7 +20,8 @@ public class LEDSequencer {
     int loop_counter;
     
 	public LEDSequencer(){
-		ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
+		//ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
+		ledstrip = new DotStarsLEDStrip(NUM_LEDS_TOTAL);
 		
 		loop_counter = 0;
 		
@@ -29,7 +32,7 @@ public class LEDSequencer {
 	
 	public void update(){
 		
-		//smoothStripSweep();
+		smoothStripSweep();
 		//smoothRainbowCycle();
 		//smoothRedWhiteCycle();
 		//sparkleWhite();
@@ -37,7 +40,7 @@ public class LEDSequencer {
 		//sparkleRainbow();
 		//cylon();
 		//cometRed();
-		cometRainbow();
+		//cometRainbow();
 		//bounce();
 		
 		
@@ -282,6 +285,6 @@ public class LEDSequencer {
 	    frame.setSize(750, 200);
 	    frame.setVisible(true);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.add(ledstrip);
+	    //frame.add(ledstrip); //uncomment this to do a desktop test
 	}
 }

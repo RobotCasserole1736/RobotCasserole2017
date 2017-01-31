@@ -84,7 +84,7 @@ public class DotStarsLEDStrip implements CasseroleLEDInterface {
      * 
      * @param numLEDs number of LED's in the total strip.
      */
-    DotStarsLEDStrip(int numLEDs) {
+    public DotStarsLEDStrip(int numLEDs) {
 
         // Number of bytes in color buffer needed - each LED has 4 bytes (1 brightness, then 1 for
         // RGB each),
