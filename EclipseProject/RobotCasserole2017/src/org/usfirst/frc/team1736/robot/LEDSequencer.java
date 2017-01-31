@@ -37,8 +37,8 @@ public class LEDSequencer {
 		//sparkleRainbow();
 		//cylon();
 		//cometRed();
-		//cometRainbow();
-		bounce();
+		cometRainbow();
+		//bounce();
 		
 		
 		loop_counter++;
@@ -161,7 +161,6 @@ public class LEDSequencer {
 		double red_val;
 		
 		double endpoint = (double)(((loop_counter)%period)/((double)period))*((NUM_LEDS_TOTAL+width*10)/2.0); 
-		System.out.println(endpoint);
 		
 		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
 			if(led_idx <= endpoint+2 ){
@@ -185,7 +184,6 @@ public class LEDSequencer {
 		double val;
 		
 		double endpoint = (double)(((loop_counter)%period)/((double)period))*((NUM_LEDS_TOTAL+width*10)/2.0); 
-		System.out.println(endpoint);
 		
 		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
 			if(led_idx <= endpoint+2 ){
