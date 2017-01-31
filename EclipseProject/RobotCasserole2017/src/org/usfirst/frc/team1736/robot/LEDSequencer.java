@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1736.robot;
 
+import java.awt.Component;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -7,18 +8,26 @@ import javax.swing.JFrame;
 
 import org.usfirst.frc.team1736.lib.LEDs.CasseroleLEDInterface;
 import org.usfirst.frc.team1736.lib.LEDs.DesktopTestLEDs;
+import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
+	
+	private static final boolean desktop_sim = false;
 
-	static DesktopTestLEDs ledstrip;
+	static CasseroleLEDInterface ledstrip;
     Timer timerThread;
 	
-    public final int NUM_LEDS_TOTAL = 40;
+    public final int NUM_LEDS_TOTAL = 52;
     
     int loop_counter;
     
 	public LEDSequencer(){
-		ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
+		
+		if(desktop_sim){
+			ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
+		} else {
+			ledstrip = new DotStarsLEDStrip(NUM_LEDS_TOTAL);
+		}
 		
 		loop_counter = 0;
 		
@@ -29,7 +38,7 @@ public class LEDSequencer {
 	
 	public void update(){
 		
-		//smoothStripSweep();
+		smoothStripSweep();
 		//smoothRainbowCycle();
 		//smoothRedWhiteCycle();
 		//sparkleWhite();
@@ -38,7 +47,7 @@ public class LEDSequencer {
 		//cylon();
 		//cometRed();
 		//cometRainbow();
-		bounce();
+		//bounce();
 		
 		
 		loop_counter++;
@@ -161,7 +170,6 @@ public class LEDSequencer {
 		double red_val;
 		
 		double endpoint = (double)(((loop_counter)%period)/((double)period))*((NUM_LEDS_TOTAL+width*10)/2.0); 
-		System.out.println(endpoint);
 		
 		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
 			if(led_idx <= endpoint+2 ){
@@ -185,7 +193,6 @@ public class LEDSequencer {
 		double val;
 		
 		double endpoint = (double)(((loop_counter)%period)/((double)period))*((NUM_LEDS_TOTAL+width*10)/2.0); 
-		System.out.println(endpoint);
 		
 		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
 			if(led_idx <= endpoint+2 ){
@@ -281,9 +288,11 @@ public class LEDSequencer {
 		LEDSequencer seq = new LEDSequencer();
 		
 	    JFrame frame = new JFrame("LED Test");
-	    frame.setSize(750, 200);
+	    frame.setSize(850, 200);
 	    frame.setVisible(true);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.add(ledstrip);
+	    if(desktop_sim){
+	    	frame.add((Component) ledstrip); //uncomment this to do a desktop test
+	    }
 	}
 }

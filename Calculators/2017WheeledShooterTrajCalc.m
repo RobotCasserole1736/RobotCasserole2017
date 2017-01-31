@@ -13,12 +13,12 @@
 clear;
 
 %% Testcase constants - adjust to suit your needs (dependent on robot state at launch time)
-launch_x_ft = 70.0/12.0;  %Distance between launch point and goal.  
-launch_wheel_speed_RPM = 2850; %RPM speed of launch wheel (assumes single-wheel launcher)
+launch_x_ft = 82.0/12.0;  %Distance between launch point and goal.  
+launch_wheel_speed_RPM = 3400; %RPM speed of launch wheel (assumes single-wheel launcher)
 
 %Your system parameters (dependent on robot design)
 launch_z_ft = 0.5; %Launch point of the ball height off the ground in meters. Max is 0.69m
-launch_angle_deg = 70; %angle between floor and launch point
+launch_angle_deg = 75; %angle between floor and launch point
 launch_wheel_diameter_in = 6; %Launch wheel diameter in inches
 launch_wheel_weight_lbs = 3; %Launch wheel mass in pounds
 
