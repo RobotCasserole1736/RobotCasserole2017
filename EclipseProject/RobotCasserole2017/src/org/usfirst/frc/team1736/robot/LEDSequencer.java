@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1736.robot;
 
+import java.awt.Component;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,9 +11,10 @@ import org.usfirst.frc.team1736.lib.LEDs.DesktopTestLEDs;
 import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
+	
+	private static final boolean desktop_sim = false;
 
-	//static DesktopTestLEDs ledstrip;
-	DotStarsLEDStrip ledstrip;
+	static CasseroleLEDInterface ledstrip;
     Timer timerThread;
 	
     public final int NUM_LEDS_TOTAL = 40;
@@ -20,8 +22,12 @@ public class LEDSequencer {
     int loop_counter;
     
 	public LEDSequencer(){
-		//ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
-		ledstrip = new DotStarsLEDStrip(NUM_LEDS_TOTAL);
+		
+		if(desktop_sim){
+			ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
+		} else {
+			ledstrip = new DotStarsLEDStrip(NUM_LEDS_TOTAL);
+		}
 		
 		loop_counter = 0;
 		
@@ -285,6 +291,8 @@ public class LEDSequencer {
 	    frame.setSize(750, 200);
 	    frame.setVisible(true);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    //frame.add(ledstrip); //uncomment this to do a desktop test
+	    if(desktop_sim){
+	    	frame.add((Component) ledstrip); //uncomment this to do a desktop test
+	    }
 	}
 }
