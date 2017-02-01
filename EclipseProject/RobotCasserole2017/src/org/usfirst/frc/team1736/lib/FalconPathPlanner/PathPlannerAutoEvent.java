@@ -12,35 +12,43 @@ import org.usfirst.frc.team1736.lib.CasserolePID.CasserolePID;
 public class PathPlannerAutoEvent extends AutoEvent {
 
     /* Path planner wrapped by this auto event */
-    public FalconPathPlanner path;
+    public MecanumPathPlanner path;
     private double[][] waypoints;
     private double time_duration_s;
     boolean pathCalculated;
 
     private int timestep;
-
-    private CasserolePID leftDT;
-    private CasserolePID rightDT;
-
-
+    private double taskRate = 0.02;
+    private double trackLength = 23.56 / 12;
+    private double trackWidth = 24.75 / 12;
+    private CasserolePID leftFrontMotor;
+    private CasserolePID rightFrontMotor;
+    private CasserolePID leftRearMotor;
+    private CasserolePID rightRearMotor;
     /**
      * Constructor. Set up the parameters of the planner here.
      * 
      * @param waypoints_in Set of x/y points which define the path the robot should take.
      * @param timeAllowed_in Number of seconds the path traversal should take. Must be long enough
      *        to allow the path planner to output realistic speeds.
-     * @param leftDT_in Reference to the PID which controls the left side of the drivetrain.
+     * @param leftFrontMotor_in Reference to the PID which controls the left front wheel of the drivetrain.
      *        Presumes the .set() method accepts units of ft/sec.
-     * @param rightDT_inReference to the PID which controls the right side of the drivetrain.
+     * @param rightFrontMotor_inReference to the PID which controls the right front wheel of the drivetrain.
      *        Presumes the .set() method accepts units of ft/sec.
+     * @param leftRearMotor_in Reference to the PID which controls the left rear wheel of the drivetrain.
+     *        Presumes the .set() method accepts units of ft/sec.
+     * @param rightRearMotor_in Reference to the PID which controls the right rear wheel of the drivetrain.
+     *        Presumes the .set() method accepts units of ft/sec.              
      */
-    public PathPlannerAutoEvent(double[][] waypoints_in, double timeAllowed_in, CasserolePID leftDT_in,
-            CasserolePID rightDT_in) {
+    public PathPlannerAutoEvent(double[][] waypoints_in, double timeAllowed_in, CasserolePID leftFrontMotor_in,
+            CasserolePID rightFrontMotor_in, CasserolePID leftRearMotor_in,CasserolePID rightRearMotor_in) {
         super();
         waypoints = waypoints_in;
         time_duration_s = timeAllowed_in;
-        leftDT = leftDT_in;
-        rightDT = rightDT_in;
+        leftFrontMotor = leftFrontMotor_in;
+        rightFrontMotor = rightFrontMotor_in;
+        rightRearMotor = rightRearMotor_in;
+        leftRearMotor = leftRearMotor_in;
     }
 
 
@@ -48,7 +56,7 @@ public class PathPlannerAutoEvent extends AutoEvent {
      * Initalizes the path planner with waypoints, but does not calculate a path yet
      */
     public void userInit() {
-        path = new FalconPathPlanner(waypoints);
+        path = new MecanumPathPlanner(waypoints);
         pathCalculated = false;
     }
 
@@ -59,13 +67,14 @@ public class PathPlannerAutoEvent extends AutoEvent {
      */
     public void userUpdate() {
         if (pathCalculated == false) {
-            path.calculate(time_duration_s, RobotConstants.MAIN_TASK_RATE_S, RobotConstants.DRIVETRAIN_WIDTH_FT);
+            path.calculate(time_duration_s, taskRate,trackWidth,trackLength);
             timestep = 0;
         }
 
-        leftDT.setSetpoint(path.smoothLeftVelocity[timestep][1]);
-        rightDT.setSetpoint(path.smoothRightVelocity[timestep][1]);
-
+        leftFrontMotor.setSetpoint(path.smoothLeftFrontVelocity[timestep][1]);
+        rightFrontMotor.setSetpoint(path.smoothRightFrontVelocity[timestep][1]);
+        leftRearMotor.setSetpoint(path.smoothLeftRearVelocity[timestep][1]);
+        rightRearMotor.setSetpoint(path.smoothRightRearVelocity[timestep][1]);
         timestep++;
     }
 
@@ -74,8 +83,10 @@ public class PathPlannerAutoEvent extends AutoEvent {
      * Force both sides of the drivetrain to zero
      */
     public void userForceStop() {
-        leftDT.setSetpoint(0);
-        rightDT.setSetpoint(0);
+        leftFrontMotor.setSetpoint(0);
+        rightFrontMotor.setSetpoint(0);
+        leftRearMotor.setSetpoint(0);
+        rightRearMotor.setSetpoint(0);
     }
 
 
