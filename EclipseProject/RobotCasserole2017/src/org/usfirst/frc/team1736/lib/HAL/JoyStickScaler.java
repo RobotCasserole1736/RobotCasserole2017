@@ -5,18 +5,18 @@ import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 public class JoyStickScaler {
 	static double input ;
 	static Calibration exponent1 = new Calibration("Joystick Exponential Scale", 2.0, 1.0, 10.0);
-	static int exponent = Math.getExponent(exponent1.get());
-	static double output;
+	
 	
 	public static double joyscale(double input){
+		double output;
 	
 	
 	
 	if (input>=0) {
-	    output = Math.pow(input, exponent);
+	    output = Math.pow(input, exponent1.get());
 	}
 	else{
-	    output = -Math.pow(-input, exponent);
+	    output = -Math.pow(-input, exponent1.get());
 	}
 	return output;
 	}
