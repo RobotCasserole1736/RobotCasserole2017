@@ -2,11 +2,11 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Spark;
 
 public class HopperControl {
 	//Declare Motor Control
-	Victor hopMotor = new Victor(RobotIOMap.HOPPER_MOTOR_PWM_PORT);
+	Spark hopMotor = new Spark(RobotIOMap.HOPPER_MOTOR_PWM_PORT);
 	
 	//Declaring Hopper Calibration
 	Calibration hopperMotorCmd = new Calibration("Hopper Feed Motor Command", 0.5, 0.0, 1.0);

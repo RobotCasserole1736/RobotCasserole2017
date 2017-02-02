@@ -3,12 +3,13 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Spark;
+
 
 public class IntakeControl {
 	
 	//Declare Motor Control
-	Victor intakeMotor = new Victor(RobotIOMap.INTAKE_MOTOR_PWM_PORT);
+	Spark intakeMotor = new Spark(RobotIOMap.INTAKE_MOTOR_PWM_PORT);
 	
 	//Declare Extender Control
 	Solenoid intakeExtend = new Solenoid(RobotIOMap.INTAKE_EXTEND_SOLENOID_PORT);

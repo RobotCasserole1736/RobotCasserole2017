@@ -2,17 +2,18 @@ package org.usfirst.frc.team1736.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
+
 import org.usfirst.frc.team1736.robot.RobotState;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 public class DriveTrain{
 	
 	RobotDrive myDrive;
 
-	Victor frontLeftMotor;
-	Victor frontRightMotor;
-	Victor rearLeftMotor;
-	Victor rearRightMotor;
+	VictorSP frontLeftMotor;
+	VictorSP frontRightMotor;
+	VictorSP rearLeftMotor;
+	VictorSP rearRightMotor;
 	
 	Encoder frontLeftEncoder;
 	Encoder frontRightEncoder;
@@ -40,10 +41,10 @@ public class DriveTrain{
 	
 	public DriveTrain() {
 		//Setup Drivetrain with motors and such
-		frontLeftMotor  = new Victor(RobotIOMap.DRIVETRAIN_FRONT_LEFT_MOTOR);
-    	frontRightMotor = new Victor(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_MOTOR);
-    	rearLeftMotor   = new Victor(RobotIOMap.DRIVETRAIN_REAR_LEFT_MOTOR);
-    	rearRightMotor  = new Victor(RobotIOMap.DRIVETRAIN_REAR_RIGHT_MOTOR);
+		frontLeftMotor  = new VictorSP(RobotIOMap.DRIVETRAIN_FRONT_LEFT_MOTOR);
+    	frontRightMotor = new VictorSP(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_MOTOR);
+    	rearLeftMotor   = new VictorSP(RobotIOMap.DRIVETRAIN_REAR_LEFT_MOTOR);
+    	rearRightMotor  = new VictorSP(RobotIOMap.DRIVETRAIN_REAR_RIGHT_MOTOR);
     	
     	//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
     	frontLeftMotor.setInverted(false);
