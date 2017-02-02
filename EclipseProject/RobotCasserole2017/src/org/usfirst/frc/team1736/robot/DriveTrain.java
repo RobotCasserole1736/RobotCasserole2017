@@ -32,7 +32,7 @@ public class DriveTrain{
 	
 	boolean runningClosedLoop;
 	
-	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0;
+	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0;
 	
 	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
 	
@@ -47,8 +47,8 @@ public class DriveTrain{
     	
     	//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
     	frontLeftMotor.setInverted(false);
-    	frontRightMotor.setInverted(true);
-    	rearLeftMotor.setInverted(false);
+    	frontRightMotor.setInverted(false);
+    	rearLeftMotor.setInverted(true);
     	rearRightMotor.setInverted(true);
     	
     	myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
@@ -68,8 +68,9 @@ public class DriveTrain{
     	//Note minus signs to invert right side of drivetrain
     	frontLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
     	frontRightEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearRightEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearLeftEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	
     	
     	
     	//Set up autonomous PI controllers
