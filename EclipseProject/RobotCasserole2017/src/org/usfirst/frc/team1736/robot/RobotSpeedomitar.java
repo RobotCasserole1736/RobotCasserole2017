@@ -24,7 +24,7 @@ public class RobotSpeedomitar {
 	
 		//Calculate translational velocity x/y components via inverse mechanum kinematic equations
 		Vx = (WheelSpeedOno + WheelSpeedDos + WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
-		Vy  = (-WheelSpeedOno + WheelSpeedDos - WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
+		Vy  = (WheelSpeedOno - WheelSpeedDos + WheelSpeedTres - WheelSpeedCuatro) * 0.17 / 4;
 	
 		//Calculate net speed vector with pythagorean theorem
 		netSpeed = Math.sqrt(Vx*Vx+Vy*Vy);
