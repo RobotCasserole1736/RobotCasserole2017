@@ -254,7 +254,7 @@ public class CasseroleDriverView {
             JSONObject obj_tmp = driverView_objects.get(name_in);
             index = (int) obj_tmp.get("index");
             webcam_x_vals.set(index,  Double.toString(Math.min(100.0, Math.max(0.0, x_pct))));
-            webcam_y_vals.set(index,  Double.toString(Math.min(100.0, Math.max(0.0, x_pct))));
+            webcam_y_vals.set(index,  Double.toString(Math.min(100.0, Math.max(0.0, y_pct))));
             return;
         }
         // If we get here, it means we didn't find the webcam
