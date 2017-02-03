@@ -1,3 +1,5 @@
+![logo](http://robotcasserole.org/wp-content/uploads/2017/01/banner_2017_text.png)
+
 # RobotCasserole2017
 Robot Casserole robot source code for the 2017 FRC game, First Steamworks.
 
