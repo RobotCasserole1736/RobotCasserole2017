@@ -463,6 +463,9 @@ public class Robot extends IterativeRobot {
 			temp = " " + temp; 
 		}
 		CasseroleDriverView.setStringBox("Orientation deg", temp);
+		CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
+				                                (RobotState.visionTopTgtXPixelPos/RobotIOMap.VISION_X_PIXELS) * 100.0, 
+				                                (RobotState.visionTopTgtYPixelPos/RobotIOMap.VISION_Y_PIXELS) * 100.0);
 	}
 	
 	//Puts all relevant data to the robot State webpage

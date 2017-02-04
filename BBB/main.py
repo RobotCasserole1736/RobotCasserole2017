@@ -127,8 +127,8 @@ def img_process(img):
         curObservation.addTarget(x, y, 0, w, h) #area unused for now.
     """
         
-    hsv_thres_lower = np.array([93,100, 83])
-    hsv_thres_upper = np.array([88,255,255])
+    hsv_thres_lower = np.array([36,98, 87])
+    hsv_thres_upper = np.array([91,255,255])
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hsv_mask = cv2.inRange(hsv, hsv_thres_lower, hsv_thres_upper)

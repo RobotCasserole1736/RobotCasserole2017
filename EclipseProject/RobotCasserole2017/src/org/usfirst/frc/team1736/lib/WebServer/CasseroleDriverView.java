@@ -27,6 +27,8 @@ public class CasseroleDriverView {
     /** The list of objects which are broadcast. Must be volatile to ensure atomic accesses */
     static volatile Hashtable<String, JSONObject> driverView_objects = new Hashtable<String, JSONObject>();
     static volatile List<String> obj_vals = new ArrayList<String>();
+    static volatile List<String> webcam_x_vals = new ArrayList<String>();
+    static volatile List<String> webcam_y_vals = new ArrayList<String>();
     static volatile List<String> ordered_obj_name_list = new ArrayList<String>(); // Used to help
                                                                                   // preserve the
                                                                                   // order the user
@@ -36,7 +38,8 @@ public class CasseroleDriverView {
                                                                                   // destroys this
                                                                                   // info
 
-    static int num_sendable_objs = 0;
+    static int num_singleval_sendable_objs = 0;
+    static int num_webcams = 0;
 
     static final String VAL_DISPLAY_FORMATTER = "%5.2f";
 
@@ -80,7 +83,7 @@ public class CasseroleDriverView {
         JSONObject new_obj = new JSONObject();
         new_obj.put("type", "dial");
         new_obj.put("name", name_in);
-        new_obj.put("index", num_sendable_objs);
+        new_obj.put("index", num_singleval_sendable_objs);
         new_obj.put("min", min_in);
         new_obj.put("max", max_in);
         new_obj.put("min_acceptable", min_acceptable_in);
@@ -89,7 +92,7 @@ public class CasseroleDriverView {
         obj_vals.add(String.format(VAL_DISPLAY_FORMATTER, min_in));
         driverView_objects.put(name_in, new_obj);
         ordered_obj_name_list.add(name_in);
-        num_sendable_objs += 1;
+        num_singleval_sendable_objs += 1;
         return;
     }
 
@@ -118,8 +121,12 @@ public class CasseroleDriverView {
         new_obj.put("targ_x_pct", marker_x);
         new_obj.put("targ_y_pct", marker_y);
         new_obj.put("rotation_deg", img_rotate_deg);
+        new_obj.put("index", num_webcams);
         driverView_objects.put(name_in, new_obj);
         ordered_obj_name_list.add(name_in);
+        webcam_x_vals.add(Double.toString(marker_x));
+        webcam_y_vals.add(Double.toString(marker_y));
+        num_webcams += 1;
         return;
     }
 
@@ -138,11 +145,11 @@ public class CasseroleDriverView {
         JSONObject new_obj = new JSONObject();
         new_obj.put("type", "stringbox");
         new_obj.put("name", name_in);
-        new_obj.put("index", num_sendable_objs);
+        new_obj.put("index", num_singleval_sendable_objs);
         obj_vals.add("N/A");
         driverView_objects.put(name_in, new_obj);
         ordered_obj_name_list.add(name_in);
-        num_sendable_objs += 1;
+        num_singleval_sendable_objs += 1;
         return;
     }
 
@@ -167,11 +174,11 @@ public class CasseroleDriverView {
         new_obj.put("type", "boolean");
         new_obj.put("name", name_in);
         new_obj.put("color", color_in);
-        new_obj.put("index", num_sendable_objs);
+        new_obj.put("index", num_singleval_sendable_objs);
         obj_vals.add("False");
         driverView_objects.put(name_in, new_obj);
         ordered_obj_name_list.add(name_in);
-        num_sendable_objs += 1;
+        num_singleval_sendable_objs += 1;
         return;
     }
 
@@ -238,6 +245,20 @@ public class CasseroleDriverView {
         }
         // If we get here, it means we didn't find the value
         System.out.println("WARNING: could not find a boolean for for " + name_in + ". No value set.");
+        return;
+    }
+    
+    public static synchronized void setWebcamCrosshairs(String name_in, double x_pct, double y_pct) {
+        int index = -1;
+        if (driverView_objects.containsKey(name_in)) {
+            JSONObject obj_tmp = driverView_objects.get(name_in);
+            index = (int) obj_tmp.get("index");
+            webcam_x_vals.set(index,  Double.toString(Math.min(100.0, Math.max(0.0, x_pct))));
+            webcam_y_vals.set(index,  Double.toString(Math.min(100.0, Math.max(0.0, y_pct))));
+            return;
+        }
+        // If we get here, it means we didn't find the webcam
+        System.out.println("WARNING: could not find a webcam for for " + name_in + ". No crosshair positions set.");
         return;
     }
 
