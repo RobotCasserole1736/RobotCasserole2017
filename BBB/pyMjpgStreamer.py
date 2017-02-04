@@ -43,7 +43,7 @@ class CamHandler(BaseHTTPRequestHandler):
                         continue                         
                     else:
                         #imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-                        r, buf = cv2.imencode(".jpg",img) 
+                        r, buf = cv2.imencode(".jpg",img,(200,200))
 
                         self.wfile.write(b"--jpgboundary\r\n")
                         self.send_header('Content-type','image/jpeg')
@@ -52,7 +52,7 @@ class CamHandler(BaseHTTPRequestHandler):
                         self.wfile.write(bytearray(buf))
                         self.wfile.write(b'\r\n')
                         rc = False
-                        time.sleep(0.1)
+                        time.sleep(0.2)
                 except socket.error:
                     print("Client " + str(self.client_address[0]) + " disconnected.")
                     break
@@ -64,7 +64,7 @@ class CamHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type','text/html')
             self.end_headers()
-            self.wfile.write(b'<html><link rel="icon" href="data:;base64,iVBORw0KGgo="/><head></head><body>')
+            self.wfile.write(b'<html><head></head><body>')
             self.wfile.write(b'<img src="http://'+self.address+b':'+ bytearray(str(port), 'utf8') +b'/cam.mjpg"/>')
             self.wfile.write(b'</body></html>')
             return
@@ -87,6 +87,7 @@ class pyMjpgStreamer():
         # Server setup
         self.server = ThreadedHTTPServer(('', port), CamHandler)
         self.server_host_thread = threading.Thread(target = self.server.serve_forever)
+        self.server_host_thread.daemon=True
         self.server_host_thread.start()
         print("Started server on port "+ str(port))
 
@@ -100,7 +101,7 @@ class pyMjpgStreamer():
         print("Shutting down server")
         self.server.shutdown()
         print("Shutting down server main thread")
-        self.server_host_thread.join()
+        #self.server_host_thread.join()
 
 
 #Actual main code starts here

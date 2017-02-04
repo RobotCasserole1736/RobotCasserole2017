@@ -110,8 +110,36 @@ def robust_url_connect(url):
     print("Successfully connected to camera image stream at \"" + url + "\"")
     return local_stream
 
+#Reads image from a webcam and returns whatever new frame is found
+def readWebCam():
+    if(readWebCam.webcamCap is None):
+        readWebCam.webcamCap =  cv2.VideoCapture(0)
+        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 352); 
+        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 288);
+        os.system('v4l2-ctl -c brightness=40 -c contrast=9 -c saturation=180 -c exposure_auto=1 -c exposure_absolute=10')
+        print('Webcam stream opened')
+        
+    local_status,local_image = readWebCam.webcamCap.read()
+    cap_time = millis()
+    
+    if(local_status):
+        return local_image,cap_time
+    else:
+        return None,None
+    
+    
 #Reads from a socket connection and returns a new frame if found.
 def readMjpgStream():
+
+    if(readMjpgStream.camera_data_stream is None):
+        #Open data stream from IP camera
+        # Robust connect should hopefullyprevent race conditions between the camera
+        # booting and this software attemptting to connect to it.
+        camera_url = 'http://'+camera_IP+'/mjpg/video.mjpg'
+        readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
+        readMjpgStream.bytes = ''
+
+
     img_local = None
     cap_time = None
     # Read data from the network in 1kb chunks
@@ -176,13 +204,14 @@ def img_process(img):
         br_x, br_y, w, h = cv2.boundingRect(c)
         #minimal amount of qualification on targets
         if(w > 10 and h > 3): 
-            #Calcualte total filled in area
-            area = cv2.contourArea(c)
-            #Calculate centroid X and Y
             moments = cv2.moments(c)
-            c_x = int(moments['m10']/moments['m00'])
-            c_y = int(moments['m01']/moments['m00'])
-            curObservation.addTarget(c_x, c_y, area, w, h) 
+            if(moments['m00'] != 0):
+                #Calcualte total filled in area
+                area = cv2.contourArea(c)
+                #Calculate centroid X and Y
+                c_x = int(moments['m10']/moments['m00'])
+                c_y = int(moments['m01']/moments['m00'])
+                curObservation.addTarget(c_x, c_y, area, w, h) 
             
 
 
@@ -195,18 +224,13 @@ def img_process(img):
 ledStatus = False
 indicateLEDsNotRunning()
 
+readWebCam.webcamCap = None
+readMjpgStream.camera_data_stream = None
  
 #subprocess.call(['./LifeCamSettings.sh']) # Thanks @Jim Dennis for suggesting the []
 
 #Reset frame counter
 frame_counter = 0
-
-#Open data stream from IP camera
-# Robust connect should hopefullyprevent race conditions between the camera
-# booting and this software attemptting to connect to it.
-camera_url = 'http://'+camera_IP+'/mjpg/video.mjpg'
-readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
-readMjpgStream.bytes = ''
 
 # Process command line arguments.
 # Only one is possible: "--debug" will turn on image display for visual algorithm
@@ -237,7 +261,8 @@ if(displayDebugImg):
 # Main execution loop
 while True:
     try:
-        img,cap_time_tmp = readMjpgStream()
+        #img,cap_time_tmp = readMjpgStream()
+        img,cap_time_tmp = readWebCam()
         if(img is not None):
             # Mark the time we found this image
             prev_frame_capture_time_ms = frame_capture_time_ms
@@ -259,7 +284,7 @@ while True:
                 mem_load_pct = psutil.virtual_memory().percent
 
             # Calculate processing time
-            proc_time_ms = millis() - ip_capture_time
+            proc_time_ms = millis() - frame_capture_time_ms
             # Calculate present FPS (capture and processing)
             fps_current = 1000/(frame_capture_time_ms - prev_frame_capture_time_ms)
 
@@ -291,7 +316,7 @@ while True:
                 cv2.imshow('Video', img)
 
             # I'm presuming this is needed to allow background things to hapapen
-            time.sleep(.02)
+            time.sleep(.01)
             
     except KeyboardInterrupt:
         print("Shutting down at user request")
