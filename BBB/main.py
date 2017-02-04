@@ -110,6 +110,42 @@ def robust_url_connect(url):
     print("Successfully connected to camera image stream at \"" + url + "\"")
     return local_stream
 
+#Reads from a socket connection and returns a new frame if found.
+def readMjpgStream():
+    img_local = None
+    cap_time = None
+    # Read data from the network in 1kb chunks
+    #  Catch any issues reading. if we have issues, try to reset the connection.
+    try:
+        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(2048)
+    except Exception as e:
+        print("WARNING: problems reading camera data from stream.")
+        print("Reason: " + str(e))
+        print("Attempting to restart connection...")
+        readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
+        return img_local, cap_time
+
+
+    #  Mark the time each chunk is fully read in.
+    cap_time = millis()
+
+    # Search for special byte sequences which indicate the start and end of
+    #  single-video-frame image data
+    b = readMjpgStream.bytes.rfind('\xff\xd9')
+    a = readMjpgStream.bytes.rfind('\xff\xd8', 0, b-1)
+
+    #Check if the presence of both markers indicate a full image is in the input buffer
+    if a != -1 and b != -1:
+        # Image frame has been found, Conver the data to an image in prep for processing
+
+        # Extract the raw image data
+        jpg = readMjpgStream.bytes[a:b+2]
+        # Clear processed bytes from the input data buffer
+        readMjpgStream.bytes = readMjpgStream.bytes[b+2:]
+        # Convert the raw image bytes into an image structure openCV can use
+        img_local = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
+    
+    return img_local, cap_time
 
 ################################################################################
 # Main Processing algorithm... or a thin wrapper around it?
@@ -162,18 +198,14 @@ indicateLEDsNotRunning()
  
 #subprocess.call(['./LifeCamSettings.sh']) # Thanks @Jim Dennis for suggesting the []
 
-
-
+#Reset frame counter
+frame_counter = 0
 
 #Open data stream from IP camera
 # Robust connect should hopefullyprevent race conditions between the camera
 # booting and this software attemptting to connect to it.
 camera_url = 'http://'+camera_IP+'/mjpg/video.mjpg'
-camera_data_stream = robust_url_connect(camera_url)
-
-#Reset byte stream and frame counter
-bytes = ''
-frame_counter = 0
+readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
 
 # Process command line arguments.
 # Only one is possible: "--debug" will turn on image display for visual algorithm
@@ -182,7 +214,7 @@ if(len(sys.argv) == 2 and sys.argv[1] is "--debug"):
     print("INFO: Debug images will be displayed.")
     displayDebugImg = True
 
-# Start json server which will spew info to the roboRIO
+readMjpgStream.bytes = ''
 
 #Attempt to initalize graphics for displaying video feeds, if requested.
 if(displayDebugImg):
@@ -206,40 +238,11 @@ if(displayDebugImg):
 # Main execution loop
 while True:
     try:
-
-        # Read data from the network in 1kb chunks
-        #  Catch any issues reading. if we have issues, try to reset the connection.
-        try:
-            bytes += camera_data_stream.read(2048)
-        except Exception as e:
-            print("WARNING: problems reading camera data from stream.")
-            print("Reason: " + str(e))
-            print("Attempting to restart connection...")
-            camera_data_stream = robust_url_connect(camera_url)
-            continue
-
-
-        #  Mark the time each chunk is fully read in.
-        ip_capture_time = millis()
-
-        # Search for special byte sequences which indicate the start and end of
-        #  single-video-frame image data
-        b = bytes.rfind('\xff\xd9')
-        a = bytes.rfind('\xff\xd8', 0, b-1)
-
-        #Check if the presence of both markers indicate a full image is in the input buffer
-        if a != -1 and b != -1:
-            # Image frame has been found, Conver the data to an image in prep for processing
-
-            # Extract the raw image data
-            jpg = bytes[a:b+2]
-            # Clear processed bytes from the input data buffer
-            bytes = bytes[b+2:]
-            # Convert the raw image bytes into an image structure openCV can use
-            img = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
+        img,cap_time_tmp = readMjpgStream()
+        if(img is not None):
             # Mark the time we found this image
             prev_frame_capture_time_ms = frame_capture_time_ms
-            frame_capture_time_ms = ip_capture_time
+            frame_capture_time_ms = cap_time_tmp
             # Update the image counter
             frame_counter = frame_counter+1
 

@@ -39,7 +39,8 @@ class CamHandler(BaseHTTPRequestHandler):
             while(True):# infinite loop with no exit condition
                 try:
                     if not rc:
-                        continue 
+                        time.sleep(0.1)
+                        continue                         
                     else:
                         #imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
                         r, buf = cv2.imencode(".jpg",img) 
@@ -50,14 +51,16 @@ class CamHandler(BaseHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(bytearray(buf))
                         self.wfile.write(b'\r\n')
+                        rc = False
                         time.sleep(0.1)
                 except socket.error:
                     print("Client " + str(self.client_address[0]) + " disconnected.")
                     break
 
+                    
             return
 
-        if self.path.endswith('.html') or self.path=="/":
+        elif self.path.endswith('.html') or self.path=="/":
             self.send_response(200)
             self.send_header('Content-type','text/html')
             self.end_headers()
