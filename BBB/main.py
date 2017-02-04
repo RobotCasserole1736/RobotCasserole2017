@@ -206,6 +206,7 @@ frame_counter = 0
 # booting and this software attemptting to connect to it.
 camera_url = 'http://'+camera_IP+'/mjpg/video.mjpg'
 readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
+readMjpgStream.bytes = ''
 
 # Process command line arguments.
 # Only one is possible: "--debug" will turn on image display for visual algorithm
@@ -213,8 +214,6 @@ readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
 if(len(sys.argv) == 2 and sys.argv[1] is "--debug"):
     print("INFO: Debug images will be displayed.")
     displayDebugImg = True
-
-readMjpgStream.bytes = ''
 
 #Attempt to initalize graphics for displaying video feeds, if requested.
 if(displayDebugImg):
