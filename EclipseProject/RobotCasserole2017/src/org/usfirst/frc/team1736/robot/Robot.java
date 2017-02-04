@@ -93,7 +93,8 @@ public class Robot extends IterativeRobot {
     
     //Air Pressure Monitor
     AirPressMonitor airPress;
-    
+
+    Autonomus auto;
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -124,7 +125,7 @@ public class Robot extends IterativeRobot {
 		comp = new Compressor();
 		comp.setClosedLoopControl(true); //ensure we are running
 		gearSolenoid = new Solenoid(RobotIOMap.GEAR_SOLENOID_PORT);
-
+		auto = new Autonomus(myRobot);
 		
 
 		driverCTRL = new Xbox360Controller(0);
@@ -217,7 +218,7 @@ public class Robot extends IterativeRobot {
 		//Open a new log
 		CsvLogger.init();
 		
-		
+		auto.executeAutonomus();
 
 	}
 
@@ -265,6 +266,8 @@ public class Robot extends IterativeRobot {
 		//Update Vision Align Control
 		visionAlignCTRL.GetAligned();
 		
+		auto.update();
+		
 		//Log & display present state data
 		updateDriverView();
 		CsvLogger.logData(false);
@@ -291,6 +294,7 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		myRobot.myDrive.setSafetyEnabled(false);
 
+		auto.stop();
 		loop_time_elapsed = 0;
 		
 		myRobot.resetAllIntegrators();

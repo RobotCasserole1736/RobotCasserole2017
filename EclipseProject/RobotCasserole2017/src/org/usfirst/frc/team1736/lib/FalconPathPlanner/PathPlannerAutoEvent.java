@@ -41,21 +41,13 @@ public class PathPlannerAutoEvent extends AutoEvent {
      *        Presumes the .set() method accepts units of ft/sec.              
      */
     public PathPlannerAutoEvent(double[][] waypoints_in, double timeAllowed_in, CasserolePID leftFrontMotor_in,
-            CasserolePID rightFrontMotor_in, CasserolePID leftRearMotor_in,CasserolePID rightRearMotor_in) {
-        super();
+            CasserolePID rightFrontMotor_in, CasserolePID leftRearMotor_in,CasserolePID rightRearMotor_in) {        super();
         waypoints = waypoints_in;
         time_duration_s = timeAllowed_in;
         leftFrontMotor = leftFrontMotor_in;
         rightFrontMotor = rightFrontMotor_in;
         rightRearMotor = rightRearMotor_in;
         leftRearMotor = leftRearMotor_in;
-    }
-
-
-    /**
-     * Initalizes the path planner with waypoints, but does not calculate a path yet
-     */
-    public void userInit() {
         path = new MecanumPathPlanner(waypoints);
         pathCalculated = false;
     }
@@ -69,8 +61,8 @@ public class PathPlannerAutoEvent extends AutoEvent {
         if (pathCalculated == false) {
             path.calculate(time_duration_s, taskRate,trackWidth,trackLength);
             timestep = 0;
+            pathCalculated = true;
         }
-
         leftFrontMotor.setSetpoint(path.smoothLeftFrontVelocity[timestep][1]);
         rightFrontMotor.setSetpoint(path.smoothRightFrontVelocity[timestep][1]);
         leftRearMotor.setSetpoint(path.smoothLeftRearVelocity[timestep][1]);
