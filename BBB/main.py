@@ -11,6 +11,7 @@ import Pipeline
 import TargetObservation
 import UDPServer
 import subprocess
+import pyMjpgStreamer
 
 ################################################################################
 #Config Data
@@ -60,6 +61,8 @@ procPipeline = Pipeline.Pipeline()
 # Server to transmit processed data over UDP to the roboRIO
 outputDataServer = UDPServer.UDPServer(send_to_address = "roborio-1736-frc.local", send_to_port = 5800)
 
+# Server to broadcast mjpg stream of raw captured video
+outputVideoStreamer= pyMjpgStreamer.pyMjpgStreamer();
 
 ################################################################################
 # Utility Functions
@@ -202,87 +205,95 @@ if(displayDebugImg):
 
 # Main execution loop
 while True:
-
-    # Read data from the network in 1kb chunks
-    #  Catch any issues reading. if we have issues, try to reset the connection.
     try:
-        bytes += camera_data_stream.read(2048)
-    except Exception as e:
-        print("WARNING: problems reading camera data from stream.")
-        print("Reason: " + str(e))
-        print("Attempting to restart connection...")
-        camera_data_stream = robust_url_connect(camera_url)
-        continue
+
+        # Read data from the network in 1kb chunks
+        #  Catch any issues reading. if we have issues, try to reset the connection.
+        try:
+            bytes += camera_data_stream.read(2048)
+        except Exception as e:
+            print("WARNING: problems reading camera data from stream.")
+            print("Reason: " + str(e))
+            print("Attempting to restart connection...")
+            camera_data_stream = robust_url_connect(camera_url)
+            continue
 
 
-    #  Mark the time each chunk is fully read in.
-    ip_capture_time = millis()
+        #  Mark the time each chunk is fully read in.
+        ip_capture_time = millis()
 
-    # Search for special byte sequences which indicate the start and end of
-    #  single-video-frame image data
-    b = bytes.rfind('\xff\xd9')
-    a = bytes.rfind('\xff\xd8', 0, b-1)
+        # Search for special byte sequences which indicate the start and end of
+        #  single-video-frame image data
+        b = bytes.rfind('\xff\xd9')
+        a = bytes.rfind('\xff\xd8', 0, b-1)
 
-    #Check if the presence of both markers indicate a full image is in the input buffer
-    if a != -1 and b != -1:
-        # Image frame has been found, Conver the data to an image in prep for processing
+        #Check if the presence of both markers indicate a full image is in the input buffer
+        if a != -1 and b != -1:
+            # Image frame has been found, Conver the data to an image in prep for processing
 
-        # Extract the raw image data
-        jpg = bytes[a:b+2]
-        # Clear processed bytes from the input data buffer
-        bytes = bytes[b+2:]
-        # Convert the raw image bytes into an image structure openCV can use
-        img = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
-        # Mark the time we found this image
-        prev_frame_capture_time_ms = frame_capture_time_ms
-        frame_capture_time_ms = ip_capture_time
-        # Update the image counter
-        frame_counter = frame_counter+1
-
-
-        # Clear out the arrays which will hold the processed data
-        curObservation.clear()
-
-        # Process the image
-        img_process(img)
-
-        # Capture CPU metrics at a slower interval, we don't need to update these
-        #  super often.
-        if(frame_counter % 15 == 0):
-            cpu_load_pct = psutil.cpu_percent()
-            mem_load_pct = psutil.virtual_memory().percent
-
-        # Calculate processing time
-        proc_time_ms = millis() - ip_capture_time
-        # Calculate present FPS (capture and processing)
-        fps_current = 1000/(frame_capture_time_ms - prev_frame_capture_time_ms)
-
-        # Add the metadata to the present target observation data
-        curObservation.setMetadata(frame_counter,proc_time_ms,cpu_load_pct,mem_load_pct,fps_current)
-
-        # Transmit the vision processing results to the roboRIO
-        outputDataServer.sendString(curObservation.toJsonString())
-        indicateLEDsProcessingActive()
+            # Extract the raw image data
+            jpg = bytes[a:b+2]
+            # Clear processed bytes from the input data buffer
+            bytes = bytes[b+2:]
+            # Convert the raw image bytes into an image structure openCV can use
+            img = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
+            # Mark the time we found this image
+            prev_frame_capture_time_ms = frame_capture_time_ms
+            frame_capture_time_ms = ip_capture_time
+            # Update the image counter
+            frame_counter = frame_counter+1
 
 
-        # Debug printing
-        # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        # print("Frame # "+ str(frame_counter))
-        # print(("Proc Time: %.2f ms" % proc_time_ms) +
-        #       (" | FPS: %.2f" % fps_current) +
-        #       (" | CPU: %.1fpct" % cpu_load_pct)+
-        #       (" | MEM: %.1fpct" % mem_load_pct))
-        # print("Area: " + " | ".join(map(str,targetAreas)))
-        # print("X   : " + " | ".join(map(str,targetXs)))
-        # print("Y   : " + " | ".join(map(str,targetYs)))
-        # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
+            # Clear out the arrays which will hold the processed data
+            curObservation.clear()
 
-        # Show debugging image
-        if(displayDebugImg):
-            cv2.imshow('Video', img)
+            # Process the image
+            img_process(img)
 
-        # I'm presuming this is needed to allow background things to hapapen
-        # time.sleep(.01)
+            # Capture CPU metrics at a slower interval, we don't need to update these
+            #  super often.
+            if(frame_counter % 15 == 0):
+                cpu_load_pct = psutil.cpu_percent()
+                mem_load_pct = psutil.virtual_memory().percent
+
+            # Calculate processing time
+            proc_time_ms = millis() - ip_capture_time
+            # Calculate present FPS (capture and processing)
+            fps_current = 1000/(frame_capture_time_ms - prev_frame_capture_time_ms)
+
+            # Add the metadata to the present target observation data
+            curObservation.setMetadata(frame_counter,proc_time_ms,cpu_load_pct,mem_load_pct,fps_current)
+
+            # Transmit the vision processing results to the roboRIO
+            outputDataServer.sendString(curObservation.toJsonString())
+            indicateLEDsProcessingActive()
+            
+            #Broadcast image
+            outputVideoStreamer.setImg(img, True)
+
+
+            # Debug printing
+            # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            # print("Frame # "+ str(frame_counter))
+            # print(("Proc Time: %.2f ms" % proc_time_ms) +
+            #       (" | FPS: %.2f" % fps_current) +
+            #       (" | CPU: %.1fpct" % cpu_load_pct)+
+            #       (" | MEM: %.1fpct" % mem_load_pct))
+            # print("Area: " + " | ".join(map(str,targetAreas)))
+            # print("X   : " + " | ".join(map(str,targetXs)))
+            # print("Y   : " + " | ".join(map(str,targetYs)))
+            # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
+
+            # Show debugging image
+            if(displayDebugImg):
+                cv2.imshow('Video', img)
+
+            # I'm presuming this is needed to allow background things to hapapen
+            time.sleep(.02)
+            
+    except KeyboardInterrupt:
+        print("Shutting down at user request")
+        break
 
 
 
@@ -291,3 +302,5 @@ indicateLEDsNotRunning()
 # Close out any debugging windows
 if(displayDebugImg):
     cv2.destroyAllWindows()
+
+outputVideoStreamer.stop()
