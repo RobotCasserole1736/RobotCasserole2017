@@ -454,7 +454,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setDialValue("Shooter Speed RPM", RobotState.shooterActualVelocity_rpm);
 		CasseroleDriverView.setDialValue("AirPressure Psi", airPress.getPress());
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
-		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound);
+		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound && RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Vision Aligning", RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible && !RobotState.visionAlignmentOnTarget);
 		CasseroleDriverView.setBoolean("Shooter Spoolup", (RobotState.shooterDesiredVelocity_rpm > 100) && !(RobotState.shooterVelocityOk));
 		
