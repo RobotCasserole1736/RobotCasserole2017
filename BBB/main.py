@@ -20,6 +20,9 @@ import pyMjpgStreamer
 #Fixed IP address of IP Camera
 camera_IP = '10.17.36.11'
 
+#Set to true to configure for USB, false for IP camera
+USE_USB_CAM=False
+
 
 ################################################################################
 # Global Data
@@ -61,8 +64,9 @@ procPipeline = Pipeline.Pipeline()
 # Server to transmit processed data over UDP to the roboRIO
 outputDataServer = UDPServer.UDPServer(send_to_address = "roborio-1736-frc.local", send_to_port = 5800)
 
-# Server to broadcast mjpg stream of raw captured video
-outputVideoStreamer= pyMjpgStreamer.pyMjpgStreamer();
+if(USE_USB_CAM):
+    # Server to broadcast mjpg stream of raw captured video
+    outputVideoStreamer= pyMjpgStreamer.pyMjpgStreamer();
 
 ################################################################################
 # Utility Functions
@@ -139,9 +143,6 @@ def readMjpgStream():
         readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
         readMjpgStream.bytes = ''
 
-
-    img_local = None
-    cap_time = None
     # Read data from the network in 1kb chunks
     #  Catch any issues reading. if we have issues, try to reset the connection.
     try:
@@ -151,11 +152,11 @@ def readMjpgStream():
         print("Reason: " + str(e))
         print("Attempting to restart connection...")
         readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
-        return img_local, cap_time
+        return None, None
 
 
     #  Mark the time each chunk is fully read in.
-    cap_time = millis()
+    readMjpgStream.cap_time = millis()
 
     # Search for special byte sequences which indicate the start and end of
     #  single-video-frame image data
@@ -171,10 +172,10 @@ def readMjpgStream():
         # Clear processed bytes from the input data buffer
         readMjpgStream.bytes = readMjpgStream.bytes[b+2:]
         # Convert the raw image bytes into an image structure openCV can use
-        img_local = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
-    
-    return img_local, cap_time
-
+        readMjpgStream.img_local = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
+        return readMjpgStream.img_local, readMjpgStream.cap_time
+    else:
+        return None, None
 ################################################################################
 # Main Processing algorithm... or a thin wrapper around it?
 ################################################################################
@@ -261,8 +262,11 @@ if(displayDebugImg):
 # Main execution loop
 while True:
     try:
-        #img,cap_time_tmp = readMjpgStream()
-        img,cap_time_tmp = readWebCam()
+        if(USE_USB_CAM):
+            img,cap_time_tmp = readWebCam()
+        else:
+            img,cap_time_tmp = readMjpgStream()
+        
         if(img is not None):
             # Mark the time we found this image
             prev_frame_capture_time_ms = frame_capture_time_ms
@@ -295,8 +299,9 @@ while True:
             outputDataServer.sendString(curObservation.toJsonString())
             indicateLEDsProcessingActive()
             
-            #Broadcast image
-            outputVideoStreamer.setImg(img, True)
+            #Broadcast image mjpg stream when using usb camera
+            if(USE_USB_CAM):
+                outputVideoStreamer.setImg(img, True)
 
 
             # Debug printing
@@ -316,7 +321,8 @@ while True:
                 cv2.imshow('Video', img)
 
             # I'm presuming this is needed to allow background things to hapapen
-            time.sleep(.01)
+            if(USE_USB_CAM):
+                time.sleep(.01)
             
     except KeyboardInterrupt:
         print("Shutting down at user request")

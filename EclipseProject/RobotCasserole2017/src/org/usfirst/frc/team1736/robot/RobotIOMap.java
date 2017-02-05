@@ -49,8 +49,8 @@ public class RobotIOMap {
 	public static final int AIR_PRESSURE_SYSTEM = 1;
 	
 	//Camera & Vision Properties
-	public static final int VISION_X_PIXELS = 352;
-	public static final int VISION_Y_PIXELS = 288;
+	public static final int VISION_X_PIXELS = 640;
+	public static final int VISION_Y_PIXELS = 480;
 
 
 }
