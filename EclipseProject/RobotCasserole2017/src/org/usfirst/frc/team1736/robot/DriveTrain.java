@@ -33,9 +33,7 @@ public class DriveTrain{
 	
 	boolean runningClosedLoop;
 	
-	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0;
-	
-	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
+
 	
 
 	
@@ -67,10 +65,10 @@ public class DriveTrain{
     	rearRightEncoder  = new Encoder(RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_A,  RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
     	
     	//Note minus signs to invert right side of drivetrain
-    	frontLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	frontRightEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearLeftEncoder.setDistancePerPulse(-DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearRightEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	frontLeftEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	frontRightEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearLeftEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+    	rearRightEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
     	
     	
     	
@@ -97,10 +95,10 @@ public class DriveTrain{
 		RobotState.rearRightWheelVelocity_rpm  = rearRightEncoder.getRate()*60.0;
 		
 		//Get distance returns in total revolutions, so convert to ft with math
-		RobotState.frontLeftWheelDistance_ft  = frontLeftEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
-		RobotState.frontRightWheelDistance_ft = frontRightEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
-		RobotState.rearLeftWheelDistance_ft   = rearLeftEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
-		RobotState.rearRightWheelDistance_ft  = rearRightEncoder.getDistance()*2.0*Math.PI*DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.frontLeftWheelDistance_ft  = frontLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.frontRightWheelDistance_ft = frontRightEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.rearLeftWheelDistance_ft   = rearLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+		RobotState.rearRightWheelDistance_ft  = rearRightEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
 		
 	}
 	

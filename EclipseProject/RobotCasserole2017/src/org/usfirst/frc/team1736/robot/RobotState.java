@@ -105,6 +105,9 @@ public class RobotState {
 	//Intake Command
 	static double intakeSpeedCmd = 0.0; //Motor command to be sent to the intake motor. 
 	static boolean intakeExtendCmd = false; //Intake Mechanism is extended when true
+	public static double robotNetDistance_ft;
+	public static double robotFwdRevDist_ft;
+	public static double robotStrafeDist_ft;
 	
 	//Getters and Setters for select globals
 	public static double getopShotCTRLOrdinal(){

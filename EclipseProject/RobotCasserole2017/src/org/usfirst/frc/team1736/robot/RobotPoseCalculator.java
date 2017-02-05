@@ -30,8 +30,8 @@ public class RobotPoseCalculator {
 		WheelSpeedCuatro =RobotState.rearRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
 	
 		//Calculate translational velocity x/y components via inverse mechanum kinematic equations
-		Vx = (WheelSpeedOno + WheelSpeedDos + WheelSpeedTres + WheelSpeedCuatro) * 0.17 / 4;
-		Vy  = (WheelSpeedOno - WheelSpeedDos + WheelSpeedTres - WheelSpeedCuatro) * 0.17 / 4;
+		Vx = (WheelSpeedOno + WheelSpeedDos + WheelSpeedTres + WheelSpeedCuatro) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
+		Vy  = (WheelSpeedOno - WheelSpeedDos + WheelSpeedTres - WheelSpeedCuatro) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
 	
 		//Calculate net speed vector with pythagorean theorem
 		netSpeed = Math.sqrt(Vx*Vx+Vy*Vy);
@@ -42,10 +42,18 @@ public class RobotPoseCalculator {
 		RobotState.robotStrafeVel_ftpers = Vy;	
 		
 		///////////////////////////////////////////////////////////////////////////
-		// Distance calculations
+		// Distance calculations - similar to above
 		///////////////////////////////////////////////////////////////////////////
-		RobotState.robotNetDistance_ft = netSpeed;
-		RobotState.robotFwdRevDist_ft = Vx;
-		RobotState.robotStrafeDist_ft = Vy;	
+		
+		RobotState.robotFwdRevDist_ft = (RobotState.frontLeftWheelDistance_ft + 
+				                         RobotState.frontRightWheelDistance_ft + 
+				                         RobotState.rearLeftWheelDistance_ft + 
+				                         RobotState.rearRightWheelDistance_ft) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
+		RobotState.robotStrafeDist_ft  = (RobotState.frontLeftWheelDistance_ft - 
+										 RobotState.frontRightWheelDistance_ft +
+										 RobotState.rearLeftWheelDistance_ft - 
+										 RobotState.rearRightWheelDistance_ft) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
+		
+		RobotState.robotNetDistance_ft =  Math.sqrt(Math.pow(RobotState.robotStrafeDist_ft, 2)+Math.pow(RobotState.robotFwdRevDist_ft, 2));
 	}
 }

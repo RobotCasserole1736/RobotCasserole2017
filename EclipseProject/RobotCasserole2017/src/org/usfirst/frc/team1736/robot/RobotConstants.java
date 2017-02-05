@@ -2,6 +2,10 @@ package org.usfirst.frc.team1736.robot;
 
 public class RobotConstants {
 	
+	///////////////////////////////////////////////////////////////////////////
+	// Electrical IO Map
+	///////////////////////////////////////////////////////////////////////////
+	
 	//Motor Output port mappings
 	public static final int DRIVETRAIN_FRONT_RIGHT_MOTOR = 0;
 	public static final int DRIVETRAIN_FRONT_LEFT_MOTOR  = 1;
@@ -25,7 +29,6 @@ public class RobotConstants {
 	public static final int CLIMBER_MOTOR2_PDP_CH  = 6;
 	public static final int INTAKE_MOTOR_PDP_CH   = 14;
 
-	
 	//CAN Device ID's
 	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 0;
 	
@@ -43,14 +46,21 @@ public class RobotConstants {
 	public static final int GEAR_SOLENOID_PORT = 1; 
 	public static final int INTAKE_EXTEND_SOLENOID_PORT = 2;
 	//public static final int SW_TEST_BOARD_SOLENOID_PORT = 4; 
-
 	
 	//Analog Inputs
-	public static final int AIR_PRESSURE_SYSTEM = 1;
+	public static final int AIR_PRESSURE_SENSOR_PORT = 1;
 	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Physical Constants
+	///////////////////////////////////////////////////////////////////////////
 	//Camera & Vision Properties
 	public static final int VISION_X_PIXELS = 640;
 	public static final int VISION_Y_PIXELS = 480;
+	
+	//Drivetrain
+	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0; //2048 cycles per revolution (encoder libraries handle 4x decoding
+	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
 
 
 }
