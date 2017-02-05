@@ -538,6 +538,10 @@ public class Robot extends IterativeRobot {
 		RobotState.intakeCamAlign = driverCTRL.X();
 		RobotState.shooterCamAlign = driverCTRL.Y();
 		
+		if(driverCTRL.DPadUp()){
+			gyro.reset();
+		}
+		
 		//gyro align commands TODO
 //		boolean newR = driverCTRL.DPadRight();
 //		boolean newD = driverCTRL.DPadDown();

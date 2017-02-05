@@ -264,7 +264,7 @@ public class Xbox360Controller {
      * @return True if the DPad is pushed up, False if it is not pressed
      */
     public boolean DPadUp() {
-        if (joystick.getPOV(XBOX_DPAD_POV) >= 315 && joystick.getPOV(XBOX_DPAD_POV) <= 45)
+        if (joystick.getPOV(XBOX_DPAD_POV) >= 315 || joystick.getPOV(XBOX_DPAD_POV) <= 45)
             return true;
         else
             return false;
