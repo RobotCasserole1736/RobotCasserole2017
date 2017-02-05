@@ -35,10 +35,10 @@ public class VisionAlignment {
 	
 	//PID Gains 
 	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 0.05, 0.0, 1.0);
-	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.02, 0.0, 1.0);
+	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.03, 0.0, 1.0);
 	Calibration angle_Kd = new Calibration("Alignment Angle Control Kd", 0.0, 0.0, 1.0);
-	Calibration dist_Kp = new Calibration("Alignment Dist Control Kp", 0.5/4, 0.0, 1.0);
-	Calibration dist_Ki = new Calibration("Alignment Dist Control Ki", 0.0, 0.0, 1.0);
+	Calibration dist_Kp = new Calibration("Alignment Dist Control Kp", 0.25, 0.0, 1.0);
+	Calibration dist_Ki = new Calibration("Alignment Dist Control Ki", 0.4, 0.0, 1.0);
 	Calibration dist_Kd = new Calibration("Alignment Dist Control Kd", 0.0, -1.0, 1.0);
 	
 	//Desired angle and distance
@@ -55,10 +55,11 @@ public class VisionAlignment {
 		// Set max and min commands
 		anglePID.setOutputRange(-0.75, 0.75);
 		anglePID.setActualAsDerivTermSrc();
-		anglePID.setintegratorDisableThresh(15.0);
+		anglePID.setintegratorDisableThresh(15.0); //Don't use I term until we're within 15 degrees
 		
 		distPID.setOutputRange(-0.5, 0.5);
 		distPID.setActualAsDerivTermSrc();
+		distPID.setintegratorDisableThresh(0.25); //Don't use I term till we're within a half a foot
 		
 		//Make sure neither pid is running
 		//CasserolePID is not running after construction
@@ -109,8 +110,8 @@ public class VisionAlignment {
 		}
 		
 		//Temp for tuning PID's
-		RobotState.visionGyroAngleDesiredAtLastFrame = 0;
-		RobotState.visionDistanceDesiredAtLastFrame = 0;
+		//RobotState.visionGyroAngleDesiredAtLastFrame = 0;
+		//RobotState.visionDistanceDesiredAtLastFrame = 0;
 		
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
