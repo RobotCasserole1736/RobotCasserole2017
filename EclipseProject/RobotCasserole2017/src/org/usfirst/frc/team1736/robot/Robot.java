@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
     Vision_Processing_Main VisionProk;
     
     //Software utilities
-    RobotSpeedomitar chris;
+    RobotPoseCalculator chris;
     CalWrangler wrangler;
     CasseroleWebServer webServer;
 
@@ -112,7 +112,7 @@ public class Robot extends IterativeRobot {
 		visionAlignCTRL = new VisionAlignment();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
-		chris = new RobotSpeedomitar();
+		chris = new RobotPoseCalculator();
 		shotCTRL = new Sht_ctrl();
 		hopControl = new HopperControl();
 		shooterControl = new ShooterWheelCTRL();

@@ -1,9 +1,9 @@
 package org.usfirst.frc.team1736.robot;
 
 
-public class RobotSpeedomitar {
+public class RobotPoseCalculator {
 	
-	public RobotSpeedomitar(){
+	public RobotPoseCalculator(){
 		return;
 	}
 	
