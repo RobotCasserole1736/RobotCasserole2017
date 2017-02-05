@@ -124,7 +124,6 @@ public class Robot extends IterativeRobot {
 		comp = new Compressor();
 		comp.setClosedLoopControl(true); //ensure we are running
 		gearSolenoid = new Solenoid(RobotIOMap.GEAR_SOLENOID_PORT);
-
 		
 
 		driverCTRL = new Xbox360Controller(0);
@@ -378,7 +377,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("PDP_DT_RR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_RIGHT_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Hopper_Motor_Current","A","getCurrent", pdp,  RobotIOMap.HOPPER_MOTOR_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR1_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR2_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Climber_Motor2_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR2_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotIOMap.INTAKE_MOTOR_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.TallonFlame);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
@@ -509,6 +508,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", RobotState.visionDtFwdRevCmd);
 		CassesroleWebStates.putDouble("Vision Rotate Cmd", RobotState.visionDtRotateCmd);
 		CassesroleWebStates.putDouble("Vision_Align_State", visionAlignCTRL.getVisionAlignState());
+		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", RobotState.visionGyroAngleAtLastFrame);
+		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", RobotState.visionGyroAngleDesiredAtLastFrame);
 	}
 
 
@@ -593,7 +594,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateGlobalSensorInputs(){
-		RobotState.robotPoseAngle_deg = gyro.getAngle();
+		RobotState.robotPoseAngle_deg = -gyro.getAngle(); //Gyro output angle is inverted from our conventions
 	}
 
 	

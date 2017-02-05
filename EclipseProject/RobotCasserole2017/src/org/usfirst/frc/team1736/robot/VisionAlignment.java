@@ -1,16 +1,25 @@
 package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
+import org.usfirst.frc.team1736.lib.SignalMath.InterpValueHistoryBuffer;
+
+import edu.wpi.first.wpilibj.Timer;
 
 public class VisionAlignment {
 	VisionAlignAnglePID anglePID;
 	VisionAlignDistPID distPID;
+	
+	//Record of old gyro values
+	InterpValueHistoryBuffer gyroHistory;
 	
 	//Tolerances
 	double angleTol = 1.0;
 	double distTol = 0.5;
 	double angleTolHyst = 0.5;
 	double distTolHyst = 0.25;
+	
+	//Keep track of what the most recent frame recieved fromt he coprocessor was
+	double prev_frame_counter;
 	
 	//States of the vision align subsystem
 	public enum VisionAlignStates {
@@ -25,10 +34,10 @@ public class VisionAlignment {
 	
 	//PID Gains 
 	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 1.0/40.0, 0.0, 1.0);
-	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 1.0/40.0/(3*50), 0.0, 1.0);
+	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.0, 0.0, 1.0);
 	Calibration angle_Kd = new Calibration("Alignment Angle Control Kd", 0.0, 0.0, 1.0);
-	Calibration dist_Kp = new Calibration("Alignment Dist Control Kp", 1.0/7.0, 0.0, 1.0);
-	Calibration dist_Ki = new Calibration("Alignment Dist Control Ki", 1.0/7.0/(3*50), 0.0, 1.0);
+	Calibration dist_Kp = new Calibration("Alignment Dist Control Kp", 0.0, 0.0, 1.0);
+	Calibration dist_Ki = new Calibration("Alignment Dist Control Ki", 0.0, 0.0, 1.0);
 	Calibration dist_Kd = new Calibration("Alignment Dist Control Kd", 0.0, 0.0, 1.0);
 	
 	//Desired angle and distance
@@ -53,17 +62,33 @@ public class VisionAlignment {
 		RobotState.visionAlignmentOnTarget = false;
 		RobotState.visionDtFwdRevCmd = 0.0;
 		RobotState.visionDtRotateCmd = 0.0;
+		
+		gyroHistory = new InterpValueHistoryBuffer(30, 0);
+		prev_frame_counter = 0;
 	}
 
 	public void GetAligned(){
 		
+		//Save gyro value
+		gyroHistory.insert(Timer.getFPGATimestamp(), RobotState.robotPoseAngle_deg);
+		
 		// Figure out if alignment is possible
 		RobotState.visionAlignmentPossible = RobotState.visionOnline && RobotState.visionTargetFound;
+		
+		//If vision align is possible, look to see if we have a new frame
+		if(RobotState.visionAlignmentPossible){
+			if(prev_frame_counter < RobotState.visionFrameCounter){
+				//New frame, update the gyro-based setpoints
+				RobotState.visionGyroAngleAtLastFrame = gyroHistory.getValAtTime(RobotState.visionEstCaptureTime);
+				RobotState.visionGyroAngleDesiredAtLastFrame = RobotState.visionGyroAngleAtLastFrame - (RobotState.visionTargetOffset_deg - angleDesired.get());
+				prev_frame_counter = RobotState.visionFrameCounter;
+			}
+		}
 		
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
 			//Set Desired
-			anglePID.setAngle(angleDesired.get());
+			anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
 			distPID.setDist(distDesired.get());
 			
 			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst)
@@ -91,7 +116,7 @@ public class VisionAlignment {
 			
 		}else if(visionAlignState == VisionAlignStates.sAligning){
 			//Set Desired
-			anglePID.setAngle(angleDesired.get());
+			anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
 			distPID.setDist(distDesired.get());
 			
 			if(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol

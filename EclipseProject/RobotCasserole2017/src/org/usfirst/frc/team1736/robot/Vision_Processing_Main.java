@@ -56,6 +56,7 @@ public class Vision_Processing_Main {
 	
 			//Update performance outputs
 			RobotState.visionCoProcessorFPS = VL.getFPS();
+			RobotState.visionFrameCounter = VL.getFrameCounter();
 			RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
 			RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
 			RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - Exp_network_latency_sec;

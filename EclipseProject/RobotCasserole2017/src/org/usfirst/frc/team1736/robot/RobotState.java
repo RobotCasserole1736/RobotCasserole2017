@@ -37,7 +37,7 @@ public class RobotState {
 	static boolean opEjectDesired = false;  //True if the operator wants to reverse the intake direction to eject lodged balls, false if not.
 	
 	//Whole-robot pose/velocity state information (outputs from drivetrain class or IMU)
-	static double robotPoseAngle_deg = 0; //Present rotation of the robot (relative to field)
+	static double robotPoseAngle_deg = 0; //Present rotation of the robot (relative to field). Zero is starting angle, more-positive angles indicate clockwise rotation, more-negative angles indicate CCW rotation.
 	static double robotRotationalVel_degpers = 0 ; //Present rotational velocity of the robot (relative to field)
 	static double robotFwdRevVel_ftpers = 0; //Present forward or reverse velocity of the robot in ft/sec. Positive numbers mean forward, negative numbers mean reverse.
 	static double robotStrafeVel_ftpers = 0; //Present side-to-side velocity of the robot in ft/sec. Positive numbers mean right, negative numbers mean left.
@@ -60,6 +60,7 @@ public class RobotState {
 	
 	//Vision Target Qualification System (Outputs from vision targeting system)
 	static boolean visionOnline = false; //True if information is being received from the coprocessor, false if the system is down. All other variables should only be considered valid if this field is true.
+	static double  visionFrameCounter = 0; //Indicates the frame we are on. Increase monotomically by one for each new processed frame.
 	static boolean visionTargetFound = false; //True if a qualified (valid) target is found in the most recent camera image, false if not
 	static double  visionTargetOffset_deg = 0; //Offset from center of image of the located target. 0 degrees means the target is right in front of the camera, positive degrees means the target is to the right, negative degrees means the target is to the left.
 	static double  visionEstTargetDist_ft = 0; //Estimated distance from the camera lens to the top vision target (hypotenuse)
@@ -71,6 +72,8 @@ public class RobotState {
 	static double  visionCoProcessorCPULoad_pct = 0; //Coprocessor reported processor load
 	static double  visionCoProcessorMemLoad_pct = 0; //Coprocessor reported memory load
 	
+	static double  visionGyroAngleAtLastFrame = 0; //what did the gyro read when the last frame was captured from vision processing
+	static double  visionGyroAngleDesiredAtLastFrame = 0; //based on most recent vision processing results, what angle should we go to?
 	
 	//Vision Align system (mostly outputs from vision-based alignment system)
 	static boolean visionAlignmentPossible = false; //True if the vision system is capable of auto-aligning the robot, false if not. False should happen if the vision system is offline, or no target can be seen.
@@ -289,6 +292,12 @@ public class RobotState {
 	}
 	public static double getVisionTopTgtYPixelPos() {
 		return visionTopTgtYPixelPos;
+	}
+	public static double getVisionGyroAngleAtLastFrame() {
+		return visionGyroAngleAtLastFrame;
+	}
+	public static double getVisionGyroAngleDesiredAtLastFrame() {
+		return visionGyroAngleDesiredAtLastFrame;
 	}
 
 	
