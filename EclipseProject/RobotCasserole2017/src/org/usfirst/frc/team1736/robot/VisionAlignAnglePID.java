@@ -23,7 +23,7 @@ public class VisionAlignAnglePID extends CasserolePID {
 	protected void usePIDOutput(double pidOutput) {
 		// Negate to get proper turn based on error sign.
 		//Limit to half range to reduce overshoot
-		RobotState.visionDtRotateCmd = Math.min(0.5, Math.max(-0.5, -pidOutput));
+		RobotState.visionDtRotateCmd = Math.min(0.5, Math.max(-0.5, pidOutput));
 	}
 
 }

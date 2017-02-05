@@ -15,8 +15,8 @@ public class VisionAlignment {
 	//Tolerances
 	double angleTol = 1.0;
 	double distTol = 0.5;
-	double angleTolHyst = 0.5;
-	double distTolHyst = 0.25;
+	double angleTolHyst = 0.025;//get within half a degree ligned up
+	double distTolHyst = 0.025; //get within one foot ligned up
 	
 	//Keep track of what the most recent frame recieved fromt he coprocessor was
 	double prev_frame_counter;
@@ -42,7 +42,7 @@ public class VisionAlignment {
 	
 	//Desired angle and distance
 	Calibration angleDesired = new Calibration("Desired Angle Alignment Offset", 0.0, -40.0, 40.0);
-	Calibration distDesired = new Calibration("Desired Distance Alignment", 10.0, 0.0, 50.0);
+	Calibration distDesired = new Calibration("Desired Distance Alignment", 17.0, 0.0, 50.0);
 	
 	VisionAlignStates visionAlignState = VisionAlignStates.sNotControlling;
 	
@@ -77,10 +77,10 @@ public class VisionAlignment {
 		
 		//If vision align is possible, look to see if we have a new frame
 		if(RobotState.visionAlignmentPossible){
-			if(prev_frame_counter < RobotState.visionFrameCounter){
+			if(prev_frame_counter != RobotState.visionFrameCounter){
 				//New frame, update the gyro-based setpoints
 				RobotState.visionGyroAngleAtLastFrame = gyroHistory.getValAtTime(RobotState.visionEstCaptureTime);
-				RobotState.visionGyroAngleDesiredAtLastFrame = RobotState.visionGyroAngleAtLastFrame - (RobotState.visionTargetOffset_deg - angleDesired.get());
+				RobotState.visionGyroAngleDesiredAtLastFrame = RobotState.visionGyroAngleAtLastFrame + (RobotState.visionTargetOffset_deg - angleDesired.get());
 				prev_frame_counter = RobotState.visionFrameCounter;
 			}
 		}
