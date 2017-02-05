@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * event's update() method is guaranteed. The child event will no longer be run once it declares
  * itself as "done". <br>
  * <br>
- * All events on the timeline must implement the functions defined here. User Init is for performing
+ * All events on the timeline must implement the functions defined here. Constructor is for performing
  * all user-specific actions during sequencer setup. User update is the periodic update function
  * which the sequencer will call as long as the event is active. isDone() signals the sequencer this
  * event no longer needs to run, while isTriggered() is used for child events to signal they need to
@@ -49,7 +49,6 @@ public abstract class AutoEvent {
         localUpdateCount = 0;
         isRunning = false;
         childEvents = new ArrayList<AutoEvent>(0);
-        userInit();
     }
 
 
@@ -79,10 +78,6 @@ public abstract class AutoEvent {
         userUpdate();
         localUpdateCount++;
     }
-
-
-    /** Perform any actions needed to initalize this event */
-    public abstract void userInit();
 
 
     /** Perform all actions needed during periodic update for this event */

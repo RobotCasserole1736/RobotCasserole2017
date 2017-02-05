@@ -18,7 +18,7 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 	boolean enabled;
 
 	public DriveTrainWheelSpeedPI(SpeedController spdctrl_in, Encoder encoder_in, Calibration K_ff_cal_in, Calibration K_p_cal_in, Calibration K_i_cal_in) {
-		super(0, 0, 0);
+		super(K_p_cal_in.get(), K_i_cal_in.get(), 0, K_ff_cal_in.get(),0,0);
 
 		spdctrl = spdctrl_in;
 		encoder = encoder_in;

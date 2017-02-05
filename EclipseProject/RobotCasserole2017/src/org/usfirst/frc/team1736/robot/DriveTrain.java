@@ -212,10 +212,10 @@ public class DriveTrain{
 		rearLeftAutonCtrl.setEnabled(true);
 		rearRightAutonCtrl.setEnabled(true);
 		
-		frontLeftAutonCtrl.setSetpoint(frontLeftSetpoint_RPM);
-		frontRightAutonCtrl.setSetpoint(frontRightSetpoint_RPM);
-		rearLeftAutonCtrl.setSetpoint(rearLeftSetpoint_RPM);
-		rearRightAutonCtrl.setSetpoint(rearRightSetpoint_RPM);
+//		frontLeftAutonCtrl.setSetpoint(frontLeftSetpoint_RPM);
+//		frontRightAutonCtrl.setSetpoint(frontRightSetpoint_RPM);
+//		rearLeftAutonCtrl.setSetpoint(rearLeftSetpoint_RPM);
+//		rearRightAutonCtrl.setSetpoint(rearRightSetpoint_RPM);
 		
 		runningClosedLoop = true;
 	}
@@ -248,7 +248,20 @@ public class DriveTrain{
 	public boolean isRunningClosedLoop(){
 		return runningClosedLoop;
 	}
+	
+	public DriveTrainWheelSpeedPI getFrontLeftCTRL(){
+		return frontLeftAutonCtrl;
+	}
+	
+	public DriveTrainWheelSpeedPI getFrontRightCTRL(){
+		return frontRightAutonCtrl;
+	}
 
-
-
+	public DriveTrainWheelSpeedPI getRearLeftCTRL(){
+		return rearLeftAutonCtrl;
+	}
+	
+	public DriveTrainWheelSpeedPI getRearrightCTRL(){
+		return rearRightAutonCtrl;
+	}
 }
