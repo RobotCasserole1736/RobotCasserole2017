@@ -21,8 +21,8 @@ public class VisionAlignAnglePID extends CasserolePID {
 
 	@Override
 	protected void usePIDOutput(double pidOutput) {
-		// TODO Auto-generated method stub
-		RobotState.visionDtRotateCmd = pidOutput;
+		// Negate to get proper turn based on error sign.
+		RobotState.visionDtRotateCmd = -pidOutput;
 	}
 
 }
