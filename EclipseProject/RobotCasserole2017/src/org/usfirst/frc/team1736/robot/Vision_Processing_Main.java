@@ -13,8 +13,6 @@ public class Vision_Processing_Main {
 	private double prevFrameCount;
 	
 	//Constants
-	private final double CAMERA_PIXELS_X = 640;
-	//private final double CAMERA_PIXELS_Y = 480; //Not yet used
 	private final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
 	//private final double CAMERA_FOV_Y_DEG = 48; //not yet used
 	private final double CURVATURE_FUDGE_FACTOR = 1.75; //Accounts for the fact the camera angle plus cylinder shape makes for a curved (not rectangular) target. I feel like this is dubious math, but it seems to help for now....
@@ -114,8 +112,9 @@ public class Vision_Processing_Main {
 			RobotState.visionTargetFound = true;
 			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
 			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
-			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*CAMERA_PIXELS_X)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
-			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - CAMERA_PIXELS_X/2) * (CAMERA_FOV_X_DEG/CAMERA_PIXELS_X);
+			double cam_to_tgt_dist_ft = (TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
+			RobotState.visionEstTargetDist_ft = Math.sqrt(Math.pow(cam_to_tgt_dist_ft, 2) - Math.pow(RobotConstants.HIGH_GOAL_VISION_TARGET_HEIGHT_FT,2)); //We need to calculate distance along the ground, so use pythagorean theorem to calculate floor distance, given target height.
+			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - RobotConstants.VISION_X_PIXELS/2) * (CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
 		} else {
 			RobotState.visionTargetFound = false;
 		}
@@ -191,8 +190,8 @@ public class Vision_Processing_Main {
 			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
 			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
 			RobotState.visionHeuristicVal = Best_Heuristic;
-			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*CAMERA_PIXELS_X)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
-			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - CAMERA_PIXELS_X/2) * (CAMERA_FOV_X_DEG/CAMERA_PIXELS_X);
+			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
+			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - RobotConstants.VISION_X_PIXELS/2) * (CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
 		} else {
 			//If there's no target seen, say so.
 			RobotState.visionTargetFound = false;

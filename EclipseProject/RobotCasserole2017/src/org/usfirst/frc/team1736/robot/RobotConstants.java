@@ -62,5 +62,6 @@ public class RobotConstants {
 	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0; //2048 cycles per revolution (encoder libraries handle 4x decoding
 	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
 
-
+	//Playing Field
+	public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 6;
 }
