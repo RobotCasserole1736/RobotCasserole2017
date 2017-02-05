@@ -43,7 +43,7 @@ public class VisionAlignment {
 	
 	//Desired angle and distance
 	Calibration angleDesired = new Calibration("Desired Angle Alignment Offset", 0.0, -40.0, 40.0);
-	Calibration distDesired = new Calibration("Desired Distance Alignment", 17.0, 0.0, 50.0);
+	Calibration distDesired = new Calibration("Desired Distance Alignment", 70.0/12.0, 0.0, 50.0);
 	
 	VisionAlignStates visionAlignState = VisionAlignStates.sNotControlling;
 	
@@ -126,7 +126,7 @@ public class VisionAlignment {
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
-			}else if(!RobotState.visionAlignmentDesiried){
+			}else if(!RobotState.visionAlignmentDesiried | !RobotState.visionOnline){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
@@ -154,7 +154,7 @@ public class VisionAlignment {
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
-			}else if(!RobotState.visionAlignmentDesiried){
+			}else if(!RobotState.visionAlignmentDesiried | !RobotState.visionOnline){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
@@ -175,7 +175,7 @@ public class VisionAlignment {
 			RobotState.visionDtFwdRevCmd = 0.0;
 			RobotState.visionDtRotateCmd = 0.0;
 			
-			if(RobotState.visionAlignmentDesiried){
+			if(RobotState.visionAlignmentDesiried & RobotState.visionOnline){
 				//Reset integrators and start pids 
 				anglePID.start();
 				distPID.start();

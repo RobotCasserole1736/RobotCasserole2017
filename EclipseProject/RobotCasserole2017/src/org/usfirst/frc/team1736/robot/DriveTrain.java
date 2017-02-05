@@ -39,16 +39,17 @@ public class DriveTrain{
 	
 	public DriveTrain() {
 		//Setup Drivetrain with motors and such
-		frontLeftMotor  = new VictorSP(RobotConstants.DRIVETRAIN_FRONT_LEFT_MOTOR);
-    	frontRightMotor = new VictorSP(RobotConstants.DRIVETRAIN_FRONT_RIGHT_MOTOR);
-    	rearLeftMotor   = new VictorSP(RobotConstants.DRIVETRAIN_REAR_LEFT_MOTOR);
-    	rearRightMotor  = new VictorSP(RobotConstants.DRIVETRAIN_REAR_RIGHT_MOTOR);
+		frontLeftMotor  = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_LEFT_MOTOR);
+    	frontRightMotor = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_RIGHT_MOTOR);
+    	rearLeftMotor   = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_REAR_LEFT_MOTOR);
+    	rearRightMotor  = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_REAR_RIGHT_MOTOR);
     	
     	//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
     	frontLeftMotor.setInverted(false);
     	frontRightMotor.setInverted(false);
     	rearLeftMotor.setInverted(true);
     	rearRightMotor.setInverted(true);
+    	
     	
     	myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
     	
