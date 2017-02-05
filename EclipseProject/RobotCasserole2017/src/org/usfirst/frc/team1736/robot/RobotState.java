@@ -74,6 +74,8 @@ public class RobotState {
 	
 	static double  visionGyroAngleAtLastFrame = 0; //what did the gyro read when the last frame was captured from vision processing
 	static double  visionGyroAngleDesiredAtLastFrame = 0; //based on most recent vision processing results, what angle should we go to?
+	public static double visionDistanceAtLastFrame = 0; //What did the encoders read for fwd/rev location when the last frame was captured from visino processing
+	public static double visionDistanceDesiredAtLastFrame = 0; //Based on the most recent vision processing results, what distance should we go to?
 	
 	//Vision Align system (mostly outputs from vision-based alignment system)
 	static boolean visionAlignmentPossible = false; //True if the vision system is capable of auto-aligning the robot, false if not. False should happen if the vision system is offline, or no target can be seen.
@@ -108,6 +110,7 @@ public class RobotState {
 	public static double robotNetDistance_ft;
 	public static double robotFwdRevDist_ft;
 	public static double robotStrafeDist_ft;
+	
 	
 	//Getters and Setters for select globals
 	public static double getopShotCTRLOrdinal(){

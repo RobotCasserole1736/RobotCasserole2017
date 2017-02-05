@@ -9,16 +9,17 @@ public class VisionAlignment {
 	VisionAlignAnglePID anglePID;
 	VisionAlignDistPID distPID;
 	
-	//Record of old gyro values
+	//Record of the history of gyro and distance values
 	InterpValueHistoryBuffer gyroHistory;
+	InterpValueHistoryBuffer distanceHistory;
 	
 	//Tolerances
 	double angleTol = 1.0;
 	double distTol = 0.5;
-	double angleTolHyst = 0.025;//get within half a degree ligned up
-	double distTolHyst = 0.025; //get within one foot ligned up
+	double angleTolHyst = 0.025;//get within half a degree lined up
+	double distTolHyst = 0.025; //get within one foot lined up
 	
-	//Keep track of what the most recent frame recieved fromt he coprocessor was
+	//Keep track of what the most recent frame received from the coprocessor was
 	double prev_frame_counter;
 	
 	//States of the vision align subsystem
@@ -52,8 +53,8 @@ public class VisionAlignment {
 		distPID = new VisionAlignDistPID(dist_Kp.get(), dist_Ki.get(), dist_Kd.get());
 		
 		// Set max and min commands
-		anglePID.setOutputRange(-1.0, 1.0);
-		distPID.setOutputRange(-1.0, 1.0);
+		anglePID.setOutputRange(-0.5, 0.5);
+		distPID.setOutputRange(-0.5, 0.5);
 		
 		//Make sure neither pid is running
 		//CasserolePID is not running after construction
@@ -64,13 +65,16 @@ public class VisionAlignment {
 		RobotState.visionDtRotateCmd = 0.0;
 		
 		gyroHistory = new InterpValueHistoryBuffer(30, 0);
+		distanceHistory = new InterpValueHistoryBuffer(30, 0);
 		prev_frame_counter = 0;
 	}
 
 	public void GetAligned(){
 		
-		//Save gyro value
-		gyroHistory.insert(Timer.getFPGATimestamp(), RobotState.robotPoseAngle_deg);
+		//Save historical values
+		double timeNow = Timer.getFPGATimestamp();
+		gyroHistory.insert(timeNow, RobotState.robotPoseAngle_deg);
+		distanceHistory.insert(timeNow, RobotState.robotFwdRevDist_ft);
 		
 		// Figure out if alignment should be done
 		RobotState.visionAlignmentPossible = RobotState.visionOnline && RobotState.visionTargetFound;
@@ -78,9 +82,13 @@ public class VisionAlignment {
 		//If vision align is possible, look to see if we have a new frame
 		if(RobotState.visionAlignmentPossible){
 			if(prev_frame_counter != RobotState.visionFrameCounter){
-				//New frame, update the gyro-based setpoints
+				//New frame
+				//update the gyro-based setpoints
 				RobotState.visionGyroAngleAtLastFrame = gyroHistory.getValAtTime(RobotState.visionEstCaptureTime);
 				RobotState.visionGyroAngleDesiredAtLastFrame = RobotState.visionGyroAngleAtLastFrame + (RobotState.visionTargetOffset_deg - angleDesired.get());
+				//Update the distance-based setpoints
+				RobotState.visionDistanceAtLastFrame = distanceHistory.getValAtTime(RobotState.visionEstCaptureTime);
+				RobotState.visionDistanceDesiredAtLastFrame = RobotState.visionDistanceAtLastFrame + (RobotState.visionEstTargetDist_ft - distDesired.get());
 				prev_frame_counter = RobotState.visionFrameCounter;
 			}
 		}
