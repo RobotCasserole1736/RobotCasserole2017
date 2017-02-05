@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.Spark;
 public class ClimberControl {
 
 	//Declare Motor Control
-	Spark climbMotor1 = new Spark(RobotIOMap.CLIMBER_MOTOR1_PWM_PORT);
-	Spark climbMotor2 = new Spark(RobotIOMap.CLIMBER_MOTOR2_PWM_PORT);
+	Spark climbMotor1 = new Spark(RobotConstants.CLIMBER_MOTOR1_PWM_PORT);
+	Spark climbMotor2 = new Spark(RobotConstants.CLIMBER_MOTOR2_PWM_PORT);
 	
 	//Climber Speed
 	public ClimberControl(){

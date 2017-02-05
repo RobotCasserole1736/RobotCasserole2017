@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.Spark;
 public class IntakeControl {
 	
 	//Declare Motor Control
-	Spark intakeMotor = new Spark(RobotIOMap.INTAKE_MOTOR_PWM_PORT);
+	Spark intakeMotor = new Spark(RobotConstants.INTAKE_MOTOR_PWM_PORT);
 	
 	//Declare Extender Control
-	Solenoid intakeExtend = new Solenoid(RobotIOMap.INTAKE_EXTEND_SOLENOID_PORT);
+	Solenoid intakeExtend = new Solenoid(RobotConstants.INTAKE_EXTEND_SOLENOID_PORT);
 	
 	//Declaring Intake Calibration
 	Calibration intakeMotorFwdCmd = new Calibration("Ground Pickup Intake Motor Command", 0.5, 0.0, 1.0);

@@ -40,8 +40,8 @@ public class CameraServoMount {
 	 * Constructor - initializes all the objects for a camera servo mount. Takes nothing, returns nothing.
 	 */
 	CameraServoMount(){
-		pan_servo = new Servo(RobotIOMap.CAMERA_PAN_SERVO_PWM_PORT);
-		tilt_servo = new Servo(RobotIOMap.CAMERA_TILT_SERVO_PWM_PORT);
+		pan_servo = new Servo(RobotConstants.CAMERA_PAN_SERVO_PWM_PORT);
+		tilt_servo = new Servo(RobotConstants.CAMERA_TILT_SERVO_PWM_PORT);
 		setCameraPos(startupPos);
 		
 	}

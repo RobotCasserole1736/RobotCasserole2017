@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1736.robot;
 
-public class RobotIOMap {
+public class RobotConstants {
 	
 	//Motor Output port mappings
 	public static final int DRIVETRAIN_FRONT_RIGHT_MOTOR = 0;

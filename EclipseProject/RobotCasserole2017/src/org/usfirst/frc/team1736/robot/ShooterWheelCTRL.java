@@ -16,7 +16,7 @@ public class ShooterWheelCTRL {
 	
 	
 	public ShooterWheelCTRL(){
-		TallonFlame = new CANTalon(RobotIOMap.SHOOTER_CAN_TALON_DEVICE_ID);
+		TallonFlame = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
 		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0);
 		Shooter_P_Gain = new Calibration("Shooter P Gain",0.001);
 		Shooter_I_Gain = new Calibration("Shooter I Gain",0);

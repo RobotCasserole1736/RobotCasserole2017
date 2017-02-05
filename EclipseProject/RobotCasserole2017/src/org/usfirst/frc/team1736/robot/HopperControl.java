@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Spark;
 
 public class HopperControl {
 	//Declare Motor Control
-	Spark hopMotor = new Spark(RobotIOMap.HOPPER_MOTOR_PWM_PORT);
+	Spark hopMotor = new Spark(RobotConstants.HOPPER_MOTOR_PWM_PORT);
 	
 	//Declaring Hopper Calibration
 	Calibration hopperMotorCmd = new Calibration("Hopper Feed Motor Command", 0.5, 0.0, 1.0);

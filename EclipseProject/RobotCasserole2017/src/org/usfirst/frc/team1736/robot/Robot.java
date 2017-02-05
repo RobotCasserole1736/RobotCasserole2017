@@ -124,7 +124,7 @@ public class Robot extends IterativeRobot {
 		
 		comp = new Compressor();
 		comp.setClosedLoopControl(true); //ensure we are running
-		gearSolenoid = new Solenoid(RobotIOMap.GEAR_SOLENOID_PORT);
+		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
 
 		auto = new Autonomus(myRobot);
 
@@ -378,14 +378,14 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
 		CsvLogger.addLoggingFieldDouble("PDP_Voltage","V","getVoltage", pdp);
 		CsvLogger.addLoggingFieldDouble("PDP_Total_Current","A","getTotalCurrent", pdp);
-		CsvLogger.addLoggingFieldDouble("PDP_DT_FL_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_FRONT_LEFT_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("PDP_DT_FR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_FRONT_RIGHT_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("PDP_DT_RL_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_LEFT_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("PDP_DT_RR_Current","A","getCurrent", pdp, RobotIOMap.DRIVETRAIN_REAR_RIGHT_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Hopper_Motor_Current","A","getCurrent", pdp,  RobotIOMap.HOPPER_MOTOR_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR1_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Climber_Motor2_Current","A","getCurrent", pdp, RobotIOMap.CLIMBER_MOTOR2_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotIOMap.INTAKE_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_FL_Current","A","getCurrent", pdp, RobotConstants.DRIVETRAIN_FRONT_LEFT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_FR_Current","A","getCurrent", pdp, RobotConstants.DRIVETRAIN_FRONT_RIGHT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_RL_Current","A","getCurrent", pdp, RobotConstants.DRIVETRAIN_REAR_LEFT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("PDP_DT_RR_Current","A","getCurrent", pdp, RobotConstants.DRIVETRAIN_REAR_RIGHT_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Hopper_Motor_Current","A","getCurrent", pdp,  RobotConstants.HOPPER_MOTOR_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR1_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Climber_Motor2_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR2_PDP_CH);
+		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotConstants.INTAKE_MOTOR_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.TallonFlame);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
@@ -473,8 +473,8 @@ public class Robot extends IterativeRobot {
 		}
 		CasseroleDriverView.setStringBox("Orientation deg", temp);
 		CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
-				                                (RobotState.visionTopTgtXPixelPos/RobotIOMap.VISION_X_PIXELS) * 100.0, 
-				                                (RobotState.visionTopTgtYPixelPos/RobotIOMap.VISION_Y_PIXELS) * 100.0);
+				                                (RobotState.visionTopTgtXPixelPos/RobotConstants.VISION_X_PIXELS) * 100.0, 
+				                                (RobotState.visionTopTgtYPixelPos/RobotConstants.VISION_Y_PIXELS) * 100.0);
 	}
 	
 	//Puts all relevant data to the robot State webpage

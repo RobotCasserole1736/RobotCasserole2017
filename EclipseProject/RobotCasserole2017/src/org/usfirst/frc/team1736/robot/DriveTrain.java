@@ -41,10 +41,10 @@ public class DriveTrain{
 	
 	public DriveTrain() {
 		//Setup Drivetrain with motors and such
-		frontLeftMotor  = new VictorSP(RobotIOMap.DRIVETRAIN_FRONT_LEFT_MOTOR);
-    	frontRightMotor = new VictorSP(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_MOTOR);
-    	rearLeftMotor   = new VictorSP(RobotIOMap.DRIVETRAIN_REAR_LEFT_MOTOR);
-    	rearRightMotor  = new VictorSP(RobotIOMap.DRIVETRAIN_REAR_RIGHT_MOTOR);
+		frontLeftMotor  = new VictorSP(RobotConstants.DRIVETRAIN_FRONT_LEFT_MOTOR);
+    	frontRightMotor = new VictorSP(RobotConstants.DRIVETRAIN_FRONT_RIGHT_MOTOR);
+    	rearLeftMotor   = new VictorSP(RobotConstants.DRIVETRAIN_REAR_LEFT_MOTOR);
+    	rearRightMotor  = new VictorSP(RobotConstants.DRIVETRAIN_REAR_RIGHT_MOTOR);
     	
     	//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
     	frontLeftMotor.setInverted(false);
@@ -61,10 +61,10 @@ public class DriveTrain{
     	dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0);
     	
     	//set up encoders
-    	frontLeftEncoder  = new Encoder(RobotIOMap.DRIVETRAIN_FRONT_LEFT_ENCODER_A,  RobotIOMap.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
-    	frontRightEncoder = new Encoder(RobotIOMap.DRIVETRAIN_FRONT_RIGHT_ENCODER_A, RobotIOMap.DRIVETRAIN_FRONT_RIGHT_ENCODER_B, false);
-    	rearLeftEncoder   = new Encoder(RobotIOMap.DRIVETRAIN_REAR_LEFT_ENCODER_A,   RobotIOMap.DRIVETRAIN_REAR_LEFT_ENCODER_B,   false);
-    	rearRightEncoder  = new Encoder(RobotIOMap.DRIVETRAIN_REAR_RIGHT_ENCODER_A,  RobotIOMap.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
+    	frontLeftEncoder  = new Encoder(RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_A,  RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
+    	frontRightEncoder = new Encoder(RobotConstants.DRIVETRAIN_FRONT_RIGHT_ENCODER_A, RobotConstants.DRIVETRAIN_FRONT_RIGHT_ENCODER_B, false);
+    	rearLeftEncoder   = new Encoder(RobotConstants.DRIVETRAIN_REAR_LEFT_ENCODER_A,   RobotConstants.DRIVETRAIN_REAR_LEFT_ENCODER_B,   false);
+    	rearRightEncoder  = new Encoder(RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_A,  RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
     	
     	//Note minus signs to invert right side of drivetrain
     	frontLeftEncoder.setDistancePerPulse(DRIVETRAIN_WHEELS_REV_PER_TICK);
