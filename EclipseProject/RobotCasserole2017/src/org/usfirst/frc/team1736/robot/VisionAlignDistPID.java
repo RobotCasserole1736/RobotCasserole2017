@@ -6,8 +6,10 @@ public class VisionAlignDistPID extends CasserolePID {
 
 	protected VisionAlignDistPID(double Kp_in, double Ki_in, double Kd_in) {
 		super(Kp_in, Ki_in, Kd_in);
-		// TODO Auto-generated constructor stub
+		this.threadName = "Vision Distance Alignment PID";
+	
 	}
+	
 	public void setDist(double dist){
 		setSetpoint(dist);
 	}
@@ -15,7 +17,7 @@ public class VisionAlignDistPID extends CasserolePID {
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return RobotState.visionEstTargetDist_ft;
+		return RobotState.robotFwdRevDist_ft;
 	}
 
 	@Override

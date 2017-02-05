@@ -6,6 +6,7 @@ public class VisionAlignAnglePID extends CasserolePID {
 
 	VisionAlignAnglePID(double Kp_in, double Ki_in, double Kd_in) {
 		super(Kp_in, Ki_in, Kd_in);
+		this.threadName = "Vision Angle Alignment PID";
 		
 	}
 	

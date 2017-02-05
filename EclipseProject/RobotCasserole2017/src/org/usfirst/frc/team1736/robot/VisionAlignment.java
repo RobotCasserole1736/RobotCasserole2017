@@ -72,6 +72,17 @@ public class VisionAlignment {
 	public void GetAligned(){
 		
 		//Save historical values
+		//Tracking the historical values is needed to offset the delays in visino processing. From the time a frame
+		// is captured by the camera, to when it goes over the network, gets processed by the coprocessor, put
+		// on the network again, and finally qualified by the vision qualification system, there's a decent amount of delay.
+		// Some of those processing times are measured, others are estimated and assumed fixed. The time all rolls up
+		// to a single estimate of what time the image was captured at (relative to the getFPGATimestamp() timeframe.
+		// We store a brief history of sensor readings (gyro or encoders). Every time we get a processed image frame,
+		// we will look up what the gyro/distance readings were at the time the image was captured. We then use the image
+		// processing data to define a new setpoint based on where image processing says we should have been. Finally,
+		// this setpoint is given to the PID algorithms, which close-loop control the drivetrain around gyro and encoders,
+		// moving it to setpoints determined by the vision processing system.
+		// We effectively get a boost in bandwidth of our control algorithm.
 		double timeNow = Timer.getFPGATimestamp();
 		gyroHistory.insert(timeNow, RobotState.robotPoseAngle_deg);
 		distanceHistory.insert(timeNow, RobotState.robotFwdRevDist_ft);
@@ -97,7 +108,7 @@ public class VisionAlignment {
 		if(visionAlignState == VisionAlignStates.sOnTarget){
 			//Set Desired
 			anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
-			distPID.setDist(distDesired.get());
+			distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
 			
 			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst)
 					|| !(Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol + angleTolHyst)){
@@ -106,7 +117,7 @@ public class VisionAlignment {
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
-			}else if(!RobotState.visionAlignmentDesiried || !RobotState.visionAlignmentPossible){
+			}else if(!RobotState.visionAlignmentDesiried){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
@@ -125,7 +136,7 @@ public class VisionAlignment {
 		}else if(visionAlignState == VisionAlignStates.sAligning){
 			//Set Desired
 			anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
-			distPID.setDist(distDesired.get());
+			distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
 			
 			if(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol
 					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol){
@@ -134,7 +145,7 @@ public class VisionAlignment {
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
-			}else if(!RobotState.visionAlignmentDesiried ){
+			}else if(!RobotState.visionAlignmentDesiried){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
@@ -155,7 +166,7 @@ public class VisionAlignment {
 			RobotState.visionDtFwdRevCmd = 0.0;
 			RobotState.visionDtRotateCmd = 0.0;
 			
-			if(RobotState.visionAlignmentDesiried ){
+			if(RobotState.visionAlignmentDesiried){
 				//Reset integrators and start pids 
 				anglePID.start();
 				distPID.start();
