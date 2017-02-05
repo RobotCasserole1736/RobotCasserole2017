@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
     Vision_Processing_Main VisionProk;
     
     //Software utilities
-    RobotPoseCalculator chris;
+    RobotPoseCalculator poseCalc;
     CalWrangler wrangler;
     CasseroleWebServer webServer;
 
@@ -112,7 +112,7 @@ public class Robot extends IterativeRobot {
 		visionAlignCTRL = new VisionAlignment();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
-		chris = new RobotPoseCalculator();
+		poseCalc = new RobotPoseCalculator();
 		shotCTRL = new Sht_ctrl();
 		hopControl = new HopperControl();
 		shooterControl = new ShooterWheelCTRL();
@@ -172,7 +172,7 @@ public class Robot extends IterativeRobot {
 		
 		//Get all inputs from outside the robot
 		updateGlobalSensorInputs();
-		chris.update();
+		poseCalc.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		VisionProk.update();
@@ -236,7 +236,7 @@ public class Robot extends IterativeRobot {
 		
 		//Get all inputs from outside the robot
 		updateGlobalSensorInputs();
-		chris.update();
+		poseCalc.update();
 		myRobot.readEncoders();
 		
 		//Update vision processing algorithm to find any targets on in view
@@ -318,7 +318,7 @@ public class Robot extends IterativeRobot {
 		updateDriverInputs();
 		updateOperatorInputs();
 		updateGlobalSensorInputs();
-		chris.update();
+		poseCalc.update();
 		myRobot.readEncoders();
 		
 		
