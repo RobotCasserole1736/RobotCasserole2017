@@ -84,15 +84,14 @@ public class Robot extends IterativeRobot {
     VisionAlignment visionAlignCTRL;
     
     //Gear control subsystem (kinda mashed in here just cuz we're lazy)
-    Compressor comp;
     Solenoid gearSolenoid;
     
     
     //LED's 
     LEDSequencer LEDseq;
     
-    //Air Pressure Monitor
-    AirPressMonitor airPress;
+    //Compressor & Sensor system
+    PneumaticsSupply airCompressor;
 
     Autonomus auto;
 	///////////////////////////////////////////////////////////////////
@@ -118,12 +117,10 @@ public class Robot extends IterativeRobot {
 		shooterControl = new ShooterWheelCTRL();
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
-		airPress = new AirPressMonitor();
+		airCompressor = new PneumaticsSupply();
 
 		camGimbal = new CameraServoMount();
 		
-		comp = new Compressor();
-		comp.setClosedLoopControl(true); //ensure we are running
 		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
 
 		auto = new Autonomus(myRobot);
@@ -438,7 +435,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
-		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airPress);
+		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airCompressor);
+		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airCompressor);
 
 	}
 	
@@ -463,7 +461,7 @@ public class Robot extends IterativeRobot {
 	public void updateDriverView(){
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
 		CasseroleDriverView.setDialValue("Shooter Speed RPM", RobotState.shooterActualVelocity_rpm);
-		CasseroleDriverView.setDialValue("AirPressure Psi", airPress.getPress());
+		CasseroleDriverView.setDialValue("AirPressure Psi", airCompressor.getPress());
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound && RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Vision Aligning", RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible && !RobotState.visionAlignmentOnTarget);
@@ -571,10 +569,10 @@ public class Robot extends IterativeRobot {
 			gearSolenoid.set(false);
 		}
 		if(operatorCTRL.StartButton()){
-			comp.setClosedLoopControl(true);
+			airCompressor.setCompressorEnabled(true);
 		} else if(operatorCTRL.BackButton()){
-			comp.setClosedLoopControl(false);
-			comp.stop();
+			airCompressor.setCompressorEnabled(false);
+			
 		}
 		
 		if( operatorCTRL.Y()){
