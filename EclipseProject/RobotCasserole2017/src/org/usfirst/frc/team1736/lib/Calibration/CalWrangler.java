@@ -121,7 +121,13 @@ public class CalWrangler {
                                     System.out.println("Info: Calibration Wrangler: " + cal.name + " was overridden to "
                                             + Double.toString(cal.cur_val));
                                 }
-                                cal.overridden = true;
+                                
+                                //Only call the calibration overridden if the values don't match.
+                                if(cal.cur_val != cal.default_val){
+                                	cal.overridden = true;
+                                } else {
+                                	cal.overridden = false;
+                                }
 
                             } catch (NumberFormatException e) {
                                 System.out.println("WARNING: Calibration Wrangler: " + line_parts[CAL_NAME_COL]
