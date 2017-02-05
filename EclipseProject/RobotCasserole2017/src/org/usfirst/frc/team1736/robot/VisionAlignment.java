@@ -72,7 +72,7 @@ public class VisionAlignment {
 		//Save gyro value
 		gyroHistory.insert(Timer.getFPGATimestamp(), RobotState.robotPoseAngle_deg);
 		
-		// Figure out if alignment is possible
+		// Figure out if alignment should be done
 		RobotState.visionAlignmentPossible = RobotState.visionOnline && RobotState.visionTargetFound;
 		
 		//If vision align is possible, look to see if we have a new frame
@@ -126,7 +126,7 @@ public class VisionAlignment {
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
-			}else if(!RobotState.visionAlignmentDesiried || !RobotState.visionAlignmentPossible){
+			}else if(!RobotState.visionAlignmentDesiried ){
 				//Set outputs to 0
 				RobotState.visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
@@ -147,7 +147,7 @@ public class VisionAlignment {
 			RobotState.visionDtFwdRevCmd = 0.0;
 			RobotState.visionDtRotateCmd = 0.0;
 			
-			if(RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible){
+			if(RobotState.visionAlignmentDesiried ){
 				//Reset integrators and start pids 
 				anglePID.start();
 				distPID.start();
