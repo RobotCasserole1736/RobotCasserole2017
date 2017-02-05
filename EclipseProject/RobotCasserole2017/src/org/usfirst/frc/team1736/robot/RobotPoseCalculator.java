@@ -54,6 +54,6 @@ public class RobotPoseCalculator {
 										 RobotState.rearLeftWheelDistance_ft - 
 										 RobotState.rearRightWheelDistance_ft) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
 		
-		RobotState.robotNetDistance_ft =  Math.sqrt(Math.pow(RobotState.robotStrafeDist_ft, 2)+Math.pow(RobotState.robotFwdRevDist_ft, 2));
+		RobotState.robotNetDistance_ft +=  RobotState.robotNetSpeed_ftpers*0.02; //meh, just a guess at sample time. This isn't used for anything now that I know of.
 	}
 }

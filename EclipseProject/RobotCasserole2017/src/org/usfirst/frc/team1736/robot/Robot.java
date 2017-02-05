@@ -401,6 +401,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",myRobot);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getRobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Dist","ft","getRobotFwdRevDist_ft",RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Dist","ft","getRobotStrafeDist_ft",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getRobotPoseAngle_deg",RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("Op_Gear_Release_Desired","bit","isOpGearReleaseDesired",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Shot_State_Command","bits","getopShotCTRLOrdinal",RobotState.class);
@@ -493,6 +495,10 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
 		CassesroleWebStates.putDouble("Intake Speed Cmd",   RobotState.intakeSpeedCmd);
 		CassesroleWebStates.putDouble("Climb Speed Cmd",   RobotState.climbSpeedCmd);
+		CassesroleWebStates.putDouble("Robot FwdRev Velocity (ft per sec)",   RobotState.robotFwdRevVel_ftpers);
+		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)",   RobotState.robotStrafeVel_ftpers);
+		CassesroleWebStates.putDouble("Robot FwdRev Distance (ft)",   RobotState.robotFwdRevDist_ft);
+		CassesroleWebStates.putDouble("Robot Strafe Distance (ft)",   RobotState.robotStrafeDist_ft);
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
 		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDriveMotorCmd);
 		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);

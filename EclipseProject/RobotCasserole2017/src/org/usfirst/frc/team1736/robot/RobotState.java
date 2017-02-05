@@ -42,6 +42,10 @@ public class RobotState {
 	static double robotFwdRevVel_ftpers = 0; //Present forward or reverse velocity of the robot in ft/sec. Positive numbers mean forward, negative numbers mean reverse.
 	static double robotStrafeVel_ftpers = 0; //Present side-to-side velocity of the robot in ft/sec. Positive numbers mean right, negative numbers mean left.
 	static double robotNetSpeed_ftpers = 0; //Present total translational speed in ft/sec
+	//Note: due to wheel slip, these will be fairly inaccurate over time, but can be trusted over short periods of time when wheels are not slipping.
+	public static double robotNetDistance_ft; //Total distance the robot has traveled in any direction (unsigned)
+	public static double robotFwdRevDist_ft; //Signed distance the robot has moved forward/backward from encoders. Starts at 0, bigger numbers mean fwd, saller mean reverse
+	public static double robotStrafeDist_ft; //Signed distance the robot has moved side to side.
 	
 	//Wheel velocities (measured from drivetrain encoders) (Outputs from Drivetrain class)
 	//Positive is forward rotation, negative is backward rotation
@@ -107,9 +111,7 @@ public class RobotState {
 	//Intake Command
 	static double intakeSpeedCmd = 0.0; //Motor command to be sent to the intake motor. 
 	static boolean intakeExtendCmd = false; //Intake Mechanism is extended when true
-	public static double robotNetDistance_ft;
-	public static double robotFwdRevDist_ft;
-	public static double robotStrafeDist_ft;
+
 	
 	
 	//Getters and Setters for select globals
@@ -304,6 +306,33 @@ public class RobotState {
 	}
 	public static double getVisionGyroAngleDesiredAtLastFrame() {
 		return visionGyroAngleDesiredAtLastFrame;
+	}
+	public static Shooter_States getOpShotCTRL() {
+		return opShotCTRL;
+	}
+	public static double getRobotNetDistance_ft() {
+		return robotNetDistance_ft;
+	}
+	public static double getRobotFwdRevDist_ft() {
+		return robotFwdRevDist_ft;
+	}
+	public static double getRobotStrafeDist_ft() {
+		return robotStrafeDist_ft;
+	}
+	public static double getVisionFrameCounter() {
+		return visionFrameCounter;
+	}
+	public static double getVisionHeuristicVal() {
+		return visionHeuristicVal;
+	}
+	public static double getVisionDistanceAtLastFrame() {
+		return visionDistanceAtLastFrame;
+	}
+	public static double getVisionDistanceDesiredAtLastFrame() {
+		return visionDistanceDesiredAtLastFrame;
+	}
+	public static boolean isIntakeExtendCmd() {
+		return intakeExtendCmd;
 	}
 
 	
