@@ -12,30 +12,21 @@ public class Vision_Processing_Main {
 	
 	private double prevFrameCount;
 	
-	//Constants
-	private final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
-	//private final double CAMERA_FOV_Y_DEG = 48; //not yet used
+	//local Constants
 	private final double CURVATURE_FUDGE_FACTOR = 1.75; //Accounts for the fact the camera angle plus cylinder shape makes for a curved (not rectangular) target. I feel like this is dubious math, but it seems to help for now....
-	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(CAMERA_FOV_X_DEG/2.0));
-	
-	private final double TGT_WIDTH_FT = 1.0 + (3.0/12.0); //Actual target (1 ft 3 in, per game manual)
-	//private final double TGT_WIDTH_FT = (6.0+5.0/16.0)/12.0; //SW test target (6 and 5/16ths inches)
+	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(RobotConstants.CAMERA_FOV_X_DEG/2.0));
 
 	
 	private final double Exp_AspectRatio_Top=15.0/(4.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_AspectRatio_Bottom=15.0/(2.0*CURVATURE_FUDGE_FACTOR);
 	private final double Exp_InfillRatio_Top = 0.75; //An educated guess
 	private final double Exp_InfillRatio_Bottom = 0.75; //An educated guess
-	private final double Exp_network_latency_sec = 0.01; //An educated guess
-
-	//Connection parameters for listening for coprocessor results
-	private final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.20";
-	private final int COPROCESSOR_LISTEN_PORT = 5800;
+	
 
 	public Vision_Processing_Main(){
 		prevFrameCount = 0;
 		
-		VL = new VisionListener(COPPROCESSOR_LISTEN_ADDRESS, COPROCESSOR_LISTEN_PORT);
+		VL = new VisionListener(RobotConstants.COPPROCESSOR_LISTEN_ADDRESS, RobotConstants.COPROCESSOR_LISTEN_PORT);
 		VL.start();
 	}
 
@@ -57,7 +48,7 @@ public class Vision_Processing_Main {
 			RobotState.visionFrameCounter = VL.getFrameCounter();
 			RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
 			RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
-			RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - Exp_network_latency_sec;
+			RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - RobotConstants.EXPECTED_NETWORK_LATENCY_SEC;
 			prevFrameCount = VL.getFrameCounter();
 		}
 		
@@ -107,18 +98,11 @@ public class Vision_Processing_Main {
 			}
 		}
 		
-		//Update all outputs
 		if(Best_Top != -1 & Best_Bottom != -1){
-			RobotState.visionTargetFound = true;
-			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
-			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
-			double cam_to_tgt_dist_ft = (TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
-			RobotState.visionEstTargetDist_ft = Math.sqrt(Math.pow(cam_to_tgt_dist_ft, 2) - Math.pow(RobotConstants.HIGH_GOAL_VISION_TARGET_HEIGHT_FT,2)); //We need to calculate distance along the ground, so use pythagorean theorem to calculate floor distance, given target height.
-			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - RobotConstants.VISION_X_PIXELS/2) * (CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
+			updateOutputs(true, VL.getX(Best_Top),VL.getY(Best_Top),VL.getWidth(Best_Top));
 		} else {
-			RobotState.visionTargetFound = false;
+			updateOutputs(false,0,0,0);
 		}
-
 		
 	}
 	
@@ -183,17 +167,30 @@ public class Vision_Processing_Main {
 		}
 		
 		
-		//Update all outputs
 		if(Best_Top != -1 & Best_Bottom != -1){
-			//If we've seen a target, calculate stuff
-			RobotState.visionTargetFound = true;
-			RobotState.visionTopTgtXPixelPos = (VL.getX(Best_Top));
-			RobotState.visionTopTgtYPixelPos = (VL.getY(Best_Top));
-			RobotState.visionHeuristicVal = Best_Heuristic;
-			RobotState.visionEstTargetDist_ft = (TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*VL.getWidth(Best_Top)*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
-			RobotState.visionTargetOffset_deg = (VL.getX(Best_Top) - RobotConstants.VISION_X_PIXELS/2) * (CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
+			updateOutputs(true, VL.getX(Best_Top),VL.getY(Best_Top),VL.getWidth(Best_Top));
 		} else {
-			//If there's no target seen, say so.
+			updateOutputs(false,0,0,0);
+		}
+	}
+	
+	/**
+	 * Given the width/x/y of the best candidate for top target, update relevant physical parameters
+	 * @param foundTgt true if a target was seen, false if n0t
+	 * @param bestX x pixel location of top centroid
+	 * @param bestY y pixel location of top centroid
+	 * @param bestWidth width of top centroid
+	 */
+	private void updateOutputs(boolean foundTgt, double bestX, double bestY, double bestWidth){
+		
+		if(foundTgt){
+			RobotState.visionTargetFound = true;
+			RobotState.visionTopTgtXPixelPos = (bestX);
+			RobotState.visionTopTgtYPixelPos = (bestY);
+			double cam_to_tgt_dist_ft = (RobotConstants.TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*bestWidth*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
+			RobotState.visionEstTargetDist_ft = Math.sqrt(Math.pow(cam_to_tgt_dist_ft, 2) - Math.pow(RobotConstants.HIGH_GOAL_VISION_TARGET_HEIGHT_FT,2)); //We need to calculate distance along the ground, so use pythagorean theorem to calculate floor distance, given target height.
+			RobotState.visionTargetOffset_deg = (bestX - RobotConstants.VISION_X_PIXELS/2) * (RobotConstants.CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
+		} else {
 			RobotState.visionTargetFound = false;
 		}
 

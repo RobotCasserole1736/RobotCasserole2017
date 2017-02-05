@@ -452,9 +452,8 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Vision Aligning", "yellow");
 		CasseroleDriverView.newBoolean("Shooter Spoolup", "yellow");
 		CasseroleDriverView.newStringBox("Orientation deg");
-		CasseroleDriverView.newWebcam("VisionProc_cam", "http://10.17.36.11/mjpg/video.mjpg", 50, 50, 0);
-		//CasseroleDriverView.newWebcam("VisionProc_cam", "http://10.17.36.20:8080/cam.mjpg", 50, 50, 0);
-		CasseroleDriverView.newWebcam("Driver_cam", "http://10.17.36.12/mjpg/video.mjpg", 50, 50, 0);
+		CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
+		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 50, 50, 0);
 
 	}
 	

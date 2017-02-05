@@ -3,6 +3,16 @@ package org.usfirst.frc.team1736.robot;
 public class RobotConstants {
 	
 	///////////////////////////////////////////////////////////////////////////
+	// Networking Architecture Constants
+	///////////////////////////////////////////////////////////////////////////
+	//Connection parameters for listening for coprocessor results
+	public static final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.20";
+	public static final int    COPROCESSOR_LISTEN_PORT = 5800;
+	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.11/mjpg/video.mjpg";
+	public static final String DRIVER_CAMERA_URL = "http://10.17.36.12/mjpg/video.mjpg";
+	public static final double EXPECTED_NETWORK_LATENCY_SEC = 0.01; //An educated guess
+	
+	///////////////////////////////////////////////////////////////////////////
 	// Electrical IO Map
 	///////////////////////////////////////////////////////////////////////////
 	
@@ -57,11 +67,20 @@ public class RobotConstants {
 	//Camera & Vision Properties
 	public static final int VISION_X_PIXELS = 640;
 	public static final int VISION_Y_PIXELS = 480;
+	//public static final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
+	public static final double CAMERA_FOV_X_DEG = 67; //from axis M1013 camera specs
+	
 	
 	//Drivetrain
 	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0; //2048 cycles per revolution (encoder libraries handle 4x decoding
 	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
 
-	//Playing Field
-	public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 6;
+	//Playing Field (Real)
+	//public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 7.0 + (2.0/12.0); //7 ft 2 inches, per game manual 
+	//private final double TGT_WIDTH_FT = 1.0 + (3.0/12.0); //1 ft 3 in, per game manual
+	
+	//Playing Field (Test 1/3 size Target)
+	public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 4; //Where I happened to place it on Febrary 5th
+	public static final double TGT_WIDTH_FT = (6.0+5.0/16.0)/12.0; //SW test target (6 and 5/16ths inches)
+	
 }
