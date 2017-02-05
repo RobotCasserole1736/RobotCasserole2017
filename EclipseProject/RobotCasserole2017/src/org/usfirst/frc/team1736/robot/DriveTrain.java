@@ -162,7 +162,7 @@ public class DriveTrain{
 
 	public void operatorControl() {
 			
-		if(RobotState.visionAlignmentDesiried & RobotState.visionAlignmentPossible){
+		if(RobotState.visionAlignmentDesiried){
 			//For operator control, vision assist, get commands from the vision subsystem (although the driver may still strafe)
 			runOpenLoop(RobotState.visionDtFwdRevCmd, RobotState.driverStrafeCmd, RobotState.visionDtRotateCmd, 0);
 		} else if(fieldOrientedCtrl.get() == 0.0){

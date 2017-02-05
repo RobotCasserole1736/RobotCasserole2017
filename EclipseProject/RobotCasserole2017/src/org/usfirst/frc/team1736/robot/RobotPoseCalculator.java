@@ -48,11 +48,11 @@ public class RobotPoseCalculator {
 		RobotState.robotFwdRevDist_ft = (RobotState.frontLeftWheelDistance_ft + 
 				                         RobotState.frontRightWheelDistance_ft + 
 				                         RobotState.rearLeftWheelDistance_ft + 
-				                         RobotState.rearRightWheelDistance_ft) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
+				                         RobotState.rearRightWheelDistance_ft) / 4.0;
 		RobotState.robotStrafeDist_ft  = (RobotState.frontLeftWheelDistance_ft - 
 										 RobotState.frontRightWheelDistance_ft +
 										 RobotState.rearLeftWheelDistance_ft - 
-										 RobotState.rearRightWheelDistance_ft) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
+										 RobotState.rearRightWheelDistance_ft) / 4.0;
 		
 		RobotState.robotNetDistance_ft +=  RobotState.robotNetSpeed_ftpers*0.02; //meh, just a guess at sample time. This isn't used for anything now that I know of.
 	}
