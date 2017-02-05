@@ -8,6 +8,9 @@ public class RobotPoseCalculator {
 	}
 	
 	public void update(){
+		//The calculations referenced herein are derived from this helpful paper:
+		// http://www.academia.edu/4557426/KINEMATICS_MODELLING_OF_MECANUM_WHEELED_MOBILE_PLATFORM
+		
 		double WheelSpeedOno;
 		double WheelSpeedDos;
 		double WheelSpeedTres;
@@ -15,6 +18,10 @@ public class RobotPoseCalculator {
 		double Vx;
 		double Vy;
 		double netSpeed;
+		
+		///////////////////////////////////////////////////////////////////////////
+		// Speed calculations
+		///////////////////////////////////////////////////////////////////////////
 		
 		//Calculate wheel speeds in radians per second
 		WheelSpeedOno =RobotState.frontLeftWheelVelocity_rpm * 2.0 * Math.PI / 60; 
@@ -32,6 +39,13 @@ public class RobotPoseCalculator {
 		//Store results into state variables
 		RobotState.robotNetSpeed_ftpers = netSpeed;
 		RobotState.robotFwdRevVel_ftpers = Vx;
-		RobotState.robotStrafeVel_ftpers = Vy;		
+		RobotState.robotStrafeVel_ftpers = Vy;	
+		
+		///////////////////////////////////////////////////////////////////////////
+		// Distance calculations
+		///////////////////////////////////////////////////////////////////////////
+		RobotState.robotNetDistance_ft = netSpeed;
+		RobotState.robotFwdRevDist_ft = Vx;
+		RobotState.robotStrafeDist_ft = Vy;	
 	}
 }
