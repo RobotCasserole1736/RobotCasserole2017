@@ -29,7 +29,7 @@ public class RobotState {
 	
 	
 	//Operator commands (derived from operator's Xbox360 controller)
-	static Shooter_States opShotCTRL = Shooter_States.NO_Shoot;
+	static ShotControl.ShooterStates opShotCTRL = ShotControl.ShooterStates.NO_Shoot;
 	static boolean opClimbEnable = false; //True if climbing should be allowed, false if all climb commands should be ignored
 	static double  opClimbSpeedDesired = 0; //desired speed of the climber motor (0= off, 1 = full forward. Should never be reverse).
 	static boolean opGearReleaseDesired = false; //True if the gear should be released, false if not.
@@ -135,15 +135,6 @@ public class RobotState {
 	}
 	public static double getShooterMotorCmd() {
 		return shooterMotorCmd;
-	}
-	public static double getDriverFwdRevCmd() {
-		return driverFwdRevCmd;
-	}
-	public static double getDriverStrafeCmd() {
-		return driverStrafeCmd;
-	}
-	public static double getDriverRotateCmd() {
-		return driverRotateCmd;
 	}
 	public static boolean isVisionAlignmentDesiried() {
 		return visionAlignmentDesiried;
@@ -307,7 +298,7 @@ public class RobotState {
 	public static double getVisionGyroAngleDesiredAtLastFrame() {
 		return visionGyroAngleDesiredAtLastFrame;
 	}
-	public static Shooter_States getOpShotCTRL() {
+	public static ShotControl.ShooterStates getOpShotCTRL() {
 		return opShotCTRL;
 	}
 	public static double getRobotNetDistance_ft() {

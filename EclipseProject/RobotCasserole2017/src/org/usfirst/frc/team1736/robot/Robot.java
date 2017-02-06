@@ -34,8 +34,8 @@ public class Robot extends IterativeRobot {
     ///////////////////////////////////////////////////////////////////
 	
 	//RIO Performance Monitoring
-	private double prev_loop_start_timestamp;
-	double loop_time_elapsed;
+	private double prevLoopStartTimestamp;
+	double loopTimeElapsed;
 	CasseroleRIOLoadMonitor ecuStats;
 	
 	// Physical Devices on the robot
@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 	DriveTrain myRobot;
 
 	//Vision Processing Algorithm
-    Vision_Processing_Main VisionProk;
+    VisionProcessing visionProc;
     
     //Software utilities
     RobotPoseCalculator poseCalc;
@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
     CasseroleWebServer webServer;
 
     //Controllers
-    Xbox360Controller driverCTRL;
+    DriverController driverCTRL;
     Xbox360Controller operatorCTRL;
 
     //Hopper Feed Control
@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
     IntakeControl intakeControl;
     
     //Shooter wheel control
-    ShooterWheelCTRL shooterControl;
+    ShooterWheelCtrl shooterControl;
     
     //Climber Control
     ClimberControl climbControl;
@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
     boolean pev_State;
     
   //Shooter control
-    Sht_ctrl shotCTRL;
+    ShotControl shotCTRL;
 
     //Vision Alignment Control
     VisionAlignment visionAlignCTRL;
@@ -93,7 +93,7 @@ public class Robot extends IterativeRobot {
     //Compressor & Sensor system
     PneumaticsSupply airCompressor;
 
-    Autonomus auto;
+    Autonomous auto;
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -107,14 +107,14 @@ public class Robot extends IterativeRobot {
 		myRobot = new DriveTrain();
 		pdp = new PowerDistributionPanel();
 		gyro =new ADXRS453_Gyro();
-		VisionProk = new Vision_Processing_Main(); 
+		visionProc = new VisionProcessing(); 
 		visionAlignCTRL = new VisionAlignment();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = new RobotPoseCalculator();
-		shotCTRL = new Sht_ctrl();
+		shotCTRL = new ShotControl();
 		hopControl = new HopperControl();
-		shooterControl = new ShooterWheelCTRL();
+		shooterControl = new ShooterWheelCtrl();
 		climbControl = new ClimberControl();
 		intakeControl = new IntakeControl();
 		airCompressor = new PneumaticsSupply();
@@ -123,11 +123,11 @@ public class Robot extends IterativeRobot {
 		
 		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
 
-		auto = new Autonomus(myRobot);
+		auto = new Autonomous(myRobot);
 
 		
 
-		driverCTRL = new Xbox360Controller(0);
+		driverCTRL = DriverController.getInstance();
 		operatorCTRL = new Xbox360Controller(1);
 		driverCTRL.setDeadzone(0.175);
 		operatorCTRL.setDeadzone(0.175);
@@ -165,14 +165,14 @@ public class Robot extends IterativeRobot {
 		
 		//Mark start of loop, Initialize Timer
 		//Must be as close to the start of the loop as possible
-		prev_loop_start_timestamp = Timer.getFPGATimestamp();
+		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
 		updateGlobalSensorInputs();
 		poseCalc.update();
 		
 		//Update vision processing algorithm to find any targets on in view
-		VisionProk.update();
+		visionProc.update();
 		
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterControl.updateGains();
@@ -184,7 +184,7 @@ public class Robot extends IterativeRobot {
 
 		//Mark end of loop and Calculate Loop Time
 		//Must be as close to the end of the loop as possible.
-		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
 		
 	}
 		
@@ -205,7 +205,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {	
 		myRobot.myDrive.setSafetyEnabled(false);
 		
-		loop_time_elapsed = 0;
+		loopTimeElapsed = 0;
 
 		//Assume starting at 0 degrees
 		gyro.reset();
@@ -229,7 +229,7 @@ public class Robot extends IterativeRobot {
 		
 		//Mark start of loop, Initialize Timer
 		//Must be as close to the start of the loop as possible
-		prev_loop_start_timestamp = Timer.getFPGATimestamp();
+		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
 		updateGlobalSensorInputs();
@@ -237,7 +237,7 @@ public class Robot extends IterativeRobot {
 		myRobot.readEncoders();
 		
 		//Update vision processing algorithm to find any targets on in view
-		VisionProk.update();
+		visionProc.update();
 		
 		//Run vision alignment algorithm based on vision processing results
 		if(RobotState.visionAlignmentDesiried){
@@ -274,7 +274,7 @@ public class Robot extends IterativeRobot {
 
 		//Mark end of loop and Calculate Loop Time
 		//Must be as close to the end of the loop as possible.
-		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
 	}
 	
 	
@@ -294,7 +294,7 @@ public class Robot extends IterativeRobot {
 		myRobot.myDrive.setSafetyEnabled(false);
 
 		auto.stop();
-		loop_time_elapsed = 0;
+		loopTimeElapsed = 0;
 		
 		myRobot.resetAllIntegrators();
 		
@@ -309,7 +309,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Initialize Timer
-		prev_loop_start_timestamp = Timer.getFPGATimestamp();
+		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
 		updateDriverInputs();
@@ -320,7 +320,7 @@ public class Robot extends IterativeRobot {
 		
 		
 		//Update vision processing algorithm to find any targets on in view
-		VisionProk.update();
+		visionProc.update();
 		
 		//Run vision alignment algorithm based on vision processing results
 		if(RobotState.visionAlignmentDesiried){
@@ -359,7 +359,7 @@ public class Robot extends IterativeRobot {
 		updateWebStates();
 		//Mark end of loop and Calculate Loop Time
 		//Must be as close to the end of the loop as possible.
-		loop_time_elapsed = Timer.getFPGATimestamp() - prev_loop_start_timestamp;
+		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
 	}
 	
 	
@@ -383,13 +383,13 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR1_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Climber_Motor2_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR2_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotConstants.INTAKE_MOTOR_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.TallonFlame);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.shooterTalon);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
-		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","getDriverFwdRevCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getDriverStrafeCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getDriverRotateCmd", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","LStick_Y", driverCTRL);
+		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","LStick_X", driverCTRL);
+		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","RStick_X", driverCTRL);
 		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","isVisionAlignmentDesiried",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_DT_FL_Desired_Velocity","RPM","getAutonDtfrontLeftWheelVelocityCmd_rpm", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_DT_FR_Desired_Velocity","RPM","getAutonDtfrontRightWheelVelocityCmd_rpm", RobotState.class);
@@ -426,7 +426,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Actual_Angle_At_Frame","deg","getVisionGyroAngleAtLastFrame",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Desired_Angle_At_Frame","deg","getVisionGyroAngleDesiredAtLastFrame",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getVisionEstTargetDist_ft",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getProcTimeMs",VisionProk.VL);
+		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getProcTimeMs",visionProc.listener);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getVisionCoProcessorFPS",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_CPU_load","%","getVisionCoProcessorCPULoad_pct",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_Mem_load","%","getVisionCoProcessorMemLoad_pct",RobotState.class);
@@ -509,7 +509,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision CoProcessor FPS", RobotState.visionCoProcessorFPS);
 		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", RobotState.visionCoProcessorCPULoad_pct);
 		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", RobotState.visionCoProcessorMemLoad_pct);
-		CassesroleWebStates.putDouble("Vision Num Contours Observed", VisionProk.VL.getNumTargetsObserved());
+		CassesroleWebStates.putDouble("Vision Num Contours Observed", visionProc.listener.getNumTargetsObserved());
 		CassesroleWebStates.putBoolean("Vision Target Seen", RobotState.visionTargetFound);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", RobotState.visionTopTgtXPixelPos);
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", RobotState.visionTopTgtYPixelPos);
@@ -579,11 +579,11 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if( operatorCTRL.Y()){
-			RobotState.opShotCTRL=Shooter_States.PREP_TO_SHOOT;
+			RobotState.opShotCTRL=ShotControl.ShooterStates.PREP_TO_SHOOT;
 		}
 		
 		if(operatorCTRL.A()){
-			RobotState.opShotCTRL=Shooter_States.NO_Shoot;	
+			RobotState.opShotCTRL=ShotControl.ShooterStates.NO_Shoot;	
 		}
 		
 		if(operatorCTRL.RB()==true & pev_State==false){
@@ -593,7 +593,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if(rising_edge==true){
-			RobotState.opShotCTRL=Shooter_States.SHOOT;	
+			RobotState.opShotCTRL=ShotControl.ShooterStates.SHOOT;	
 		}
 		
 		if(operatorCTRL.RB()==false & pev_State==true){
@@ -603,7 +603,7 @@ public class Robot extends IterativeRobot {
 			falling_edge=false;
 		}	
 		if(falling_edge==true){
-			RobotState.opShotCTRL=Shooter_States.PREP_TO_SHOOT;
+			RobotState.opShotCTRL=ShotControl.ShooterStates.PREP_TO_SHOOT;
 		}
 		
 		pev_State = operatorCTRL.RB();
@@ -617,7 +617,7 @@ public class Robot extends IterativeRobot {
 	
 	//Getters & setters for class-scope variables. Needed by MethodHandles logging infrastructure
 	public double getLoopTime_ms(){
-		return loop_time_elapsed*1000;
+		return loopTimeElapsed*1000;
 	}
 
 	public double getCpuLoad(){

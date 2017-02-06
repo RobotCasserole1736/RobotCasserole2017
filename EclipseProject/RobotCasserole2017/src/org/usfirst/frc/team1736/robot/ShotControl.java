@@ -2,10 +2,15 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 
-public class Sht_ctrl {
+public class ShotControl {
+	
+	public enum ShooterStates 
+	{
+		NO_Shoot,PREP_TO_SHOOT,SHOOT;	
+	}
 
 	 Calibration wheel_Set_Point_rpm;
-	 public Sht_ctrl(){ 
+	 public ShotControl(){ 
 		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint RPM", 2700, 0, 5000);
 		 RobotState.hopperFeedCmd = false;
 		 RobotState.shooterDesiredVelocity_rpm= 0;
@@ -13,17 +18,17 @@ public class Sht_ctrl {
 
 		 
 	 public void update(){
-		  if(Shooter_States.NO_Shoot==RobotState.opShotCTRL){
+		  if(ShooterStates.NO_Shoot==RobotState.opShotCTRL){
 			  //Operator requests everything turned off.
 			  RobotState.hopperFeedCmd=false;
 			  RobotState.shooterDesiredVelocity_rpm=0; 
 		  }
-		  else if(Shooter_States.PREP_TO_SHOOT==RobotState.opShotCTRL){
+		  else if(ShooterStates.PREP_TO_SHOOT==RobotState.opShotCTRL){
 			  //Operator wants to prepare to shoot. Today, this means spooling up the shooter wheel.
 			  RobotState.hopperFeedCmd=false;
 			  RobotState.shooterDesiredVelocity_rpm=wheel_Set_Point_rpm.get();
 		  }
-		  else if((Shooter_States.SHOOT==RobotState.opShotCTRL) & RobotState.shooterVelocityOk){
+		  else if((ShooterStates.SHOOT==RobotState.opShotCTRL) & RobotState.shooterVelocityOk){
 			  //Operator wants to take the shot, and the shooter RPM is up to speed
 			  if(RobotState.visionAlignmentDesiried){
 				  //Driver has robot under automatic (vision-assist) alignment. 

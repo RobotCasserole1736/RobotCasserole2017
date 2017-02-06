@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import org.usfirst.frc.team1736.lib.CoProcessor.VisionListener;
 
-public class Vision_Processing_Main {
-	VisionListener VL;
+public class VisionProcessing {
+	VisionListener listener;
 
-	ArrayList<Integer> ArrayList_Top = new ArrayList<Integer>(15);
-	ArrayList<Integer> ArrayList_Bottom = new ArrayList<Integer>(15);
+	ArrayList<Integer> topTargets = new ArrayList<Integer>(15);
+	ArrayList<Integer> bottomTargets = new ArrayList<Integer>(15);
 	
 	private double prevFrameCount;
 	
@@ -23,11 +23,11 @@ public class Vision_Processing_Main {
 	private final double Exp_InfillRatio_Bottom = 0.75; //An educated guess
 	
 
-	public Vision_Processing_Main(){
+	public VisionProcessing(){
 		prevFrameCount = 0;
 		
-		VL = new VisionListener(RobotConstants.COPPROCESSOR_LISTEN_ADDRESS, RobotConstants.COPROCESSOR_LISTEN_PORT);
-		VL.start();
+		listener = new VisionListener(RobotConstants.COPPROCESSOR_LISTEN_ADDRESS, RobotConstants.COPROCESSOR_LISTEN_PORT);
+		listener.start();
 	}
 
 	/**
@@ -36,24 +36,24 @@ public class Vision_Processing_Main {
 	public void update(){
 
 		//Sample latest available data
-		VL.sampleLatestData();
+		listener.sampleLatestData();
 		
-		if(prevFrameCount != VL.getFrameCounter()){
+		if(prevFrameCount != listener.getFrameCounter()){
 			//If we have a new frame since the last time we processed, run the processing algorithm.
 			
 			alg1();
 	
 			//Update performance outputs
-			RobotState.visionCoProcessorFPS = VL.getFPS();
-			RobotState.visionFrameCounter = VL.getFrameCounter();
-			RobotState.visionCoProcessorCPULoad_pct = VL.getCpuLoad();
-			RobotState.visionCoProcessorMemLoad_pct= VL.getMemLoad();
-			RobotState.visionEstCaptureTime = VL.getPacketRxSystemTime() - VL.getProcTimeMs()/1000.0 - RobotConstants.EXPECTED_NETWORK_LATENCY_SEC;
-			prevFrameCount = VL.getFrameCounter();
+			RobotState.visionCoProcessorFPS = listener.getFPS();
+			RobotState.visionFrameCounter = listener.getFrameCounter();
+			RobotState.visionCoProcessorCPULoad_pct = listener.getCpuLoad();
+			RobotState.visionCoProcessorMemLoad_pct= listener.getMemLoad();
+			RobotState.visionEstCaptureTime = listener.getPacketRxSystemTime() - listener.getProcTimeMs()/1000.0 - RobotConstants.EXPECTED_NETWORK_LATENCY_SEC;
+			prevFrameCount = listener.getFrameCounter();
 		}
 		
 		//Always report on alive/dead state of vision system
-		RobotState.visionOnline = VL.isCoProcessorAlive();
+		RobotState.visionOnline = listener.isCoProcessorAlive();
 	}
 	
 	/**
@@ -61,8 +61,8 @@ public class Vision_Processing_Main {
 	 */
 	@SuppressWarnings("unused")
 	private void alg0(){
-		ArrayList_Top.clear();
-		ArrayList_Bottom.clear();
+		topTargets.clear();
+		bottomTargets.clear();
 		
 		double AspectRatio;
 		double Pct_Error_Top;
@@ -72,34 +72,34 @@ public class Vision_Processing_Main {
 		int Best_Bottom=-1;
 		double Best_Heuristic=9001;
 		
-		for(int i=0; i<VL.getNumTargetsObserved();i++){
-			AspectRatio=VL.getWidth(i)/VL.getHeight(i);
+		for(int i=0; i<listener.getNumTargetsObserved();i++){
+			AspectRatio=listener.getWidth(i)/listener.getHeight(i);
 			Pct_Error_Top=Math.abs((AspectRatio-Exp_AspectRatio_Top)/Exp_AspectRatio_Top);
 			Pct_Error_Bottom=Math.abs((AspectRatio-Exp_AspectRatio_Bottom)/Exp_AspectRatio_Bottom);
 
 			if (Pct_Error_Top>Pct_Error_Bottom){
-				ArrayList_Bottom.add(i);
+				bottomTargets.add(i);
 			}
 			else{
-				ArrayList_Top.add(i);
+				topTargets.add(i);
 			}
 		}
 
-		for(int i=0; i<ArrayList_Bottom.size();i++){
-			for(int j=0; j<ArrayList_Top.size();j++){
+		for(int i=0; i<bottomTargets.size();i++){
+			for(int j=0; j<topTargets.size();j++){
 
-				Heuristic=Math.abs(VL.getY(ArrayList_Bottom.get(i))-VL.getY(ArrayList_Top.get(j)));		
+				Heuristic=Math.abs(listener.getY(bottomTargets.get(i))-listener.getY(topTargets.get(j)));		
 
 				if (Heuristic<Best_Heuristic){
 					Best_Heuristic=Heuristic;
-					Best_Top=ArrayList_Bottom.get(i);
-					Best_Bottom=ArrayList_Top.get(j);		
+					Best_Top=bottomTargets.get(i);
+					Best_Bottom=topTargets.get(j);		
 				}
 			}
 		}
 		
 		if(Best_Top != -1 & Best_Bottom != -1){
-			updateOutputs(true, VL.getX(Best_Top),VL.getY(Best_Top),VL.getWidth(Best_Top));
+			updateOutputs(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
 		} else {
 			updateOutputs(false,0,0,0);
 		}
@@ -128,23 +128,23 @@ public class Vision_Processing_Main {
 		double bottom_infill_error;
 		double i_like_big_targets_and_i_cannot_lie;
 
-		for(int i=0; i<VL.getNumTargetsObserved();i++){ //i is top target iter
-			for(int j=0; j<VL.getNumTargetsObserved();j++){ //j is bottom target iter
+		for(int i=0; i<listener.getNumTargetsObserved();i++){ //i is top target iter
+			for(int j=0; j<listener.getNumTargetsObserved();j++){ //j is bottom target iter
 				
 				if(i == j){
 					//Cannot compare a target to itself
 					continue;
 				}
-				x_pos_error = Math.abs(VL.getX(i)-VL.getX(j)); //expect X positions to be aligned
-				y_sep_exp = (double)Math.round((VL.getHeight(i)*3.0/2.0 + VL.getHeight(j)/2)/CURVATURE_FUDGE_FACTOR);
-				y_pos_error = Math.abs((VL.getY(j)-VL.getY(i))-y_sep_exp); //Expect Top to be above Bottom (top's y < bottom's y) by an assumed distance
-				width_error = Math.abs(VL.getWidth(i)-VL.getWidth(j)); //Expect same width
-				height_error = Math.abs(VL.getHeight(i)-VL.getHeight(j)*2.0); //expect top height to be double bottom height
-				top_ar_error = Math.abs((VL.getWidth(i)/VL.getHeight(i))-Exp_AspectRatio_Top); //Expect certain aspect ratios
-				bottom_ar_error = Math.abs((VL.getWidth(j)/VL.getHeight(j))-Exp_AspectRatio_Bottom);
-				top_infill_error = Math.abs((VL.getArea(i)/(VL.getWidth(i)*VL.getHeight(i))) - Exp_InfillRatio_Top);
-				bottom_infill_error = Math.abs((VL.getArea(j)/(VL.getWidth(j)*VL.getHeight(j))) - Exp_InfillRatio_Bottom);
-				i_like_big_targets_and_i_cannot_lie = 100000 * 1/(VL.getArea(i) + VL.getArea(j));
+				x_pos_error = Math.abs(listener.getX(i)-listener.getX(j)); //expect X positions to be aligned
+				y_sep_exp = (double)Math.round((listener.getHeight(i)*3.0/2.0 + listener.getHeight(j)/2)/CURVATURE_FUDGE_FACTOR);
+				y_pos_error = Math.abs((listener.getY(j)-listener.getY(i))-y_sep_exp); //Expect Top to be above Bottom (top's y < bottom's y) by an assumed distance
+				width_error = Math.abs(listener.getWidth(i)-listener.getWidth(j)); //Expect same width
+				height_error = Math.abs(listener.getHeight(i)-listener.getHeight(j)*2.0); //expect top height to be double bottom height
+				top_ar_error = Math.abs((listener.getWidth(i)/listener.getHeight(i))-Exp_AspectRatio_Top); //Expect certain aspect ratios
+				bottom_ar_error = Math.abs((listener.getWidth(j)/listener.getHeight(j))-Exp_AspectRatio_Bottom);
+				top_infill_error = Math.abs((listener.getArea(i)/(listener.getWidth(i)*listener.getHeight(i))) - Exp_InfillRatio_Top);
+				bottom_infill_error = Math.abs((listener.getArea(j)/(listener.getWidth(j)*listener.getHeight(j))) - Exp_InfillRatio_Bottom);
+				i_like_big_targets_and_i_cannot_lie = 100000 * 1/(listener.getArea(i) + listener.getArea(j));
 				
 				//The better the target is, the smaller Heuristic should be
 				Heuristic= x_pos_error     * 10.0 + //We want the top/bottom centroids to be aligned in the X direction
@@ -168,7 +168,7 @@ public class Vision_Processing_Main {
 		
 		
 		if(Best_Top != -1 & Best_Bottom != -1){
-			updateOutputs(true, VL.getX(Best_Top),VL.getY(Best_Top),VL.getWidth(Best_Top));
+			updateOutputs(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
 		} else {
 			updateOutputs(false,0,0,0);
 		}

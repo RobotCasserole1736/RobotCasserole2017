@@ -4,10 +4,10 @@ import org.usfirst.frc.team1736.lib.AutoSequencer.AutoSequencer;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import org.usfirst.frc.team1736.robot.auto.AutoEventDriveForward;
 
-public class Autonomus {
+public class Autonomous {
 	Calibration autoMode;
 	DriveTrain driveTrain;
-	public Autonomus(DriveTrain driveTrain){
+	public Autonomous(DriveTrain driveTrain){
 		autoMode = new Calibration("Auto Mode",0,0,5);
 		this.driveTrain = driveTrain;
 	}
