@@ -19,6 +19,9 @@ public class VisionAlignment {
 	double angleTolHyst = 0.025;//get within half a degree lined up
 	double distTolHyst = 0.025; //get within one foot lined up
 	
+	//Continuous Frame Mode
+	boolean contFrameMode = false;
+	
 	//Keep track of what the most recent frame received from the coprocessor was
 	double prev_frame_counter;
 	
@@ -115,15 +118,21 @@ public class VisionAlignment {
 		
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
-			//Set Desired
-			anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
-			distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
-			
+			if(contFrameMode){
+				//Set Desired
+				anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
+				distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
+			}
 			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst)
 					|| !(Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol + angleTolHyst)){
 				//Set Off Target
 				RobotState.visionAlignmentOnTarget = false;
 				
+				if(!contFrameMode){
+					//Take Pic
+					anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
+					distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
+				}
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
 			}else if(!RobotState.visionAlignmentDesiried | !RobotState.visionOnline){
@@ -143,15 +152,21 @@ public class VisionAlignment {
 			}
 			
 		}else if(visionAlignState == VisionAlignStates.sAligning){
-			//Set Desired
-			anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
-			distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
-			
+			if(contFrameMode){
+				//Set Desired
+				anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
+				distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
+			}
 			if(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol
 					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol){
 				//Set On Target
 				RobotState.visionAlignmentOnTarget = true;
 				
+				if(!contFrameMode){
+					//Take Pic
+					anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
+					distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
+				}
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
 			}else if(!RobotState.visionAlignmentDesiried | !RobotState.visionOnline){
@@ -180,6 +195,11 @@ public class VisionAlignment {
 				anglePID.start();
 				distPID.start();
 				
+				if(!contFrameMode){
+					//Take Pic
+					anglePID.setAngle(RobotState.visionGyroAngleDesiredAtLastFrame);
+					distPID.setDist(RobotState.visionDistanceDesiredAtLastFrame);
+				}
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
 			}else{
