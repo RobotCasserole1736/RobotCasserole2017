@@ -537,11 +537,16 @@ public class Robot extends IterativeRobot {
 		RobotState.gearCamAlign = driverCTRL.B();
 		RobotState.intakeCamAlign = driverCTRL.X();
 		RobotState.shooterCamAlign = driverCTRL.Y();
+
+		if(driverCTRL.StartButton()){
+			airCompressor.setCompressorEnabled(true);
+		} else if(driverCTRL.BackButton()){
+			airCompressor.setCompressorEnabled(false);
+		}	
 		
 		if(driverCTRL.DPadUp()){
 			gyro.reset();
 		}
-		
 		//gyro align commands TODO
 //		boolean newR = driverCTRL.DPadRight();
 //		boolean newD = driverCTRL.DPadDown();
@@ -550,8 +555,7 @@ public class Robot extends IterativeRobot {
 //		RobotState.gyroAlignRight = DaBouncer.AboveDebounceBoo(newR);
 //		RobotState.gyroAlignDown = DaBouncer.AboveDebounceBoo(newD);
 //		RobotState.gyroAlignUp = driverCTRL.DPadUp();
-//		RobotState.gyroAlignLeft = driverCTRL.DPadLeft();
-//		
+//		RobotState.gyroAlignLeft = driverCTRL.DPadLeft();	
 		
 	}
 	
@@ -573,12 +577,6 @@ public class Robot extends IterativeRobot {
 			gearSolenoid.set(true);
 		} else {
 			gearSolenoid.set(false);
-		}
-		if(driverCTRL.StartButton()){
-			airCompressor.setCompressorEnabled(true);
-		} else if(driverCTRL.BackButton()){
-			airCompressor.setCompressorEnabled(false);
-			
 		}
 		
 		if( operatorCTRL.Y()){
