@@ -95,6 +95,8 @@ public class RobotState {
 	static boolean shooterVelocityOk = false; //True if the actual RPM is within a pre-defined range of the desired RPM and a shot can be taken accurately, false otherwise (output, calculated by this subsystem)
 
 	//Hopper Subsystem
+	static boolean opHopperFwdDesired = false; //True if the operator wants to run hopper agitator forward, false if not.
+	static boolean opHopperRwdDesired = false;  //True if the operator wants to run hopper agitator forward, false if not.
 	static boolean hopperFeedCmd;//True if the hopper should feed balls to the shooter, false if not (input from other sources)
 	static double  hopperMotorCmd; //Motor command sent to the hopper feed motor (0 = stop, 1 = feed as fast as possible) (calculated by this subsystem)
 	

@@ -565,15 +565,18 @@ public class Robot extends IterativeRobot {
 		RobotState.opIntakeDesired = operatorCTRL.LB();
 		RobotState.opEjectDesired = operatorCTRL.B();
 		
+		RobotState.opHopperFwdDesired = operatorCTRL.StartButton();
+		RobotState.opHopperRwdDesired = operatorCTRL.BackButton();
+		
 		//Gear control (done here cuz we're lazy)
 		if(operatorCTRL.RTrigger() > 0.5){
 			gearSolenoid.set(true);
 		} else {
 			gearSolenoid.set(false);
 		}
-		if(operatorCTRL.StartButton()){
+		if(driverCTRL.StartButton()){
 			airCompressor.setCompressorEnabled(true);
-		} else if(operatorCTRL.BackButton()){
+		} else if(driverCTRL.BackButton()){
 			airCompressor.setCompressorEnabled(false);
 			
 		}
