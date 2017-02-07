@@ -52,13 +52,13 @@ Checkout your favorite release. Probably latest on master should be correct.
 Now that all the dependencies are installed, the unit should be moved and placed on the robot network (probably no internet access).
 Once this is done, log back in.
 
-Set a static IP address of 10.17.36.20, with the default gateway pointing to the router (usually 10.17.36.1)
+Set a static IP address of 10.17.36.8, with the default gateway pointing to the router (usually 10.17.36.1)
 
     ls -la /var/lib/connman/
     cd /var/lib/connman/ethernet_[xx]
     more settings
     cd /usr/lib/connman/test
-    ./set-ipv4-method ethernet_[xx]_cable manual 10.17.36.20 255.255.255.0 10.17.36.1
+    ./set-ipv4-method ethernet_[xx]_cable manual 10.17.36.8 255.255.255.0 10.17.36.1
     reboot
     
 Once the BBB boots again, you should be able to connect via the set up static IP address.

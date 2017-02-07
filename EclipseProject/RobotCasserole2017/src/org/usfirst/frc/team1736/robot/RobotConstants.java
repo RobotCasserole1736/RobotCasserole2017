@@ -6,10 +6,10 @@ public class RobotConstants {
 	// Networking Architecture Constants
 	///////////////////////////////////////////////////////////////////////////
 	//Connection parameters for listening for coprocessor results
-	public static final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.20";
+	public static final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.9";
 	public static final int    COPROCESSOR_LISTEN_PORT = 5800;
-	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.11/mjpg/video.mjpg";
-	public static final String DRIVER_CAMERA_URL = "http://10.17.36.12/mjpg/video.mjpg";
+	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.10/mjpg/video.mjpg";
+	public static final String DRIVER_CAMERA_URL = "http://10.17.36.8/mjpg/video.mjpg";
 	public static final double EXPECTED_NETWORK_LATENCY_SEC = ((0.345+0.275)*0.5)/1000.0; //An educated guess, based off of measurements with "ping"
 	
 	///////////////////////////////////////////////////////////////////////////

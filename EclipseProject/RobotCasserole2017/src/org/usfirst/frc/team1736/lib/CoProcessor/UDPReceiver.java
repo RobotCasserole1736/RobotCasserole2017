@@ -38,7 +38,7 @@ public class UDPReceiver{
     /**
      * Constructor for the UDP reciever. Sets up internal memory structures in prep to start listening for packets.
      * 
-     * @param listen_to_addr String of the IP address of the coprocessor (For example, "10.17.36.20")
+     * @param listen_to_addr String of the IP address of the coprocessor (For example, "10.17.36.8")
      * @param listen_on_port integer port number to listen on. Often between 5800 and 5810 per FMS whitepaper. Must match whatever port the coprocessor is sending information to.
      */
     public UDPReceiver(String listen_from_addr_in, int listen_on_port_in) {

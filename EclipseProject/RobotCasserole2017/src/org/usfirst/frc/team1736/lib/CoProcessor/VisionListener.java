@@ -76,7 +76,7 @@ public class VisionListener {
     /**
      * Constructor for the Vision Coprocessor listener socket. Sets up internal variables to get ready
      * for information to be transmitted from the coprocessor.
-     * @param listen_to_addr String of the IP address of the coprocessor (For example, "10.17.36.20")
+     * @param listen_to_addr String of the IP address of the coprocessor (For example, "10.17.36.8")
      * @param listen_on_port integer port number to listen on. Usually between 5800 and 5810 per FMS whitepaper. Must match whatever port the coprocessor is sending information to.
      */
     public VisionListener(String listen_to_addr, int listen_on_port){
