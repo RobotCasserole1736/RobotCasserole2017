@@ -6,10 +6,10 @@ public class RobotConstants {
 	// Networking Architecture Constants
 	///////////////////////////////////////////////////////////////////////////
 	//Connection parameters for listening for coprocessor results
-	public static final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.20";
+	public static final String COPPROCESSOR_LISTEN_ADDRESS = "10.17.36.9";
 	public static final int    COPROCESSOR_LISTEN_PORT = 5800;
-	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.11/mjpg/video.mjpg";
-	public static final String DRIVER_CAMERA_URL = "http://10.17.36.12/mjpg/video.mjpg";
+	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.10/mjpg/video.mjpg";
+	public static final String DRIVER_CAMERA_URL = "http://10.17.36.8/mjpg/video.mjpg";
 	public static final double EXPECTED_NETWORK_LATENCY_SEC = ((0.345+0.275)*0.5)/1000.0; //An educated guess, based off of measurements with "ping"
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -65,8 +65,8 @@ public class RobotConstants {
 	// Physical Constants
 	///////////////////////////////////////////////////////////////////////////
 	//Camera & Vision Properties
-	public static final int VISION_X_PIXELS = 640;
-	public static final int VISION_Y_PIXELS = 480;
+	public static final int VISION_X_PIXELS = 800;
+	public static final int VISION_Y_PIXELS = 600;
 	//public static final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
 	public static final double CAMERA_FOV_X_DEG = 67; //from axis M1013 camera specs
 	

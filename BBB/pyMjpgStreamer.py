@@ -23,7 +23,7 @@ class CamHandler(BaseHTTPRequestHandler):
             self.address = bytearray(socket.gethostbyname(socket.gethostname()), 'utf8')
         except:
             #eeeh, we'll just guess
-            self.address = b'10.17.36.20'
+            self.address = b'10.17.36.9'
         BaseHTTPRequestHandler.__init__(self, something, somethingelse, anotherthing)
 
     def do_GET(self):
