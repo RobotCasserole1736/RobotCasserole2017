@@ -5,7 +5,7 @@ import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class DriverController extends Xbox360Controller {
 	
 	private static DriverController controller = null;
-	
+	private boolean airCompState = true;
 	
 	public static synchronized DriverController getInstance()
 	{
@@ -52,6 +52,15 @@ public class DriverController extends Xbox360Controller {
 	public boolean getGyroReset()
 	{
 		return DPadUp();
+	}
+	
+	public boolean getAirCompEnableCmd()
+	{
+		if(StartButton())
+			airCompState = true;
+		if(BackButton())
+			airCompState = false;
+		return airCompState;
 	}
 
 }

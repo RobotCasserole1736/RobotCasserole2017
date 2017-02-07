@@ -7,6 +7,11 @@ import edu.wpi.first.wpilibj.Spark;
 public class HopperControl {
 	private static HopperControl hopperControl = null;
 	
+	public enum HopperStates 
+	{
+		HOPPER_OFF,HOPPER_FWD,HOPPER_REV;	
+	}
+	
 	//Declare Motor Control
 	private Spark hopMotor = new Spark(RobotConstants.HOPPER_MOTOR_PWM_PORT);
 	
@@ -33,9 +38,15 @@ public class HopperControl {
 	}
 	
 	public void update() {
-		if(ShotControl.getInstance().getHopperFeedCmd()){
-			motorCmd = hopperMotorCmd.get();
-		}else{
+		if(OperatorController.getInstance().getHopperFwdOverride())
+			motorCmd = 1 * hopperMotorCmd.get();
+		else if(OperatorController.getInstance().getHopperRevOverride())
+			motorCmd = -1 * hopperMotorCmd.get();
+		else if(ShotControl.getInstance().getHopperFeedCmd() == HopperStates.HOPPER_FWD)
+			motorCmd = 1 * hopperMotorCmd.get();
+		else if(ShotControl.getInstance().getHopperFeedCmd() == HopperStates.HOPPER_REV)
+			motorCmd = -1 * hopperMotorCmd.get();
+		else{
 			motorCmd = hopSpeedOff;
 		}
 		hopMotor.set(motorCmd);

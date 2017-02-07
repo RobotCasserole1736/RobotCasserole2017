@@ -27,6 +27,7 @@ public class VisionAlignment {
 	
 	//Keep track of what the most recent frame received from the coprocessor was
 	private double prev_frame_counter;
+	private boolean contFrameMode = false;
 	
 	//States of the vision align subsystem
 	public enum VisionAlignStates {
@@ -131,14 +132,22 @@ public class VisionAlignment {
 		
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
-			//Set Desired
-			anglePID.setAngle(gyroAngleDesiredLastFrame);
-			distPID.setDist(distanceDesiredLastFrame);
+			if(contFrameMode){
+				//Set Desired
+				anglePID.setAngle(gyroAngleDesiredLastFrame);
+				distPID.setDist(distanceDesiredLastFrame);
+			}
 			
 			if(!(Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol + angleTolHyst)
 					|| !(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol + angleTolHyst)){
 				//Set Off Target
 				visionAlignmentOnTarget = false;
+				
+				if(!contFrameMode) {
+					//Take Pic
+					anglePID.setAngle(gyroAngleDesiredLastFrame);
+					distPID.setDist(distanceDesiredLastFrame);
+				}
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
@@ -157,15 +166,22 @@ public class VisionAlignment {
 			}
 			
 		}else if(visionAlignState == VisionAlignStates.sAligning){
-			//Set Desired
-			anglePID.setAngle(gyroAngleDesiredLastFrame);
-			distPID.setDist(distanceDesiredLastFrame);
+			if(contFrameMode){
+				//Set Desired
+				anglePID.setAngle(gyroAngleDesiredLastFrame);
+				distPID.setDist(distanceDesiredLastFrame);
+			}
 			
 			if(Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol
 					&& Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol){
 				//Set On Target
 				visionAlignmentOnTarget = true;
 				
+				if(!contFrameMode){
+					//Take Pic
+					anglePID.setAngle(gyroAngleDesiredLastFrame);
+					distPID.setDist(distanceDesiredLastFrame);
+				}
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
 			}else if(!visionAlignmentDesired | !vis.isOnline()){
@@ -189,6 +205,12 @@ public class VisionAlignment {
 				//Reset integrators and start pids 
 				anglePID.start();
 				distPID.start();
+				
+				if(!contFrameMode){
+					//Take Pic
+					anglePID.setAngle(gyroAngleDesiredLastFrame);
+					distPID.setDist(distanceDesiredLastFrame);
+				}
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;

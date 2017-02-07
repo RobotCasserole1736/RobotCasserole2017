@@ -526,7 +526,7 @@ public class Robot extends IterativeRobot {
 	
 	 void updateOperatorInputs(){
 		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
-		airCompressor.setCompressorEnabled(operatorCTRL.getAirCompEnableCmd());
+		airCompressor.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
 		 
 		boolean rising_edge;
 		boolean falling_edge;

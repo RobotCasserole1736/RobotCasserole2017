@@ -5,7 +5,7 @@ import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 public class ShotControl {
 	private static ShotControl shotControl = null;
 	Calibration wheel_Set_Point_rpm;
-	private boolean hopperFeedCmd;
+	private HopperControl.HopperStates hopperFeedCmd = HopperControl.HopperStates.HOPPER_OFF;
 	private ShooterWheelCtrl wheelCtrl;
 	private ShooterStates desiredShooterState = ShooterStates.NO_Shoot;
 	
@@ -23,7 +23,7 @@ public class ShotControl {
 
 	 private ShotControl(){ 
 		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint RPM", 2700, 0, 5000);
-		 hopperFeedCmd = false;
+		 hopperFeedCmd = HopperControl.HopperStates.HOPPER_OFF;
 		 wheelCtrl = ShooterWheelCtrl.getInstance();
 		 wheelCtrl.setShooterDesiredRPM(0);
 	 }
@@ -32,12 +32,12 @@ public class ShotControl {
 	 public void update(){
 		  if(ShooterStates.NO_Shoot == desiredShooterState){
 			  //Operator requests everything turned off.
-			  hopperFeedCmd=false;
+			  hopperFeedCmd=HopperControl.HopperStates.HOPPER_OFF;
 			  wheelCtrl.setShooterDesiredRPM(0);
 		  }
 		  else if(ShooterStates.PREP_TO_SHOOT == desiredShooterState){
 			  //Operator wants to prepare to shoot. Today, this means spooling up the shooter wheel.
-			  hopperFeedCmd=false;
+			  hopperFeedCmd=HopperControl.HopperStates.HOPPER_OFF;
 			  wheelCtrl.setShooterDesiredRPM(wheel_Set_Point_rpm.get());
 		  }
 		  else if((ShooterStates.SHOOT == desiredShooterState) & wheelCtrl.getShooterVelocityOK()){
@@ -46,27 +46,27 @@ public class ShotControl {
 				  //Driver has robot under automatic (vision-assist) alignment. 
 				  if(VisionAlignment.getInstance().getVisionAlignmentPossible() & VisionAlignment.getInstance().getVisionAlignmentOnTarget()){
 					  //Vision alignment reports we are on target. Take the shot.
-					  hopperFeedCmd=true;
+					  hopperFeedCmd=HopperControl.HopperStates.HOPPER_FWD;
 					  wheelCtrl.setShooterDesiredRPM(wheel_Set_Point_rpm.get());
 				  } else {
 					  //Inhibit shot until vision alignment is achieved
-					  hopperFeedCmd=false;
+					  hopperFeedCmd=HopperControl.HopperStates.HOPPER_OFF;
 					  wheelCtrl.setShooterDesiredRPM(wheel_Set_Point_rpm.get());
 				  }
 			  } else {
 				  //Shooter is under manual alignment, just take the shot if RPM is ok
-				  hopperFeedCmd=true;
+				  hopperFeedCmd=HopperControl.HopperStates.HOPPER_FWD;
 				  wheelCtrl.setShooterDesiredRPM(wheel_Set_Point_rpm.get());
 			  }
 		  }
 		  else{ //Shot desired but wheel RPM is not OK
 			  //Just spool the wheel back up. Hopefully we get it fast enough to take a shot soon.
-			  hopperFeedCmd=false;
+			  hopperFeedCmd=HopperControl.HopperStates.HOPPER_OFF;
 			  wheelCtrl.setShooterDesiredRPM(wheel_Set_Point_rpm.get());
 		  }
 	 }
 	 
-	 public boolean getHopperFeedCmd()
+	 public HopperControl.HopperStates getHopperFeedCmd()
 	 {
 		 return hopperFeedCmd;
 	 }

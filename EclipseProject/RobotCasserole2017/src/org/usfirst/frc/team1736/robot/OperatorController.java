@@ -5,7 +5,6 @@ import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class OperatorController extends Xbox360Controller {
 	
 	private static OperatorController controller = null;
-	private static boolean airCompState = true;
 	
 	public static synchronized OperatorController getInstance()
 	{
@@ -23,15 +22,6 @@ public class OperatorController extends Xbox360Controller {
 		return RTrigger() > 0.5;
 	}
 	
-	public boolean getAirCompEnableCmd()
-	{
-		if(StartButton())
-			airCompState = true;
-		if(BackButton())
-			airCompState = false;
-		return airCompState;
-	}
-	
 	public double getClimbSpeedCmd()
 	{
 		return LStick_X();
@@ -45,6 +35,16 @@ public class OperatorController extends Xbox360Controller {
 	public boolean getEjectDesiredCmd()
 	{
 		return B();
+	}
+	
+	public boolean getHopperFwdOverride()
+	{
+		return StartButton();
+	}
+	
+	public boolean getHopperRevOverride()
+	{
+		return BackButton();
 	}
 
 }
