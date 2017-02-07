@@ -18,7 +18,7 @@ import pyMjpgStreamer
 ################################################################################
 
 #Fixed IP address of IP Camera
-camera_IP = '10.17.36.11'
+camera_IP = '10.17.36.10'
 
 #Set to true to configure for USB, false for IP camera
 USE_USB_CAM=False

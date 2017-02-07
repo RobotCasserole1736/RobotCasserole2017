@@ -39,7 +39,7 @@ SCP_PATH_LIST = ["C:\\Program Files\\Git\\mingw32\\bin\\scp.exe",
                  "scp"]
                  
 #Beaglebone Black should be at a fixed IP address
-TARGET_IP_ADDRESS = "10.17.36.8"
+TARGET_IP_ADDRESS = "10.17.36.9"
        
 #Path to root directory where we put the files on the remote
 TARGET_SCRIPT_DIR = "~/CasseroleVision/"
