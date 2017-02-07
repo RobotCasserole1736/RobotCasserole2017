@@ -1,7 +1,7 @@
 <edu.wpi.grip.core.Pipeline>
   <sources>
     <edu.wpi.grip.core.sources.CameraSource>
-      <property name="address" value="http://10.17.36.11/mjpg/video.mjpg"/>
+      <property name="address" value="http://10.17.36.10/mjpg/video.mjpg"/>
     </edu.wpi.grip.core.sources.CameraSource>
   </sources>
   <steps>
