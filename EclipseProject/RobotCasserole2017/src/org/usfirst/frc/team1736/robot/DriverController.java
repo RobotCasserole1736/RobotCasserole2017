@@ -54,12 +54,16 @@ public class DriverController extends Xbox360Controller {
 		return DPadUp();
 	}
 	
-	public boolean getAirCompEnableCmd()
+	public void updateAirCompEnabled()
 	{
 		if(StartButton())
 			airCompState = true;
 		if(BackButton())
 			airCompState = false;
+	}
+	
+	public boolean getAirCompEnableCmd()
+	{
 		return airCompState;
 	}
 

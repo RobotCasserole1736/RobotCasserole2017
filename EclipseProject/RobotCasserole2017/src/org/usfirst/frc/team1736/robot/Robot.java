@@ -304,7 +304,7 @@ public class Robot extends IterativeRobot {
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateOperatorInputs();
+		updateAllHumanInputs();
 		poseCalc.update();
 		
 		
@@ -524,7 +524,7 @@ public class Robot extends IterativeRobot {
 //		RobotState.gyroAlignLeft = driverCTRL.DPadLeft();
 //		
 	
-	 void updateOperatorInputs(){
+	 void updateAllHumanInputs(){
 		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
 		airCompressor.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
 		 
@@ -545,21 +545,23 @@ public class Robot extends IterativeRobot {
 			rising_edge=false;
 		}
 		
-		if(rising_edge==true){
-			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
-		}
-		
 		if(operatorCTRL.RB()==false & pev_State==true){
 			falling_edge=true;	
 		}
 		else{
 			falling_edge=false;
 		}	
-		if(falling_edge==true){
+		
+		
+		if(rising_edge==true){
+			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
+		} else if(falling_edge==true){
 			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
 		
 		pev_State = operatorCTRL.RB();
+		
+		driverCTRL.updateAirCompEnabled();
 	}
 
 	
