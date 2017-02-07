@@ -6,8 +6,10 @@ import org.usfirst.frc.team1736.lib.SignalMath.InterpValueHistoryBuffer;
 import edu.wpi.first.wpilibj.Timer;
 
 public class VisionAlignment {
-	VisionAlignAnglePID anglePID;
-	VisionAlignDistPID distPID;
+	private static VisionAlignment visionAlignment = null;
+	
+	private VisionAlignAnglePID anglePID;
+	private VisionAlignDistPID distPID;
 	
 	//Record of the history of gyro and distance values
 	InterpValueHistoryBuffer gyroHistory;
@@ -45,9 +47,19 @@ public class VisionAlignment {
 	Calibration angleDesired = new Calibration("Desired Angle Alignment Offset", 0.0, -40.0, 40.0);
 	Calibration distDesired = new Calibration("Desired Distance Alignment", 70.0/12.0, 0.0, 50.0);
 	
-	VisionAlignStates visionAlignState = VisionAlignStates.sNotControlling;
+	private VisionAlignStates visionAlignState = VisionAlignStates.sNotControlling;
+	private boolean visionAlignmentPossible = false;
+	private boolean visionAlignmentOnTarget = false;
+	private boolean visionAlignmentDesired = false;
 	
-	public VisionAlignment(){
+	public static synchronized VisionAlignment getInstance()
+	{
+		if(visionAlignment == null)
+			visionAlignment = new VisionAlignment();
+		return visionAlignment;
+	}
+	
+	private VisionAlignment(){
 		// Instantiate angle and distance PIDs
 		anglePID = new VisionAlignAnglePID(angle_Kp.get(), angle_Ki.get(), angle_Kd.get());
 		distPID = new VisionAlignDistPID(dist_Kp.get(), dist_Ki.get(), dist_Kd.get());
@@ -65,7 +77,7 @@ public class VisionAlignment {
 		//CasserolePID is not running after construction
 		
 		//Make sure controller is off
-		RobotState.visionAlignmentOnTarget = false;
+		visionAlignmentOnTarget = false;
 		RobotState.visionDtFwdRevCmd = 0.0;
 		RobotState.visionDtRotateCmd = 0.0;
 		
@@ -89,14 +101,14 @@ public class VisionAlignment {
 		// moving it to setpoints determined by the vision processing system.
 		// We effectively get a boost in bandwidth of our control algorithm.
 		double timeNow = Timer.getFPGATimestamp();
-		gyroHistory.insert(timeNow, RobotState.robotPoseAngle_deg);
-		distanceHistory.insert(timeNow, RobotState.robotFwdRevDist_ft);
+		gyroHistory.insert(timeNow, Gyro.getInstance().getAngle());
+		distanceHistory.insert(timeNow, RobotPoseCalculator.getInstance().getFwdRevDistFt());
 		
 		// Figure out if alignment should be done
-		RobotState.visionAlignmentPossible = RobotState.visionOnline && RobotState.visionTargetFound;
+		visionAlignmentPossible = RobotState.visionOnline && RobotState.visionTargetFound;
 		
 		//If vision align is possible, look to see if we have a new frame
-		if(RobotState.visionAlignmentPossible){
+		if(visionAlignmentPossible){
 			if(prev_frame_counter != RobotState.visionFrameCounter){
 				//New frame
 				//update the gyro-based setpoints
@@ -122,13 +134,13 @@ public class VisionAlignment {
 			if(!(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol + angleTolHyst)
 					|| !(Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol + angleTolHyst)){
 				//Set Off Target
-				RobotState.visionAlignmentOnTarget = false;
+				visionAlignmentOnTarget = false;
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
-			}else if(!RobotState.visionAlignmentDesiried | !RobotState.visionOnline){
+			}else if(!visionAlignmentDesired | !RobotState.visionOnline){
 				//Set outputs to 0
-				RobotState.visionAlignmentOnTarget = false;
+				visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
 				RobotState.visionDtRotateCmd = 0.0;
 
@@ -150,13 +162,13 @@ public class VisionAlignment {
 			if(Math.abs(RobotState.visionTargetOffset_deg - angleDesired.get()) < angleTol
 					&& Math.abs(RobotState.visionEstTargetDist_ft - distDesired.get()) < distTol){
 				//Set On Target
-				RobotState.visionAlignmentOnTarget = true;
+				visionAlignmentOnTarget = true;
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sOnTarget;
-			}else if(!RobotState.visionAlignmentDesiried | !RobotState.visionOnline){
+			}else if(!visionAlignmentDesired | !RobotState.visionOnline){
 				//Set outputs to 0
-				RobotState.visionAlignmentOnTarget = false;
+				visionAlignmentOnTarget = false;
 				RobotState.visionDtFwdRevCmd = 0.0;
 				RobotState.visionDtRotateCmd = 0.0;
 
@@ -171,11 +183,11 @@ public class VisionAlignment {
 			}
 			
 		}else{ // visionAlignState == VisionAlignStates.sNotControlling
-			RobotState.visionAlignmentOnTarget = false;
+			visionAlignmentOnTarget = false;
 			RobotState.visionDtFwdRevCmd = 0.0;
 			RobotState.visionDtRotateCmd = 0.0;
 			
-			if(RobotState.visionAlignmentDesiried & RobotState.visionOnline){
+			if(visionAlignmentDesired & RobotState.visionOnline){
 				//Reset integrators and start pids 
 				anglePID.start();
 				distPID.start();
@@ -233,5 +245,25 @@ public class VisionAlignment {
 		}else{ //visionAlignState == VisionAlignStates.sNotControlling
 			return 0.0;
 		}
+	}
+	
+	public boolean getVisionAlignmentPossible()
+	{
+		return visionAlignmentPossible;
+	}
+	
+	public boolean getVisionAlignmentOnTarget()
+	{
+		return visionAlignmentOnTarget;
+	}
+	
+	public void setVisionAlignmentDesired(boolean isDesired)
+	{
+		visionAlignmentDesired = isDesired;
+	}
+	
+	public boolean getVisionAlignmentDesired()
+	{
+		return visionAlignmentDesired;
 	}
 }

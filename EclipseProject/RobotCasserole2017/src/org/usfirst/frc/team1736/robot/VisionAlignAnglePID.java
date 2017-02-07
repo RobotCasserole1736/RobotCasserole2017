@@ -17,7 +17,7 @@ public class VisionAlignAnglePID extends CasserolePID {
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return RobotState.robotPoseAngle_deg;
+		return Gyro.getInstance().getAngle();
 	}
 
 	@Override

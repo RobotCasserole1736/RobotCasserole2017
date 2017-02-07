@@ -17,7 +17,7 @@ public class VisionAlignDistPID extends CasserolePID {
 	@Override
 	protected double returnPIDInput() {
 		// TODO Auto-generated method stub
-		return RobotState.robotFwdRevDist_ft;
+		return RobotPoseCalculator.getInstance().getFwdRevDistFt();
 	}
 
 	@Override

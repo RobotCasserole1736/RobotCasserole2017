@@ -8,22 +8,24 @@ import org.usfirst.frc.team1736.robot.RobotState;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 public class DriveTrain{
 	
-	RobotDrive myDrive;
+	private static DriveTrain driveTrain;
+	
+	private RobotDrive myDrive;
 
-	VictorSP frontLeftMotor;
-	VictorSP frontRightMotor;
-	VictorSP rearLeftMotor;
-	VictorSP rearRightMotor;
+	private VictorSP frontLeftMotor;
+	private VictorSP frontRightMotor;
+	private VictorSP rearLeftMotor;
+	private VictorSP rearRightMotor;
 	
-	Encoder frontLeftEncoder;
-	Encoder frontRightEncoder;
-	Encoder rearLeftEncoder;
-	Encoder rearRightEncoder;
+	private Encoder frontLeftEncoder;
+	private Encoder frontRightEncoder;
+	private Encoder rearLeftEncoder;
+	private Encoder rearRightEncoder;
 	
-	DriveTrainWheelSpeedPI frontLeftAutonCtrl;
-	DriveTrainWheelSpeedPI frontRightAutonCtrl;
-	DriveTrainWheelSpeedPI rearLeftAutonCtrl;
-	DriveTrainWheelSpeedPI rearRightAutonCtrl;
+	private DriveTrainWheelSpeedPI frontLeftAutonCtrl;
+	private DriveTrainWheelSpeedPI frontRightAutonCtrl;
+	private DriveTrainWheelSpeedPI rearLeftAutonCtrl;
+	private DriveTrainWheelSpeedPI rearRightAutonCtrl;
 	
 	Calibration dtPGainCal;
 	Calibration dtFGainCal;
@@ -31,13 +33,17 @@ public class DriveTrain{
 	
 	Calibration fieldOrientedCtrl;
 	
-	boolean runningClosedLoop;
+	private boolean runningClosedLoop;
 	
 
+	public static synchronized DriveTrain getInstance()
+	{
+		if(driveTrain == null)
+			driveTrain = new DriveTrain();
+		return driveTrain;
+	}
 	
-
-	
-	public DriveTrain() {
+	private DriveTrain() {
 		//Setup Drivetrain with motors and such
 		frontLeftMotor  = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_LEFT_MOTOR);
     	frontRightMotor = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_RIGHT_MOTOR);
@@ -82,27 +88,6 @@ public class DriveTrain{
     	runningClosedLoop = false;
 	}
 	
-	
-	/**
-	 * Reads the current speed and total distance of each wheel on the drivetrain. 
-	 * Should be called each periodic loop.
-	 */
-	public void readEncoders(){
-		
-		//getRate returns in per seconds, so we need to convert
-		RobotState.frontLeftWheelVelocity_rpm  = frontLeftEncoder.getRate()*60.0;
-		RobotState.frontRightWheelVelocity_rpm = frontRightEncoder.getRate()*60.0;
-		RobotState.rearLeftWheelVelocity_rpm   = rearLeftEncoder.getRate()*60.0;
-		RobotState.rearRightWheelVelocity_rpm  = rearRightEncoder.getRate()*60.0;
-		
-		//Get distance returns in total revolutions, so convert to ft with math
-		RobotState.frontLeftWheelDistance_ft  = frontLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
-		RobotState.frontRightWheelDistance_ft = frontRightEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
-		RobotState.rearLeftWheelDistance_ft   = rearLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
-		RobotState.rearRightWheelDistance_ft  = rearRightEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
-		
-	}
-	
 	/**
 	 * Sets all encoder distances back to zero.
 	 */
@@ -141,8 +126,8 @@ public class DriveTrain{
 	}
 
 	public void autonomousControl() {
-		if(RobotState.visionAlignmentDesiried){
-			if(RobotState.visionAlignmentPossible){
+		if(VisionAlignment.getInstance().getVisionAlignmentDesired()){
+			if(VisionAlignment.getInstance().getVisionAlignmentPossible()){
 				//If we're in autonomous and vision alignment is desired (and possible), use the vision commands with no strafe
 				runOpenLoop(RobotState.visionDtFwdRevCmd, 0, RobotState.visionDtRotateCmd, 0);
 			} else {
@@ -152,29 +137,22 @@ public class DriveTrain{
 
 		} else {
 			//If we're in autonomous but don't need vision alignment, use the PID commands
-			 runClosedLoop(RobotState.autonDtfrontLeftWheelVelocityCmd_rpm,
-					       RobotState.autonDtfrontRightWheelVelocityCmd_rpm,
-					       RobotState.autonDtrearLeftWheelVelocityCmd_rpm,
-					       RobotState.autonDtrearRightWheelVelocityCmd_rpm);
+			 runClosedLoop();
 		}
-		
-		updateMotorCmds();
 	}
 
 	public void operatorControl() {
-			
-		if(RobotState.visionAlignmentDesiried){
+		DriverController driverControl = DriverController.getInstance();
+		if(VisionAlignment.getInstance().getVisionAlignmentDesired()){
 			//For operator control, vision assist, get commands from the vision subsystem (although the driver may still strafe)
-			runOpenLoop(RobotState.visionDtFwdRevCmd, RobotState.driverStrafeCmd, RobotState.visionDtRotateCmd, 0);
+			runOpenLoop(RobotState.visionDtFwdRevCmd, driverControl.getStrafeCmd(), RobotState.visionDtRotateCmd, 0);
 		} else if(fieldOrientedCtrl.get() == 0.0){
 			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
-			runOpenLoop(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, 0);
+			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), 0);
 		} else {
 			//For operator control, field oriented, and no vision assist, get all commands from driver along with gyro angle
-			runOpenLoop(RobotState.driverFwdRevCmd, RobotState.driverStrafeCmd, RobotState.driverRotateCmd, RobotState.robotPoseAngle_deg);
+			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), Gyro.getInstance().getAngle());
 		}
-		
-		updateMotorCmds();
 
 	}
 	
@@ -199,33 +177,15 @@ public class DriveTrain{
 	}
 	
 	/**
-	 * Enables PI controllers (if not yet enabled) and updates their setpoints
-	 * @param frontLeftSetpoint_RPM
-	 * @param frontRightSetpoint_RPM
-	 * @param rearLeftSetpoint_RPM
-	 * @param rearRightSetpoint_RPM
+	 * Enables PI controllers (if not yet enabled).  Assumes setpoints for PI controllers are managed elsewhere
 	 */
-	private void runClosedLoop(double frontLeftSetpoint_RPM, double frontRightSetpoint_RPM, double rearLeftSetpoint_RPM, double rearRightSetpoint_RPM){
+	private void runClosedLoop(){
 		frontLeftAutonCtrl.setEnabled(true);
 		frontRightAutonCtrl.setEnabled(true);
 		rearLeftAutonCtrl.setEnabled(true);
 		rearRightAutonCtrl.setEnabled(true);
 		
-//		frontLeftAutonCtrl.setSetpoint(frontLeftSetpoint_RPM);
-//		frontRightAutonCtrl.setSetpoint(frontRightSetpoint_RPM);
-//		rearLeftAutonCtrl.setSetpoint(rearLeftSetpoint_RPM);
-//		rearRightAutonCtrl.setSetpoint(rearRightSetpoint_RPM);
-		
 		runningClosedLoop = true;
-	}
-	
-	
-	private void updateMotorCmds(){		
-		//Update Motor Commands
-		RobotState.frontLeftDriveMotorCmd  =  getFLDriveMotorCmd();
-		RobotState.frontRightDriveMotorCmd =  getFRDriveMotorCmd();
-		RobotState.rearLeftDriveMotorCmd   =  getRLDriveMotorCmd();
-		RobotState.rearRightDriveMotorCmd  =  getRRDriveMotorCmd();
 	}
 
 	public double getFLDriveMotorCmd() {
@@ -260,7 +220,52 @@ public class DriveTrain{
 		return rearLeftAutonCtrl;
 	}
 	
-	public DriveTrainWheelSpeedPI getRearrightCTRL(){
+	public DriveTrainWheelSpeedPI getRearRightCTRL(){
 		return rearRightAutonCtrl;
+	}
+	
+	public double getFrontLeftWheelSpeedRPM()
+	{
+		return frontLeftEncoder.getRate()*60.0;
+	}
+	
+	public double getFrontRightWheelSpeedRPM()
+	{
+		return frontRightEncoder.getRate()*60.0;
+	}
+	
+	public double getRearLeftWheelSpeedRPM()
+	{
+		return rearLeftEncoder.getRate()*60.0;
+	}
+	
+	public double getRearRightWheelSpeedRPM()
+	{
+		return rearRightEncoder.getRate()*60.0;
+	}
+	
+	public double getFrontLeftWheelDistanceFt()
+	{
+		return frontLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+	}
+	
+	public double getFrontRightWheelDistanceFt()
+	{
+		return frontRightEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+	}
+	
+	public double getRearLeftWheelDistanceFt()
+	{
+		return rearLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+	}
+	
+	public double getRearRightWheelDistanceFt()
+	{
+		return rearRightEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
+	}
+	
+	public void disableSafety()
+	{
+		myDrive.setSafetyEnabled(false);
 	}
 }

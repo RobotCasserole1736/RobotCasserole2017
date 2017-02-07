@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1736.lib.FalconPathPlanner;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
-import org.usfirst.frc.team1736.lib.Globals.RobotConstants;
 import org.usfirst.frc.team1736.lib.CasserolePID.CasserolePID;
 
 /**

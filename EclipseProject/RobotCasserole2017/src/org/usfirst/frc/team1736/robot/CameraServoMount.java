@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.Servo;
  */
 public class CameraServoMount {
 	
+	public enum CamPos{
+		SHOOT, GEAR, INTAKE
+	}
+	
 	//State variables
 	public double cur_pan_angle;
 	public double cur_tilt_angle;
@@ -47,11 +51,11 @@ public class CameraServoMount {
 	}
 	
 	public void update(){
-		if(RobotState.gearCamAlign){
+		if(DriverController.getInstance().getGearCamAlign()){
 			setCameraPos(CamPos.GEAR);
-		} else if(RobotState.intakeCamAlign) {
+		} else if(DriverController.getInstance().getIntakeCamAlign()) {
 			setCameraPos(CamPos.INTAKE);
-		} else if(RobotState.shooterCamAlign){
+		} else if(DriverController.getInstance().getShooterCamAlign()){
 			setCameraPos(CamPos.SHOOT);
 		}
 	}

@@ -3,7 +3,23 @@ package org.usfirst.frc.team1736.robot;
 
 public class RobotPoseCalculator {
 	
-	public RobotPoseCalculator(){
+	private static RobotPoseCalculator poseCalculator = null;
+	
+	private double netSpeed = 0;
+	private double fwdRevVel = 0;
+	private double strafeVel = 0;
+	private double fwdRevDist = 0;
+	private double strafeDist = 0;
+	private double netDist = 0;
+	
+	public static synchronized RobotPoseCalculator getInstance()
+	{
+		if(poseCalculator == null)
+			poseCalculator = new RobotPoseCalculator();
+		return poseCalculator;
+	}
+	
+	private RobotPoseCalculator(){
 		return;
 	}
 	
@@ -17,17 +33,17 @@ public class RobotPoseCalculator {
 		double WheelSpeedCuatro;
 		double Vx;
 		double Vy;
-		double netSpeed;
+		DriveTrain dt = DriveTrain.getInstance();
 		
 		///////////////////////////////////////////////////////////////////////////
 		// Speed calculations
 		///////////////////////////////////////////////////////////////////////////
 		
 		//Calculate wheel speeds in radians per second
-		WheelSpeedOno =RobotState.frontLeftWheelVelocity_rpm * 2.0 * Math.PI / 60; 
-		WheelSpeedDos =RobotState.frontRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
-		WheelSpeedTres =RobotState.rearLeftWheelVelocity_rpm * 2.0 * Math.PI / 60;
-		WheelSpeedCuatro =RobotState.rearRightWheelVelocity_rpm * 2.0 * Math.PI / 60;
+		WheelSpeedOno = dt.getFrontLeftWheelSpeedRPM() * 2.0 * Math.PI / 60; 
+		WheelSpeedDos = dt.getFrontRightWheelSpeedRPM() * 2.0 * Math.PI / 60;
+		WheelSpeedTres = dt.getRearLeftWheelSpeedRPM() * 2.0 * Math.PI / 60;
+		WheelSpeedCuatro = dt.getRearRightWheelSpeedRPM() * 2.0 * Math.PI / 60;
 	
 		//Calculate translational velocity x/y components via inverse mechanum kinematic equations
 		Vx = (WheelSpeedOno + WheelSpeedDos + WheelSpeedTres + WheelSpeedCuatro) * RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT / 4;
@@ -37,23 +53,52 @@ public class RobotPoseCalculator {
 		netSpeed = Math.sqrt(Vx*Vx+Vy*Vy);
 		
 		//Store results into state variables
-		RobotState.robotNetSpeed_ftpers = netSpeed;
-		RobotState.robotFwdRevVel_ftpers = Vx;
-		RobotState.robotStrafeVel_ftpers = Vy;	
+		fwdRevVel = Vx;
+		strafeVel = Vy;	
 		
 		///////////////////////////////////////////////////////////////////////////
 		// Distance calculations - similar to above
 		///////////////////////////////////////////////////////////////////////////
 		
-		RobotState.robotFwdRevDist_ft = (RobotState.frontLeftWheelDistance_ft + 
-				                         RobotState.frontRightWheelDistance_ft + 
-				                         RobotState.rearLeftWheelDistance_ft + 
-				                         RobotState.rearRightWheelDistance_ft) / 4.0;
-		RobotState.robotStrafeDist_ft  = (RobotState.frontLeftWheelDistance_ft - 
-										 RobotState.frontRightWheelDistance_ft +
-										 RobotState.rearLeftWheelDistance_ft - 
-										 RobotState.rearRightWheelDistance_ft) / 4.0;
+		fwdRevDist = (dt.getFrontLeftWheelDistanceFt() + 
+				                         dt.getFrontRightWheelDistanceFt() + 
+				                         dt.getRearLeftWheelDistanceFt() + 
+				                         dt.getRearRightWheelDistanceFt()) / 4.0;
+		strafeDist = (dt.getFrontLeftWheelDistanceFt() - 
+										 dt.getFrontRightWheelDistanceFt() +
+										 dt.getRearLeftWheelDistanceFt() - 
+										 dt.getRearRightWheelDistanceFt()) / 4.0;
 		
-		RobotState.robotNetDistance_ft +=  RobotState.robotNetSpeed_ftpers*0.02; //meh, just a guess at sample time. This isn't used for anything now that I know of.
+		netDist +=  netSpeed*0.02; //meh, just a guess at sample time. This isn't used for anything now that I know of.
+	}
+	
+	public double getNetSpeedFtPerS()
+	{
+		return netSpeed;
+	}
+	
+	public double getFwdRevVelFtPerS()
+	{
+		return fwdRevVel;
+	}
+	
+	public double getStrafeVelFtPerS()
+	{
+		return strafeVel;
+	}
+	
+	public double getFwdRevDistFt()
+	{
+		return fwdRevDist;
+	}
+	
+	public double getStrafeDistFt()
+	{
+		return strafeDist;
+	}
+	
+	public double getNetDistFt()
+	{
+		return netDist;
 	}
 }

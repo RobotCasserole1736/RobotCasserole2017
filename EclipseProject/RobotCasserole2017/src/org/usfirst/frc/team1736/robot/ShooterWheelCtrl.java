@@ -7,6 +7,8 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 public class ShooterWheelCtrl {
 	
+	private static ShooterWheelCtrl wheelCtrl = null;
+	
 	Calibration Shooter_ff_Gain;
 	Calibration Shooter_P_Gain;
 	Calibration Shooter_I_Gain;
@@ -14,8 +16,20 @@ public class ShooterWheelCtrl {
 	Calibration ErrorRange;
 	CANTalon shooterTalon;
 	
+	private double desiredVelocity = 0;
+	private double actualVelocity = 0;
+	private double motorCmd = 0;
+	private boolean isVelocityOk = false;
 	
-	public ShooterWheelCtrl(){
+	
+	public static synchronized ShooterWheelCtrl getInstance()
+	{
+		if(wheelCtrl == null)
+			wheelCtrl = new ShooterWheelCtrl();
+		return wheelCtrl;
+	}
+	
+	private ShooterWheelCtrl(){
 		shooterTalon = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
 		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0);
 		Shooter_P_Gain = new Calibration("Shooter P Gain",0.001);
@@ -64,16 +78,41 @@ public class ShooterWheelCtrl {
 	
 	
 	public void update(){
-		shooterTalon.set(RobotState.shooterDesiredVelocity_rpm); // set what speed the wheel should be running at 
-		RobotState.shooterActualVelocity_rpm = shooterTalon.getSpeed();
-		RobotState.shooterMotorCmd = shooterTalon.get();
-		double Error = Math.abs(RobotState.shooterDesiredVelocity_rpm -RobotState.shooterActualVelocity_rpm);
+		shooterTalon.set(desiredVelocity); // set what speed the wheel should be running at 
+		actualVelocity = shooterTalon.getSpeed();
+		motorCmd = shooterTalon.get();
+		double Error = Math.abs(desiredVelocity - actualVelocity);
 		if (Error > ErrorRange.get()){
-			RobotState.shooterVelocityOk = false;
+			isVelocityOk = false;
 		}else{
-			RobotState.shooterVelocityOk = true;
+			isVelocityOk = true;
 		}
 	
+	}
+	
+	public void setShooterDesiredRPM(double rpm)
+	{
+		desiredVelocity = rpm;
+	}
+	
+	public double getShooterDesiredRPM()
+	{
+		return desiredVelocity;
+	}
+	
+	public boolean getShooterVelocityOK()
+	{
+		return isVelocityOk;
+	}
+	
+	public double getShooterActualVelocityRPM()
+	{
+		return actualVelocity;
+	}
+	
+	public double getShooterMotorCmd()
+	{
+		return motorCmd;
 	}
 	
 }

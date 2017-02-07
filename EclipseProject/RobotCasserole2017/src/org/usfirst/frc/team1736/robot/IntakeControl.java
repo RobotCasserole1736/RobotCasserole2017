@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.Spark;
 
 public class IntakeControl {
 	
+	private static IntakeControl intakeControl = null;
+	
 	//Declare Motor Control
 	Spark intakeMotor = new Spark(RobotConstants.INTAKE_MOTOR_PWM_PORT);
 	
@@ -19,8 +21,17 @@ public class IntakeControl {
 	Calibration intakeMotorRevCmd = new Calibration("Ground Pickup Eject Motor Command", -0.5, -1.0, 0.0);
 	
 	//Intake Speed
-	double intakeOff = 0.0;
-	public IntakeControl(){
+	private final double INTAKE_OFF = 0.0;
+	private static double intakeSpeedCommand = 0;
+	
+	public static synchronized IntakeControl getInstance()
+	{
+		if(intakeControl == null)
+			intakeControl = new IntakeControl();
+		return intakeControl;
+	}
+	
+	private IntakeControl(){
 		
 		//Init Motor to off
 		intakeMotor.set(0.0);
@@ -30,17 +41,23 @@ public class IntakeControl {
 	}
 	
 	public void update(){
-		if(RobotState.opIntakeDesired){
-			RobotState.intakeSpeedCmd = intakeMotorFwdCmd.get();
-		}else if(RobotState.opEjectDesired){
-			RobotState.intakeSpeedCmd = intakeMotorRevCmd.get();
+		OperatorController operatorControl = OperatorController.getInstance();
+		if(operatorControl.getIntakeDesiredCmd()){
+			intakeSpeedCommand = intakeMotorFwdCmd.get();
+		}else if(operatorControl.getEjectDesiredCmd()){
+			intakeSpeedCommand = intakeMotorRevCmd.get();
 		}else{
-			RobotState.intakeSpeedCmd = intakeOff;
+			intakeSpeedCommand = INTAKE_OFF;
 		}
-		intakeMotor.set(RobotState.intakeSpeedCmd);
+		intakeMotor.set(intakeSpeedCommand);
 	}
 	
 	public void IntakeExtend(){
 		intakeExtend.set(true);
+	}
+	
+	public double getCommandedIntakeSpeed()
+	{
+		return intakeSpeedCommand;
 	}
 }

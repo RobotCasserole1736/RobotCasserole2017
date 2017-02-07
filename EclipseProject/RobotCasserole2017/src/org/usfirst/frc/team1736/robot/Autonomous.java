@@ -16,7 +16,7 @@ public class Autonomous {
 		int mode = (int) Math.round(autoMode.get());
 		switch(mode){
 			case 1: //drive forward across base line
-				AutoEventDriveForward driveForward = new AutoEventDriveForward(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearrightCTRL());
+				AutoEventDriveForward driveForward = new AutoEventDriveForward(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
 				AutoSequencer.addEvent(driveForward);
 				break;
 				

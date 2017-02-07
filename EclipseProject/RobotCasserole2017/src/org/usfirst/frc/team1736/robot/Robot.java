@@ -4,15 +4,11 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
-import org.usfirst.frc.team1736.lib.Sensors.ADXRS453_Gyro;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
-import org.usfirst.frc.team1736.lib.HAL.JoyStickScaler;
-import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 import org.usfirst.frc.team1736.robot.RobotState;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -44,8 +40,8 @@ public class Robot extends IterativeRobot {
 	// Air pressure
 	double currAirPress;
 	
-	ADXRS453_Gyro gyro;
-	DriveTrain myRobot;
+	Gyro gyro;
+	DriveTrain driveTrain;
 
 	//Vision Processing Algorithm
     VisionProcessing visionProc;
@@ -57,7 +53,7 @@ public class Robot extends IterativeRobot {
 
     //Controllers
     DriverController driverCTRL;
-    Xbox360Controller operatorCTRL;
+    OperatorController operatorCTRL;
 
     //Hopper Feed Control
     HopperControl hopControl; 
@@ -66,7 +62,7 @@ public class Robot extends IterativeRobot {
     IntakeControl intakeControl;
     
     //Shooter wheel control
-    ShooterWheelCtrl shooterControl;
+    ShooterWheelCtrl shooterWheelControl;
     
     //Climber Control
     ClimberControl climbControl;
@@ -104,31 +100,31 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit(){
 		//Set up physical devices
-		myRobot = new DriveTrain();
+		driveTrain = DriveTrain.getInstance();
 		pdp = new PowerDistributionPanel();
-		gyro =new ADXRS453_Gyro();
+		gyro = Gyro.getInstance();
 		visionProc = new VisionProcessing(); 
-		visionAlignCTRL = new VisionAlignment();
+		visionAlignCTRL = VisionAlignment.getInstance();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
-		poseCalc = new RobotPoseCalculator();
-		shotCTRL = new ShotControl();
-		hopControl = new HopperControl();
-		shooterControl = new ShooterWheelCtrl();
-		climbControl = new ClimberControl();
-		intakeControl = new IntakeControl();
+		poseCalc = RobotPoseCalculator.getInstance();
+		shotCTRL = ShotControl.getInstance();
+		hopControl = HopperControl.getInstance();
+		shooterWheelControl = ShooterWheelCtrl.getInstance();
+		climbControl = ClimberControl.getInstance();
+		intakeControl = IntakeControl.getInstance();
 		airCompressor = new PneumaticsSupply();
 
 		camGimbal = new CameraServoMount();
 		
 		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
 
-		auto = new Autonomous(myRobot);
+		auto = new Autonomous(driveTrain);
 
 		
 
 		driverCTRL = DriverController.getInstance();
-		operatorCTRL = new Xbox360Controller(1);
+		operatorCTRL = OperatorController.getInstance();
 		driverCTRL.setDeadzone(0.175);
 		operatorCTRL.setDeadzone(0.175);
 		
@@ -168,15 +164,14 @@ public class Robot extends IterativeRobot {
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateGlobalSensorInputs();
 		poseCalc.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
 		
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
-		shooterControl.updateGains();
-		myRobot.updateAllCals();
+		shooterWheelControl.updateGains();
+		driveTrain.updateAllCals();
 		visionAlignCTRL.updateGains();
 		
 		updateDriverView();
@@ -203,7 +198,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {	
-		myRobot.myDrive.setSafetyEnabled(false);
+		driveTrain.disableSafety();
 		
 		loopTimeElapsed = 0;
 
@@ -211,8 +206,8 @@ public class Robot extends IterativeRobot {
 		gyro.reset();
 		
 		//Presume autonomous starts at zero distance (robot initial orientation is origin)
-		myRobot.resetAllEncoders();
-		myRobot.resetAllIntegrators();
+		driveTrain.resetAllEncoders();
+		driveTrain.resetAllIntegrators();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -232,15 +227,13 @@ public class Robot extends IterativeRobot {
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateGlobalSensorInputs();
 		poseCalc.update();
-		myRobot.readEncoders();
 		
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
 		
 		//Run vision alignment algorithm based on vision processing results
-		if(RobotState.visionAlignmentDesiried){
+		if(visionAlignCTRL.getVisionAlignmentDesired()){
 			visionAlignCTRL.GetAligned();
 		}
 		
@@ -254,10 +247,10 @@ public class Robot extends IterativeRobot {
 		intakeControl.update();
 		
 		//Update shooter wheel control
-		shooterControl.update();
+		shooterWheelControl.update();
 		
 		//Run drivetrain in autonomous
-		myRobot.autonomousControl();
+		driveTrain.autonomousControl();
 		
 		//Update Climber Control 
 		climbControl.update();
@@ -291,12 +284,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		myRobot.myDrive.setSafetyEnabled(false);
+		driveTrain.disableSafety();
 
 		auto.stop();
 		loopTimeElapsed = 0;
 		
-		myRobot.resetAllIntegrators();
+		driveTrain.resetAllIntegrators();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -312,18 +305,15 @@ public class Robot extends IterativeRobot {
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateDriverInputs();
 		updateOperatorInputs();
-		updateGlobalSensorInputs();
 		poseCalc.update();
-		myRobot.readEncoders();
 		
 		
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
 		
 		//Run vision alignment algorithm based on vision processing results
-		if(RobotState.visionAlignmentDesiried){
+		if(visionAlignCTRL.getVisionAlignmentDesired()){
 			visionAlignCTRL.GetAligned();
 		}
 		
@@ -337,10 +327,10 @@ public class Robot extends IterativeRobot {
 		intakeControl.update();
 		
 		//Update shooter wheel control
-		shooterControl.update();
+		shooterWheelControl.update();
 		
 		//Run drivetrain in operator control
-		myRobot.operatorControl();
+		driveTrain.operatorControl();
 		
 		//Update Climber Control 
 		climbControl.update();
@@ -383,19 +373,19 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR1_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Climber_Motor2_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR2_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotConstants.INTAKE_MOTOR_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterControl.shooterTalon);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterWheelControl.shooterTalon);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
-		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","LStick_Y", driverCTRL);
-		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","LStick_X", driverCTRL);
-		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","RStick_X", driverCTRL);
+		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","getFwdRevCmd", driverCTRL);
+		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getStrafeCmd", driverCTRL);
+		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getRotateCmd", driverCTRL);
 		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","isVisionAlignmentDesiried",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_DT_FL_Desired_Velocity","RPM","getAutonDtfrontLeftWheelVelocityCmd_rpm", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_DT_FR_Desired_Velocity","RPM","getAutonDtfrontRightWheelVelocityCmd_rpm", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_DT_RL_Desired_Velocity","RPM","getAutonDtrearLeftWheelVelocityCmd_rpm", RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Auton_DT_RR_Desired_Velocity","RPM","getAutonDtrearRightWheelVelocityCmd_rpm", RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",myRobot);
+		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",driveTrain);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getRobotFwdRevVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Dist","ft","getRobotFwdRevDist_ft",RobotState.class);
@@ -443,8 +433,8 @@ public class Robot extends IterativeRobot {
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
-		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterControl.ErrorRange.get(), 
-				                                                             shotCTRL.wheel_Set_Point_rpm.get() + shooterControl.ErrorRange.get());
+		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterWheelControl.ErrorRange.get(), 
+				                                                             shotCTRL.wheel_Set_Point_rpm.get() + shooterWheelControl.ErrorRange.get());
 		CasseroleDriverView.newDial("AirPressure Psi", 0, 130, 10, 100, 120);
 		
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
@@ -458,15 +448,15 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateDriverView(){
-		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", RobotState.robotNetSpeed_ftpers);
-		CasseroleDriverView.setDialValue("Shooter Speed RPM", RobotState.shooterActualVelocity_rpm);
+		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", poseCalc.getNetSpeedFtPerS());
+		CasseroleDriverView.setDialValue("Shooter Speed RPM", shooterWheelControl.getShooterActualVelocityRPM());
 		CasseroleDriverView.setDialValue("AirPressure Psi", airCompressor.getPress());
 		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
 		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound && RobotState.visionOnline);
-		CasseroleDriverView.setBoolean("Vision Aligning", RobotState.visionAlignmentDesiried && RobotState.visionAlignmentPossible && !RobotState.visionAlignmentOnTarget);
-		CasseroleDriverView.setBoolean("Shooter Spoolup", (RobotState.shooterDesiredVelocity_rpm > 100) && !(RobotState.shooterVelocityOk));
+		CasseroleDriverView.setBoolean("Vision Aligning", visionAlignCTRL.getVisionAlignmentDesired() && visionAlignCTRL.getVisionAlignmentPossible() && !visionAlignCTRL.getVisionAlignmentOnTarget());
+		CasseroleDriverView.setBoolean("Shooter Spoolup", (shooterWheelControl.getShooterDesiredRPM() > 100) && !(shooterWheelControl.getShooterVelocityOK()));
 		
-		String temp = String.format("%.1f", RobotState.robotPoseAngle_deg % 360.0);
+		String temp = String.format("%.1f", gyro.getAngle() % 360.0);
 		for(int ii = 0; ii < 5 - temp.length(); ii++){
 			temp = " " + temp; 
 		}
@@ -481,30 +471,30 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Loop Time (ms)",    getLoopTime_ms());
 		CassesroleWebStates.putDouble("CPU Load (%)",      getCpuLoad()); 
 		CassesroleWebStates.putDouble("RAM Usage (%)",     getRAMUsage()); 
-		CassesroleWebStates.putDouble("Driver FwdRev Cmd", RobotState.driverFwdRevCmd);
-		CassesroleWebStates.putDouble("Driver Strafe Cmd", RobotState.driverStrafeCmd);
-		CassesroleWebStates.putDouble("Driver Rotate Cmd", RobotState.driverRotateCmd);
-		CassesroleWebStates.putString("Op Shot Command", RobotState.opShotCTRL.toString());
-		CassesroleWebStates.putDouble("Shooter Wheel Command", RobotState.shooterMotorCmd);
-		CassesroleWebStates.putDouble("Shooter Desired Speed (RPM)", RobotState.shooterDesiredVelocity_rpm);
-		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", RobotState.shooterActualVelocity_rpm);
-		CassesroleWebStates.putBoolean("Shooter Speed OK", RobotState.shooterVelocityOk);
-		CassesroleWebStates.putDouble("Hopper Feed Cmd",   RobotState.hopperMotorCmd);
-		CassesroleWebStates.putDouble("Intake Speed Cmd",   RobotState.intakeSpeedCmd);
-		CassesroleWebStates.putDouble("Climb Speed Cmd",   RobotState.climbSpeedCmd);
-		CassesroleWebStates.putDouble("Robot FwdRev Velocity (ft per sec)",   RobotState.robotFwdRevVel_ftpers);
-		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)",   RobotState.robotStrafeVel_ftpers);
-		CassesroleWebStates.putDouble("Robot FwdRev Distance (ft)",   RobotState.robotFwdRevDist_ft);
-		CassesroleWebStates.putDouble("Robot Strafe Distance (ft)",   RobotState.robotStrafeDist_ft);
-		CassesroleWebStates.putDouble("Robot Yaw (deg)",   RobotState.robotPoseAngle_deg);
-		CassesroleWebStates.putDouble("Front Left Motor Output",   RobotState.frontLeftDriveMotorCmd);
-		CassesroleWebStates.putDouble("Front Right Motor Output",   RobotState.frontRightDriveMotorCmd);
-		CassesroleWebStates.putDouble("Rear Left Motor Output",   RobotState.rearLeftDriveMotorCmd);
-		CassesroleWebStates.putDouble("Rear Right Motor Output",   RobotState.rearRightDriveMotorCmd);
-		CassesroleWebStates.putDouble("Front Left Motor Speed (RPM)",   RobotState.frontLeftWheelVelocity_rpm);
-		CassesroleWebStates.putDouble("Front Right Motor Speed (RPM)",   RobotState.frontRightWheelVelocity_rpm);
-		CassesroleWebStates.putDouble("Rear Left Motor Speed (RPM)",   RobotState.rearLeftWheelVelocity_rpm);
-		CassesroleWebStates.putDouble("Rear Right Motor Speed (RPM)",   RobotState.rearRightWheelVelocity_rpm);
+		CassesroleWebStates.putDouble("Driver FwdRev Cmd", driverCTRL.getFwdRevCmd());
+		CassesroleWebStates.putDouble("Driver Strafe Cmd", driverCTRL.getStrafeCmd());
+		CassesroleWebStates.putDouble("Driver Rotate Cmd", driverCTRL.getRotateCmd());
+		CassesroleWebStates.putString("Op Shot Command", shotCTRL.getDesiredShooterState().toString());
+		CassesroleWebStates.putDouble("Shooter Wheel Command", shooterWheelControl.getShooterMotorCmd());
+		CassesroleWebStates.putDouble("Shooter Desired Speed (RPM)", shooterWheelControl.getShooterDesiredRPM());
+		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", shooterWheelControl.getShooterActualVelocityRPM());
+		CassesroleWebStates.putBoolean("Shooter Speed OK", shooterWheelControl.getShooterVelocityOK());
+		CassesroleWebStates.putDouble("Hopper Feed Cmd",   hopControl.getHopperMotorCmd());
+		CassesroleWebStates.putDouble("Intake Speed Cmd",   intakeControl.getCommandedIntakeSpeed());
+		CassesroleWebStates.putDouble("Climb Speed Cmd",   operatorCTRL.getClimbSpeedCmd());
+		CassesroleWebStates.putDouble("Robot FwdRev Velocity (ft per sec)",   poseCalc.getFwdRevVelFtPerS());
+		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)",   poseCalc.getStrafeVelFtPerS());
+		CassesroleWebStates.putDouble("Robot FwdRev Distance (ft)",   poseCalc.getFwdRevDistFt());
+		CassesroleWebStates.putDouble("Robot Strafe Distance (ft)",   poseCalc.getStrafeDistFt());
+		CassesroleWebStates.putDouble("Robot Yaw (deg)",   gyro.getAngle());
+		CassesroleWebStates.putDouble("Front Left Motor Output",   driveTrain.getFLDriveMotorCmd());
+		CassesroleWebStates.putDouble("Front Right Motor Output",   driveTrain.getFRDriveMotorCmd());
+		CassesroleWebStates.putDouble("Rear Left Motor Output",   driveTrain.getRLDriveMotorCmd());
+		CassesroleWebStates.putDouble("Rear Right Motor Output",   driveTrain.getRRDriveMotorCmd());
+		CassesroleWebStates.putDouble("Front Left Motor Speed (RPM)",   driveTrain.getFrontLeftWheelSpeedRPM());
+		CassesroleWebStates.putDouble("Front Right Motor Speed (RPM)",   driveTrain.getFrontRightWheelSpeedRPM());
+		CassesroleWebStates.putDouble("Rear Left Motor Speed (RPM)",   driveTrain.getRearLeftWheelSpeedRPM());
+		CassesroleWebStates.putDouble("Rear Right Motor Speed (RPM)",   driveTrain.getRearRightWheelSpeedRPM());
 		CassesroleWebStates.putBoolean("Vision CoProcessor Online", RobotState.visionOnline);
 		CassesroleWebStates.putDouble("Vision CoProcessor FPS", RobotState.visionCoProcessorFPS);
 		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", RobotState.visionCoProcessorCPULoad_pct);
@@ -523,24 +513,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", RobotState.visionGyroAngleAtLastFrame);
 		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", RobotState.visionGyroAngleDesiredAtLastFrame);
 	}
-
-
-	//Updates all relevant robot inputs. Should be called during periodic loops
-	public void updateDriverInputs(){
-		//drive train commands
-		RobotState.driverFwdRevCmd = JoyStickScaler.joyscale(driverCTRL.LStick_Y());
-		RobotState.driverStrafeCmd = JoyStickScaler.joyscale(driverCTRL.LStick_X());
-		RobotState.driverRotateCmd = JoyStickScaler.joyscale(driverCTRL.RStick_X());
-		RobotState.visionAlignmentDesiried = driverCTRL.RB();	
-		
-		//camera positioning commands
-		RobotState.gearCamAlign = driverCTRL.B();
-		RobotState.intakeCamAlign = driverCTRL.X();
-		RobotState.shooterCamAlign = driverCTRL.Y();
-		
-		if(driverCTRL.DPadUp()){
-			gyro.reset();
-		}
 		
 		//gyro align commands TODO
 //		boolean newR = driverCTRL.DPadRight();
@@ -552,38 +524,20 @@ public class Robot extends IterativeRobot {
 //		RobotState.gyroAlignUp = driverCTRL.DPadUp();
 //		RobotState.gyroAlignLeft = driverCTRL.DPadLeft();
 //		
-		
-	}
 	
 	 void updateOperatorInputs(){
+		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
+		airCompressor.setCompressorEnabled(operatorCTRL.getAirCompEnableCmd());
+		 
 		boolean rising_edge;
 		boolean falling_edge;
 		
-		RobotState.climbSpeedCmd = operatorCTRL.LStick_X();
-		RobotState.climbEnable = true;
-		
-		RobotState.opIntakeDesired = operatorCTRL.LB();
-		RobotState.opEjectDesired = operatorCTRL.B();
-		
-		//Gear control (done here cuz we're lazy)
-		if(operatorCTRL.RTrigger() > 0.5){
-			gearSolenoid.set(true);
-		} else {
-			gearSolenoid.set(false);
-		}
-		if(operatorCTRL.StartButton()){
-			airCompressor.setCompressorEnabled(true);
-		} else if(operatorCTRL.BackButton()){
-			airCompressor.setCompressorEnabled(false);
-			
-		}
-		
 		if( operatorCTRL.Y()){
-			RobotState.opShotCTRL=ShotControl.ShooterStates.PREP_TO_SHOOT;
+			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
 		
 		if(operatorCTRL.A()){
-			RobotState.opShotCTRL=ShotControl.ShooterStates.NO_Shoot;	
+			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.NO_Shoot);	
 		}
 		
 		if(operatorCTRL.RB()==true & pev_State==false){
@@ -593,7 +547,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if(rising_edge==true){
-			RobotState.opShotCTRL=ShotControl.ShooterStates.SHOOT;	
+			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
 		}
 		
 		if(operatorCTRL.RB()==false & pev_State==true){
@@ -603,14 +557,10 @@ public class Robot extends IterativeRobot {
 			falling_edge=false;
 		}	
 		if(falling_edge==true){
-			RobotState.opShotCTRL=ShotControl.ShooterStates.PREP_TO_SHOOT;
+			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
 		
 		pev_State = operatorCTRL.RB();
-	}
-	
-	public void updateGlobalSensorInputs(){
-		RobotState.robotPoseAngle_deg = -gyro.getAngle(); //Gyro output angle is inverted from our conventions
 	}
 
 	
