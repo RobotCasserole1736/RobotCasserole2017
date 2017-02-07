@@ -7,7 +7,6 @@ import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
-import org.usfirst.frc.team1736.robot.RobotState;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -103,7 +102,7 @@ public class Robot extends IterativeRobot {
 		driveTrain = DriveTrain.getInstance();
 		pdp = new PowerDistributionPanel();
 		gyro = Gyro.getInstance();
-		visionProc = new VisionProcessing(); 
+		visionProc = VisionProcessing.getInstance(); 
 		visionAlignCTRL = VisionAlignment.getInstance();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
@@ -373,57 +372,57 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Climber_Motor1_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR1_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Climber_Motor2_Current","A","getCurrent", pdp, RobotConstants.CLIMBER_MOTOR2_PDP_CH);
 		CsvLogger.addLoggingFieldDouble("Intake_Motor_Current","A","getCurrent", pdp,  RobotConstants.INTAKE_MOTOR_PDP_CH);
-		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterWheelControl.shooterTalon);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Current","A","getOutputCurrent",shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("RIO_Loop_Time","msec","getLoopTime_ms", this);
 		CsvLogger.addLoggingFieldDouble("RIO_Cpu_Load","%","getCpuLoad", this);
 		CsvLogger.addLoggingFieldDouble("RIO_RAM_Usage","%","getRAMUsage", this);
 		CsvLogger.addLoggingFieldDouble("Driver_FwdRev_cmd","cmd","getFwdRevCmd", driverCTRL);
 		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getStrafeCmd", driverCTRL);
 		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getRotateCmd", driverCTRL);
-		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","isVisionAlignmentDesiried",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_DT_FL_Desired_Velocity","RPM","getAutonDtfrontLeftWheelVelocityCmd_rpm", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_DT_FR_Desired_Velocity","RPM","getAutonDtfrontRightWheelVelocityCmd_rpm", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_DT_RL_Desired_Velocity","RPM","getAutonDtrearLeftWheelVelocityCmd_rpm", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Auton_DT_RR_Desired_Velocity","RPM","getAutonDtrearRightWheelVelocityCmd_rpm", RobotState.class);
+		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","getVisionAlignmentDesired", visionAlignCTRL);
+//		CsvLogger.addLoggingFieldDouble("Auton_DT_FL_Desired_Velocity","RPM","getAutonDtfrontLeftWheelVelocityCmd_rpm", RobotState.class);
+//		CsvLogger.addLoggingFieldDouble("Auton_DT_FR_Desired_Velocity","RPM","getAutonDtfrontRightWheelVelocityCmd_rpm", RobotState.class);
+//		CsvLogger.addLoggingFieldDouble("Auton_DT_RL_Desired_Velocity","RPM","getAutonDtrearLeftWheelVelocityCmd_rpm", RobotState.class);
+//		CsvLogger.addLoggingFieldDouble("Auton_DT_RR_Desired_Velocity","RPM","getAutonDtrearRightWheelVelocityCmd_rpm", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",driveTrain);
-		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getRobotFwdRevVel_ftpers",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getRobotStrafeVel_ftpers",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Dist","ft","getRobotFwdRevDist_ft",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Dist","ft","getRobotStrafeDist_ft",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getRobotPoseAngle_deg",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Op_Gear_Release_Desired","bit","isOpGearReleaseDesired",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Shot_State_Command","bits","getopShotCTRLOrdinal",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopperMotorCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Intake_Speed_Cmd","cmd","getIntakeSpeedCmd", RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Op_Intake_Desired","bit","isOpIntakeDesired",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Op_Eject_Desired","bit","isOpEjectDesired",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","isShooterVelocityOk",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFrontLeftDriveMotorCmd",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("FR_Motor_Cmd","cmd","getFrontRightDriveMotorCmd",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("RL_Motor_Cmd","cmd","getRearLeftDriveMotorCmd",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("RR_Motor_Cmd","cmd","getRearRightDriveMotorCmd",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("FL_Wheel_Velocity","rpm","getFrontLeftWheelVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("FR_Wheel_Velocity","rpm","getFrontRightWheelVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("RL_Wheel_Velocity","rpm","getRearLeftWheelVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("RR_Wheel_Velocity","rpm","getRearRightWheelVelocity_rpm",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Vision_System_Online","bit","isVisionOnline",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isVisionTargetFound",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getVisionTargetOffset_deg",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Actual_Angle_At_Frame","deg","getVisionGyroAngleAtLastFrame",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Desired_Angle_At_Frame","deg","getVisionGyroAngleDesiredAtLastFrame",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getVisionEstTargetDist_ft",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getProcTimeMs",visionProc.listener);
-		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getVisionCoProcessorFPS",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_CoProc_CPU_load","%","getVisionCoProcessorCPULoad_pct",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_CoProc_Mem_load","%","getVisionCoProcessorMemLoad_pct",RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Vision_Align_Possible","bit","isVisionAlignmentPossible",RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getVisionDtFwdRevCmd", RobotState.class);
-		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getVisionDtRotateCmd", RobotState.class);
-		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","isVisionAlignmentOnTarget", RobotState.class);
+		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getFwdRevVelFtPerS", poseCalc);
+		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getStrafeVelFtPerS", poseCalc);
+		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Dist","ft","getFwdRevDistFt", poseCalc);
+		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Dist","ft","getStrafeDistFt", poseCalc);
+		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getAngle", gyro);
+		CsvLogger.addLoggingFieldBoolean("Op_Gear_Release_Desired","bit","getGearSolenoidCmd", operatorCTRL);
+		CsvLogger.addLoggingFieldDouble("Shot_State_Command","bits","getDesiredShooterStateOrdinal", shotCTRL);
+		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopperMotorCmd", hopControl);
+		CsvLogger.addLoggingFieldDouble("Intake_Speed_Cmd","cmd","getCommandedIntakeSpeed", intakeControl);
+		CsvLogger.addLoggingFieldBoolean("Op_Intake_Desired","bit","getIntakeDesiredCmd", operatorCTRL);
+		CsvLogger.addLoggingFieldBoolean("Op_Eject_Desired","bit","getEjectDesiredCmd",operatorCTRL);
+		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", operatorCTRL);
+		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredRPM", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocityRPM", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd", shooterWheelControl);
+		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","getShooterVelocityOK", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFLDriveMotorCmd", driveTrain);
+		CsvLogger.addLoggingFieldDouble("FR_Motor_Cmd","cmd","getFRDriveMotorCmd", driveTrain);
+		CsvLogger.addLoggingFieldDouble("RL_Motor_Cmd","cmd","getRLDriveMotorCmd", driveTrain);
+		CsvLogger.addLoggingFieldDouble("RR_Motor_Cmd","cmd","getRRDriveMotorCmd", driveTrain);
+		CsvLogger.addLoggingFieldDouble("FL_Wheel_Velocity","rpm","getFrontLeftWheelSpeedRPM", driveTrain);
+		CsvLogger.addLoggingFieldDouble("FR_Wheel_Velocity","rpm","getFrontRightWheelSpeedRPM", driveTrain);
+		CsvLogger.addLoggingFieldDouble("RL_Wheel_Velocity","rpm","getRearLeftWheelSpeedRPM", driveTrain);
+		CsvLogger.addLoggingFieldDouble("RR_Wheel_Velocity","rpm","getRearRightWheelSpeedRPM", driveTrain);
+		CsvLogger.addLoggingFieldBoolean("Vision_System_Online","bit","isOnline", visionProc);
+		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isTargetFound", visionProc.getTarget());
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getTargetOffsetDegrees", visionProc.getTarget());
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Actual_Angle_At_Frame","deg","getGyroAngleAtLastFrame", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Desired_Angle_At_Frame","deg","getGyroAngleDesiredAtLastFrame", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getEstTargetDistanceFt", visionProc.getTarget());
+		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getVisionProcessTimeMs",visionProc);
+		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getCoProcessorFPS", visionProc);
+		CsvLogger.addLoggingFieldDouble("Vision_CoProc_CPU_load","%","getCoProcessorCPULoadPct", visionProc);
+		CsvLogger.addLoggingFieldDouble("Vision_CoProc_Mem_load","%","getCoProcessorMemLoadPct", visionProc);
+		CsvLogger.addLoggingFieldBoolean("Vision_Align_Possible","bit","getVisionAlignmentPossible", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getFwdRevCmd", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getRotateCmd", visionAlignCTRL);
+		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","getVisionAlignmentOnTarget", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airCompressor);
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airCompressor);
@@ -451,8 +450,8 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", poseCalc.getNetSpeedFtPerS());
 		CasseroleDriverView.setDialValue("Shooter Speed RPM", shooterWheelControl.getShooterActualVelocityRPM());
 		CasseroleDriverView.setDialValue("AirPressure Psi", airCompressor.getPress());
-		CasseroleDriverView.setBoolean("Vision Offline", !RobotState.visionOnline);
-		CasseroleDriverView.setBoolean("Target in View", RobotState.visionTargetFound && RobotState.visionOnline);
+		CasseroleDriverView.setBoolean("Vision Offline", !visionProc.isOnline());
+		CasseroleDriverView.setBoolean("Target in View", visionProc.getTarget().isTargetFound() && visionProc.isOnline());
 		CasseroleDriverView.setBoolean("Vision Aligning", visionAlignCTRL.getVisionAlignmentDesired() && visionAlignCTRL.getVisionAlignmentPossible() && !visionAlignCTRL.getVisionAlignmentOnTarget());
 		CasseroleDriverView.setBoolean("Shooter Spoolup", (shooterWheelControl.getShooterDesiredRPM() > 100) && !(shooterWheelControl.getShooterVelocityOK()));
 		
@@ -462,8 +461,8 @@ public class Robot extends IterativeRobot {
 		}
 		CasseroleDriverView.setStringBox("Orientation deg", temp);
 		CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
-				                                (RobotState.visionTopTgtXPixelPos/RobotConstants.VISION_X_PIXELS) * 100.0, 
-				                                (RobotState.visionTopTgtYPixelPos/RobotConstants.VISION_Y_PIXELS) * 100.0);
+				                                (visionProc.getTarget().getTopTargetXPixelPos()/RobotConstants.VISION_X_PIXELS) * 100.0, 
+				                                (visionProc.getTarget().getTopTargetYPixelPos()/RobotConstants.VISION_Y_PIXELS) * 100.0);
 	}
 	
 	//Puts all relevant data to the robot State webpage
@@ -495,23 +494,23 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Front Right Motor Speed (RPM)",   driveTrain.getFrontRightWheelSpeedRPM());
 		CassesroleWebStates.putDouble("Rear Left Motor Speed (RPM)",   driveTrain.getRearLeftWheelSpeedRPM());
 		CassesroleWebStates.putDouble("Rear Right Motor Speed (RPM)",   driveTrain.getRearRightWheelSpeedRPM());
-		CassesroleWebStates.putBoolean("Vision CoProcessor Online", RobotState.visionOnline);
-		CassesroleWebStates.putDouble("Vision CoProcessor FPS", RobotState.visionCoProcessorFPS);
-		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", RobotState.visionCoProcessorCPULoad_pct);
-		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", RobotState.visionCoProcessorMemLoad_pct);
-		CassesroleWebStates.putDouble("Vision Num Contours Observed", visionProc.listener.getNumTargetsObserved());
-		CassesroleWebStates.putBoolean("Vision Target Seen", RobotState.visionTargetFound);
-		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", RobotState.visionTopTgtXPixelPos);
-		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", RobotState.visionTopTgtYPixelPos);
-		CassesroleWebStates.putDouble("Vision Target Range (ft)", RobotState.visionEstTargetDist_ft);
-		CassesroleWebStates.putDouble("Vision Target Offset (deg)", RobotState.visionTargetOffset_deg);
-		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
-		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - RobotState.visionEstCaptureTime)*1000);
-		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", RobotState.visionDtFwdRevCmd);
-		CassesroleWebStates.putDouble("Vision Rotate Cmd", RobotState.visionDtRotateCmd);
+		CassesroleWebStates.putBoolean("Vision CoProcessor Online", visionProc.isOnline());
+		CassesroleWebStates.putDouble("Vision CoProcessor FPS", visionProc.getCoProcessorFPS());
+		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", visionProc.getCoProcessorCPULoadPct());
+		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", visionProc.getCoProcessorMemLoadPct());
+		CassesroleWebStates.putDouble("Vision Num Contours Observed", visionProc.getNumberOfTargetsObserved());
+		CassesroleWebStates.putBoolean("Vision Target Seen", visionProc.getTarget().isTargetFound());
+		CassesroleWebStates.putDouble("Vision Target Pixel Pos X", visionProc.getTarget().getTopTargetXPixelPos());
+		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", visionProc.getTarget().getTopTargetYPixelPos());
+		CassesroleWebStates.putDouble("Vision Target Range (ft)", visionProc.getTarget().getEstTargetDistanceFt());
+		CassesroleWebStates.putDouble("Vision Target Offset (deg)", visionProc.getTarget().getTargetOffsetDegrees());
+//		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
+		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - visionProc.getEstCaptureTime())*1000);
+		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", visionAlignCTRL.getFwdRevCmd());
+		CassesroleWebStates.putDouble("Vision Rotate Cmd", visionAlignCTRL.getRotateCmd());
 		CassesroleWebStates.putDouble("Vision_Align_State", visionAlignCTRL.getVisionAlignState());
-		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", RobotState.visionGyroAngleAtLastFrame);
-		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", RobotState.visionGyroAngleDesiredAtLastFrame);
+		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleAtLastFrame());
+		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleDesiredAtLastFrame());
 	}
 		
 		//gyro align commands TODO

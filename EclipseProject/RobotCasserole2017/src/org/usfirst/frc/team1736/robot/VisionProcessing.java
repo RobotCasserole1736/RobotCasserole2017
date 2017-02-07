@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import org.usfirst.frc.team1736.lib.CoProcessor.VisionListener;
 
 public class VisionProcessing {
-	VisionListener listener;
+	private static VisionProcessing visionProcessing = null;
+	private VisionListener listener;
 
 	ArrayList<Integer> topTargets = new ArrayList<Integer>(15);
 	ArrayList<Integer> bottomTargets = new ArrayList<Integer>(15);
@@ -14,7 +15,6 @@ public class VisionProcessing {
 	
 	//local Constants
 	private final double CURVATURE_FUDGE_FACTOR = 1.75; //Accounts for the fact the camera angle plus cylinder shape makes for a curved (not rectangular) target. I feel like this is dubious math, but it seems to help for now....
-	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(RobotConstants.CAMERA_FOV_X_DEG/2.0));
 
 	
 	private final double Exp_AspectRatio_Top=15.0/(4.0*CURVATURE_FUDGE_FACTOR);
@@ -22,8 +22,16 @@ public class VisionProcessing {
 	private final double Exp_InfillRatio_Top = 0.75; //An educated guess
 	private final double Exp_InfillRatio_Bottom = 0.75; //An educated guess
 	
-
-	public VisionProcessing(){
+	private VisionTarget target;
+	
+	public static synchronized VisionProcessing getInstance()
+	{
+		if(visionProcessing == null)
+			visionProcessing = new VisionProcessing();
+		return visionProcessing;
+	}
+	
+	private VisionProcessing(){
 		prevFrameCount = 0;
 		
 		listener = new VisionListener(RobotConstants.COPPROCESSOR_LISTEN_ADDRESS, RobotConstants.COPROCESSOR_LISTEN_PORT);
@@ -40,20 +48,8 @@ public class VisionProcessing {
 		
 		if(prevFrameCount != listener.getFrameCounter()){
 			//If we have a new frame since the last time we processed, run the processing algorithm.
-			
 			alg1();
-	
-			//Update performance outputs
-			RobotState.visionCoProcessorFPS = listener.getFPS();
-			RobotState.visionFrameCounter = listener.getFrameCounter();
-			RobotState.visionCoProcessorCPULoad_pct = listener.getCpuLoad();
-			RobotState.visionCoProcessorMemLoad_pct= listener.getMemLoad();
-			RobotState.visionEstCaptureTime = listener.getPacketRxSystemTime() - listener.getProcTimeMs()/1000.0 - RobotConstants.EXPECTED_NETWORK_LATENCY_SEC;
-			prevFrameCount = listener.getFrameCounter();
 		}
-		
-		//Always report on alive/dead state of vision system
-		RobotState.visionOnline = listener.isCoProcessorAlive();
 	}
 	
 	/**
@@ -99,9 +95,9 @@ public class VisionProcessing {
 		}
 		
 		if(Best_Top != -1 & Best_Bottom != -1){
-			updateOutputs(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
+			target.updateTarget(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
 		} else {
-			updateOutputs(false,0,0,0);
+			target.updateTarget(false,0,0,0);
 		}
 		
 	}
@@ -168,34 +164,57 @@ public class VisionProcessing {
 		
 		
 		if(Best_Top != -1 & Best_Bottom != -1){
-			updateOutputs(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
+			target.updateTarget(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
 		} else {
-			updateOutputs(false,0,0,0);
+			target.updateTarget(false,0,0,0);
 		}
 	}
 	
-	/**
-	 * Given the width/x/y of the best candidate for top target, update relevant physical parameters
-	 * @param foundTgt true if a target was seen, false if n0t
-	 * @param bestX x pixel location of top centroid
-	 * @param bestY y pixel location of top centroid
-	 * @param bestWidth width of top centroid
-	 */
-	private void updateOutputs(boolean foundTgt, double bestX, double bestY, double bestWidth){
-		
-		if(foundTgt){
-			RobotState.visionTargetFound = true;
-			RobotState.visionTopTgtXPixelPos = (bestX);
-			RobotState.visionTopTgtYPixelPos = (bestY);
-			double cam_to_tgt_dist_ft = (RobotConstants.TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*bestWidth*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
-			RobotState.visionEstTargetDist_ft = Math.sqrt(Math.pow(cam_to_tgt_dist_ft, 2) - Math.pow(RobotConstants.HIGH_GOAL_VISION_TARGET_HEIGHT_FT,2)); //We need to calculate distance along the ground, so use pythagorean theorem to calculate floor distance, given target height.
-			RobotState.visionTargetOffset_deg = (bestX - RobotConstants.VISION_X_PIXELS/2) * (RobotConstants.CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
-		} else {
-			RobotState.visionTargetFound = false;
-		}
-
-		
+	public VisionTarget getTarget()
+	{
+		return target;
 	}
+	
+	public boolean isOnline()
+	{
+		return listener.isCoProcessorAlive();
+	}
+	
+	public double getCoProcessorFPS()
+	{
+		return listener.getFPS();
+	}
+	
+	public double getCoProcessorCPULoadPct()
+	{
+		return listener.getCpuLoad();
+	}
+	
+	public double getCoProcessorMemLoadPct()
+	{
+		return listener.getMemLoad();
+	}
+	
+	public double getEstCaptureTime()
+	{
+		return listener.getPacketRxSystemTime() - listener.getProcTimeMs()/1000.0 - RobotConstants.EXPECTED_NETWORK_LATENCY_SEC;
+	}
+	
+	public double getFrameCount()
+	{
+		return listener.getFrameCounter();
+	}
+	
+	public double getVisionProcessTimeMs()
+	{
+		return listener.getProcTimeMs();
+	}
+	
+	public double getNumberOfTargetsObserved()
+	{
+		return listener.getNumTargetsObserved();
+	}
+	
 }
 
 

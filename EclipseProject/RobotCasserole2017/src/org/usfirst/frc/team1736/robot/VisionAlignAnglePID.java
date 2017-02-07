@@ -3,6 +3,8 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.CasserolePID.CasserolePID;
 
 public class VisionAlignAnglePID extends CasserolePID {
+	
+	private double outputCmd = 0;
 
 	VisionAlignAnglePID(double Kp_in, double Ki_in, double Kd_in) {
 		super(Kp_in, Ki_in, Kd_in);
@@ -16,14 +18,24 @@ public class VisionAlignAnglePID extends CasserolePID {
 	
 	@Override
 	protected double returnPIDInput() {
-		// TODO Auto-generated method stub
 		return Gyro.getInstance().getAngle();
 	}
 
 	@Override
 	protected void usePIDOutput(double pidOutput) {
 		//Limit to half range to reduce overshoot
-		RobotState.visionDtRotateCmd = pidOutput;
+		outputCmd = pidOutput;
+	}
+	
+	@Override
+	public void stop() {
+		super.stop();
+		outputCmd = 0;
+	}
+	
+	public double getOutputCommand()
+	{
+		return outputCmd;
 	}
 
 }

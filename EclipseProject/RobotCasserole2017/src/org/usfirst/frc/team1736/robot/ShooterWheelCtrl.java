@@ -5,6 +5,7 @@ import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
+
 public class ShooterWheelCtrl {
 	
 	private static ShooterWheelCtrl wheelCtrl = null;
@@ -14,7 +15,7 @@ public class ShooterWheelCtrl {
 	Calibration Shooter_I_Gain;
 	Calibration Shooter_D_Gain;
 	Calibration ErrorRange;
-	CANTalon shooterTalon;
+	private CANTalon shooterTalon;
 	
 	private double desiredVelocity = 0;
 	private double actualVelocity = 0;
@@ -113,6 +114,11 @@ public class ShooterWheelCtrl {
 	public double getShooterMotorCmd()
 	{
 		return motorCmd;
+	}
+	
+	public double getOutputCurrent()
+	{
+		return shooterTalon.getOutputCurrent();
 	}
 	
 }

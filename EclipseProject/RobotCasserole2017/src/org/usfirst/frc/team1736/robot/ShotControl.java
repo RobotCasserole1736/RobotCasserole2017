@@ -76,6 +76,11 @@ public class ShotControl {
 		 return desiredShooterState;
 	 }
 	 
+	 public double getDesiredShooterStateOrdinal()
+	 {
+		 return desiredShooterState.ordinal();
+	 }
+	 
 	 public void setDesiredShooterState(ShooterStates state)
 	 {
 		 desiredShooterState = state;
