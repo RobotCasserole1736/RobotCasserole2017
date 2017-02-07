@@ -65,8 +65,8 @@ public class RobotConstants {
 	// Physical Constants
 	///////////////////////////////////////////////////////////////////////////
 	//Camera & Vision Properties
-	public static final int VISION_X_PIXELS = 640;
-	public static final int VISION_Y_PIXELS = 480;
+	public static final int VISION_X_PIXELS = 800;
+	public static final int VISION_Y_PIXELS = 600;
 	//public static final double CAMERA_FOV_X_DEG = 48; //from axis M1011 camera specs
 	public static final double CAMERA_FOV_X_DEG = 67; //from axis M1013 camera specs
 	
