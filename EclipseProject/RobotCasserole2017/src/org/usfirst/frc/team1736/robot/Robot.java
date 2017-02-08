@@ -557,6 +557,46 @@ public class Robot extends IterativeRobot {
 		pev_State = operatorCTRL.RB();
 		
 		driverCTRL.updateAirCompEnabled();
+		
+		//Update Gyro angle
+		int angle = gyro.getAngleOffset();
+		if(driverCTRL.getGyroReset())
+		{
+			angle = 0;
+		}
+		else if(driverCTRL.getGyroReset90())
+		{
+			angle = 90;
+		}
+		else if(driverCTRL.getGyroReset180())
+		{
+			angle = 180;
+		}
+		else if(driverCTRL.getGyroReset270())
+		{
+			angle = 270;
+		}
+
+		/* Alternate gyro angle update key idea
+		 * If decide to try comment out if else above
+		 * And update DriverController
+		 * 
+		 if(driverCTRL.DPadUp())
+		 {
+			 angle += 90;
+			 if (angle >= 360){
+				 angle = 0;
+			 }
+		 } else if(driverCTRL.DPadDown())
+		 {
+			 angle -= 90;
+			 if (angle < 0){
+				 angle = 270;
+			 }
+		 }
+		  */
+		gyro.setAngleOffset(angle);
+		
 	}
 
 	
