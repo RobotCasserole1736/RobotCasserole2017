@@ -34,7 +34,7 @@ public class VisionDelayCalibration {
 		//Init state
 		curState = VisionCalStates.NO_CAL;
 		ringOutputActive = false;
-		runVisionDelayCal = new Calibration("Run Vision Processing Delay Calibration (1 to run)", 0.0, 0.0, 1.0);
+		runVisionDelayCal = new Calibration("Activate Vision Processing Delay Calibration", 0.0, 0.0, 1.0);
 		calDesiredPrev = false;
 		calHistory = new ArrayList<Double>(20);
 		lastResult = VisionCalResults.CAL_NOT_RUN;
