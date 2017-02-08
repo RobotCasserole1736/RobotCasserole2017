@@ -8,6 +8,7 @@ Robot Casserole robot source code for the 2017 FRC game, First Steamworks.
 Here's a high level overview of what we did this year:
 - [Path-planned autonomous on a mechanum drivetrain](https://github.com/RobotCasserole1736/MecanumPathPlanner)
 - [High goal vision target detection](https://github.com/RobotCasserole1736/RobotCasserole2017/wiki/Vision-Target-Qualification-Algorithm)
+- [Singelton](https://github.com/RobotCasserole1736/RobotCasserole2017/wiki/Singelton-Architecture) implementation of key robot components
 - Custom robot [website](https://github.com/RobotCasserole1736/RobotCasserole2017/tree/master/EclipseProject/RobotCasserole2017/src/org/usfirst/frc/team1736/lib/WebServer) for real-time driver information, debugging information, and value calibration
 - PID control of [drivetrain velocity](https://github.com/RobotCasserole1736/RobotCasserole2017/blob/master/EclipseProject/RobotCasserole2017/src/org/usfirst/frc/team1736/robot/DriveTrain.java), [vision alignment](https://github.com/RobotCasserole1736/RobotCasserole2017/blob/master/EclipseProject/RobotCasserole2017/src/org/usfirst/frc/team1736/robot/VisionAlignment.java), and [shooter wheel](https://github.com/RobotCasserole1736/RobotCasserole2017/blob/master/EclipseProject/RobotCasserole2017/src/org/usfirst/frc/team1736/robot/ShooterWheelCTRL.java)
 - Automated ball launch [system](https://github.com/RobotCasserole1736/RobotCasserole2017/blob/master/EclipseProject/RobotCasserole2017/src/org/usfirst/frc/team1736/robot/Sht_ctrl.java) with integrated control of shooter, vision, and hopper feed
