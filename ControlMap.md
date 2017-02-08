@@ -9,7 +9,7 @@
 | RX        | Axis   | CROT              | Controls rotational motion of the robot |
 | RY        | Axis   |                   |                 |
 | LBumper   | Button |                   |                 |
-| RBumper   | Button | Auto-Align        |                 |
+| RBumper   | Button | Auto-Align        | Execute vision system auto-alignment routine. Inhibits shooting until aligned. |
 | L Trigger | Axis   |                   |                 |
 | R Trigger | Axis   |                   |                 |
 | B         | Button | Camera Pos Gear   | Press to point the camera at the gear deployment mechanism |
