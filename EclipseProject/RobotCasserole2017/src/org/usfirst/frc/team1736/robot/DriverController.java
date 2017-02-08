@@ -54,6 +54,21 @@ public class DriverController extends Xbox360Controller {
 		return DPadUp();
 	}
 	
+	public boolean getGyroReset90()
+	{
+		return DPadRight();
+	}
+	
+	public boolean getGyroReset180()
+	{
+		return DPadDown();
+	}
+	
+	public boolean getGyroReset270()
+	{
+		return DPadLeft();
+	}
+	
 	public void updateAirCompEnabled()
 	{
 		if(StartButton())
