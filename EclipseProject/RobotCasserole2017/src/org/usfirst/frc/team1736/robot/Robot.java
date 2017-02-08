@@ -172,6 +172,9 @@ public class Robot extends IterativeRobot {
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
 		
+		//Update any calibration which is running
+		visionDelayCal.update();
+		
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterWheelControl.updateGains();
 		driveTrain.updateAllCals();
@@ -237,6 +240,9 @@ public class Robot extends IterativeRobot {
 		
 		//Run vision alignment algorithm
 		visionAlignCTRL.GetAligned();
+		
+		//Update any calibration which is running
+		visionDelayCal.update();
 		
 		//Update shot control management subsystem
 		shotCTRL.update();
@@ -312,6 +318,9 @@ public class Robot extends IterativeRobot {
 
 		//Run vision alignment algorithm
 		visionAlignCTRL.GetAligned();
+		
+		//Update any calibration which is running
+		visionDelayCal.update();
 		
 		//Update shot control management subsystem
 		shotCTRL.update();
