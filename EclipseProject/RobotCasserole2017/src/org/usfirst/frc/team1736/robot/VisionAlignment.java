@@ -111,7 +111,7 @@ public class VisionAlignment {
 		distanceHistory.insert(timeNow, RobotPoseCalculator.getInstance().getFwdRevDistFt());
 		
 		// Figure out if alignment should be done
-		visionAlignmentPossible = vis.isOnline() && vis.getTarget().isTargetFound();
+		visionAlignmentPossible = vis.isOnline() && vis.getTarget().isTargetFound() && Gyro.getInstance().getGyroConnected();
 		
 		//If vision align is possible, look to see if we have a new frame
 		if(visionAlignmentPossible){
