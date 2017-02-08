@@ -43,6 +43,7 @@ public class ADXRS453_Gyro extends GyroBase implements Gyro, PIDSource {
     private static final int kPIDRegister = 0x0C;
 
     private SPI m_spi;
+    private SPI.Port m_port;
 
     private boolean m_is_calibrating;
     private double m_last_center;
@@ -61,7 +62,37 @@ public class ADXRS453_Gyro extends GyroBase implements Gyro, PIDSource {
      *            (the SPI port that the gyro is connected to)
      */
     public ADXRS453_Gyro(SPI.Port port) {
-        m_spi = new SPI(port);
+    	m_port = port;
+    	TryConnect();
+    	if (true == IsConnected())
+    	{
+	        m_spi.initAccumulator(kSamplePeriod, 0x20000000, 4, 0x0c00000E, 0x04000000, 10, 16, true, true);
+	
+	        calibrate();
+    	}
+
+    }
+    
+    /**
+     * This function verifies the SPI connection state
+     */
+    public synchronized boolean IsConnected() {
+      if(m_spi != null)
+      {
+    	  if ((readRegister(kPIDRegister) & 0xff00) != 0x5200) {
+              m_spi.free();
+              m_spi = null;
+              DriverStation.reportError("Could not find ADXRS453 gyro on SPI port " + m_port.name(), false);
+              return false;
+          }else
+          {
+        	  return true;
+          }
+      }
+      return false;
+    }
+    public synchronized void TryConnect() {
+        m_spi = new SPI(m_port);
         m_spi.setClockRate(3000000);
         m_spi.setMSBFirst();
         m_spi.setSampleDataOnRising();
@@ -72,17 +103,10 @@ public class ADXRS453_Gyro extends GyroBase implements Gyro, PIDSource {
         if ((readRegister(kPIDRegister) & 0xff00) != 0x5200) {
             m_spi.free();
             m_spi = null;
-            DriverStation.reportError("Could not find ADXRS453 gyro on SPI port " + port.name(), false);
+            DriverStation.reportError("Could not find ADXRS453 gyro on SPI port " + m_port.name(), false);
             return;
         }
-
-        m_spi.initAccumulator(kSamplePeriod, 0x20000000, 4, 0x0c00000E, 0x04000000, 10, 16, true, true);
-
-        calibrate();
-
-
     }
-
     /**
      * This is a blocking calibration call. There are also non-blocking options
      * available in this class!

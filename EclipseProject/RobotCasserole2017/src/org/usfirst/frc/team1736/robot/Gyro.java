@@ -38,8 +38,14 @@ public class Gyro {
 	{
 		angleOffset = angle;
 	}
+	
 	public int getAngleOffset()
 	{
 		return angleOffset;
+	}
+
+	public boolean getGyroConnected()
+	{
+		return adxrs453.IsConnected();
 	}
 }
