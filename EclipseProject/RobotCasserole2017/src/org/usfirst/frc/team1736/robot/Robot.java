@@ -44,6 +44,7 @@ public class Robot extends IterativeRobot {
 
 	//Vision Processing Algorithm
     VisionProcessing visionProc;
+    VisionTarget bestTarget; //the best thing since sliced bread
     
     //Software utilities
     RobotPoseCalculator poseCalc;
@@ -230,11 +231,10 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
+		bestTarget = visionProc.getTarget();
 		
-		//Run vision alignment algorithm based on vision processing results
-		if(visionAlignCTRL.getVisionAlignmentDesired()){
-			visionAlignCTRL.GetAligned();
-		}
+		//Run vision alignment algorithm
+		visionAlignCTRL.GetAligned();
 		
 		//Update shot control management subsystem
 		shotCTRL.update();
@@ -253,9 +253,6 @@ public class Robot extends IterativeRobot {
 		
 		//Update Climber Control 
 		climbControl.update();
-		
-		//Update Vision Align Control
-		visionAlignCTRL.GetAligned();
 		
 		auto.update();
 		
@@ -310,11 +307,10 @@ public class Robot extends IterativeRobot {
 		
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
-		
-		//Run vision alignment algorithm based on vision processing results
-		if(visionAlignCTRL.getVisionAlignmentDesired()){
-			visionAlignCTRL.GetAligned();
-		}
+		bestTarget = visionProc.getTarget();
+
+		//Run vision alignment algorithm
+		visionAlignCTRL.GetAligned();
 		
 		//Update shot control management subsystem
 		shotCTRL.update();
@@ -337,9 +333,6 @@ public class Robot extends IterativeRobot {
 
 		//Update user camera
 		camGimbal.update();
-
-		//Update Vision Align Control
-		visionAlignCTRL.GetAligned();
 
 		
 		//Log & display present state data
@@ -410,8 +403,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("RL_Wheel_Velocity","rpm","getRearLeftWheelSpeedRPM", driveTrain);
 		CsvLogger.addLoggingFieldDouble("RR_Wheel_Velocity","rpm","getRearRightWheelSpeedRPM", driveTrain);
 		CsvLogger.addLoggingFieldBoolean("Vision_System_Online","bit","isOnline", visionProc);
-		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isTargetFound", visionProc.getTarget());
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getTargetOffsetDegrees", visionProc.getTarget());
+		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isTargetFound", bestTarget);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getTargetOffsetDegrees", bestTarget);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Actual_Angle_At_Frame","deg","getGyroAngleAtLastFrame", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Desired_Angle_At_Frame","deg","getGyroAngleDesiredAtLastFrame", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getEstTargetDistanceFt", visionProc.getTarget());
@@ -513,17 +506,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleDesiredAtLastFrame());
 	}
 		
-		//gyro align commands TODO
-//		boolean newR = driverCTRL.DPadRight();
-//		boolean newD = driverCTRL.DPadDown();
-//		boolean newL = driverCTRL.DPadLeft();
-//		boolean newU = driverCTRL.DPadUp();
-//		RobotState.gyroAlignRight = DaBouncer.AboveDebounceBoo(newR);
-//		RobotState.gyroAlignDown = DaBouncer.AboveDebounceBoo(newD);
-//		RobotState.gyroAlignUp = driverCTRL.DPadUp();
-//		RobotState.gyroAlignLeft = driverCTRL.DPadLeft();
-//		
-	
 	 void updateAllHumanInputs(){
 		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
 		airCompressor.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
