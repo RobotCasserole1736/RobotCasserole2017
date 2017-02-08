@@ -60,6 +60,9 @@ public class RobotConstants {
 	//Analog Inputs
 	public static final int AIR_PRESSURE_SENSOR_PORT = 1;
 	
+	//DIO Ports
+	public static final int LED_RING_CONTROL_OUTPORT = 8;
+	
 	
 	///////////////////////////////////////////////////////////////////////////
 	// Physical Constants

@@ -45,6 +45,9 @@ public class Robot extends IterativeRobot {
 	//Vision Processing Algorithm
     VisionProcessing visionProc;
     
+    //Vision system delay measurement & Calibration
+    VisionDelayCalibration visionDelayCal;
+    
     //Software utilities
     RobotPoseCalculator poseCalc;
     CalWrangler wrangler;
@@ -104,6 +107,7 @@ public class Robot extends IterativeRobot {
 		gyro = Gyro.getInstance();
 		visionProc = VisionProcessing.getInstance();
 		visionAlignCTRL = VisionAlignment.getInstance();
+		visionDelayCal = VisionDelayCalibration.getInstance();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
@@ -501,6 +505,9 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision_Align_State", visionAlignCTRL.getVisionAlignState());
 		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleAtLastFrame());
 		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleDesiredAtLastFrame());
+		CassesroleWebStates.putString("Vision Cal Last Result", visionDelayCal.getLastResult().toString());
+		CassesroleWebStates.putDouble("Vision Cal Avg Delay Time (s)", visionDelayCal.getPrevCalAvgTime());
+		CassesroleWebStates.putDouble("Vision Cal Time Std Dev (s)", visionDelayCal.getPrevCalStdDev());
 	}
 		
 	 void updateAllHumanInputs(){
