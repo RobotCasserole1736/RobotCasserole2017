@@ -29,8 +29,9 @@ public class ClimberControl {
 	public void update(){
 		double operatorClimbCmd = OperatorController.getInstance().getClimbSpeedCmd();
 		double climb_speed = isClimbEnabled && operatorClimbCmd >= 0.0 ? operatorClimbCmd : 0.0;
-		climbMotor1.set(climb_speed);
-		climbMotor2.set(climb_speed);
+		
+		climbMotor1.set(Math.abs(climb_speed));
+		climbMotor2.set(Math.abs(climb_speed));
 	}
 	
 	public void setClimbEnabled(boolean isEnabled)
