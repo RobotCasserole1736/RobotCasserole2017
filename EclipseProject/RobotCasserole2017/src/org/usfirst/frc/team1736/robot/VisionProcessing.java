@@ -22,7 +22,7 @@ public class VisionProcessing {
 	private final double Exp_InfillRatio_Top = 0.75; //An educated guess
 	private final double Exp_InfillRatio_Bottom = 0.75; //An educated guess
 	
-	private VisionTarget target;
+	private VisionTarget target = null;
 	
 	public static synchronized VisionProcessing getInstance()
 	{
@@ -36,6 +36,7 @@ public class VisionProcessing {
 		
 		listener = new VisionListener(RobotConstants.COPPROCESSOR_LISTEN_ADDRESS, RobotConstants.COPROCESSOR_LISTEN_PORT);
 		listener.start();
+		target = new VisionTarget();
 	}
 
 	/**

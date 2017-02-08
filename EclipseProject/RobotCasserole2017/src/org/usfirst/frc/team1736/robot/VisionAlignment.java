@@ -92,6 +92,7 @@ public class VisionAlignment {
 	public void GetAligned(){
 		
 		VisionProcessing vis = VisionProcessing.getInstance();
+		visionAlignmentDesired = DriverController.getInstance().getAlignDesired();
 		
 		//Save historical values
 		//Tracking the historical values is needed to offset the delays in visino processing. From the time a frame

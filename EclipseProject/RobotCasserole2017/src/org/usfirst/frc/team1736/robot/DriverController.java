@@ -66,5 +66,10 @@ public class DriverController extends Xbox360Controller {
 	{
 		return airCompState;
 	}
+	
+	public boolean getAlignDesired()
+	{
+		return RB();
+	}
 
 }
