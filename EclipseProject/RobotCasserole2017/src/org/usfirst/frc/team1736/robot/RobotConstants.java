@@ -76,11 +76,22 @@ public class RobotConstants {
 	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.10/mjpg/video.mjpg";
 	*/
 	
+	
 	//Axis M1011
 	public static final int VISION_X_PIXELS = 640;
 	public static final int VISION_Y_PIXELS = 480;
 	public static final double CAMERA_FOV_X_DEG = 48; 
 	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.10/mjpg/video.mjpg";
+	
+	
+	/*
+	//Microsoft Lifecam
+	public static final int VISION_X_PIXELS = 800;
+	public static final int VISION_Y_PIXELS = 600;
+	public static final double CAMERA_FOV_X_DEG = 61; 
+	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.9:8080/cam.mjpg";
+	*/
+	
 	
 	
 	

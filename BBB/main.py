@@ -116,10 +116,11 @@ def robust_url_connect(url):
 
 #Reads image from a webcam and returns whatever new frame is found
 def readWebCam():
+    time.sleep(0.01) #Provide some hacky framerate limit
     if(readWebCam.webcamCap is None):
         readWebCam.webcamCap =  cv2.VideoCapture(0)
-        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 352); 
-        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 288);
+        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 800); 
+        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 600);
         os.system('v4l2-ctl -c brightness=40 -c contrast=9 -c saturation=180 -c exposure_auto=1 -c exposure_absolute=10')
         print('Webcam stream opened')
         
@@ -191,14 +192,18 @@ def img_process(img):
         x, y, w, h = cv2.boundingRect(c)
         curObservation.addTarget(x, y, 0, w, h) #area unused for now.
     """
+    if(USE_USB_CAM == False):    
+        #Axis M1013 tunings.... kinda... it doesn't work too well.
+        #hsv_thres_lower = np.array([29,32, 71])
+        #hsv_thres_upper = np.array([131,255,255])
         
-    #Axis M1013 tunings.... kinda... it doesn't work too well.
-    #hsv_thres_lower = np.array([29,32, 71])
-    #hsv_thres_upper = np.array([131,255,255])
-    
-    #Axis M1011 tunings. This camera works better.
-    hsv_thres_lower = np.array([37,128, 67])
-    hsv_thres_upper = np.array([92,255,255])
+        #Axis M1011 tunings. This camera works better.
+        hsv_thres_lower = np.array([37,128, 67])
+        hsv_thres_upper = np.array([92,255,255])
+    else:
+        #Microsoft Lifecam values
+        hsv_thres_lower = np.array([31,172,163])
+        hsv_thres_upper = np.array([97,255,255])
     
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
