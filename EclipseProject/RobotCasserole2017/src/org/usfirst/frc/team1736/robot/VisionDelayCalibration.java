@@ -7,6 +7,19 @@ import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * This class provides a mechanism to determine the total delay of the vision processing system
+ * including camera delay, network and processing latency, etc.
+ * 
+ * It works by cycling the LED ring on and off, and measuring the delay between commanding the ring on
+ * and actually registering the target through the vision system.
+ * 
+ * The calibration routine presumes a target is in view of the camera. If not, the calibration will fail.
+ * 
+ * Once disabled, the calibration will report out the average and standard deviation of the delays measured.
+ * @author Chris Gerth
+ *
+ */
 public class VisionDelayCalibration {
 	private static VisionDelayCalibration visionDelayCal = null;
 	
@@ -162,14 +175,23 @@ public class VisionDelayCalibration {
 		return sum/((double)in.size());
 	}
 
+	/**
+	 * @return The calibratino result from the most recent calibration (not yet run, running, pass, fail, etc)
+	 */
 	public VisionCalResults getLastResult() {
 		return lastResult;
 	}
 
+	/**
+	 * @return Average image proc delay time from the most recently run calibration
+	 */
 	public double getPrevCalAvgTime() {
 		return prevCalAvgTime;
 	}
-
+	
+	/**
+	 * @return Standard deviation of the measured processing times from the most recently run calibration
+	 */
 	public double getPrevCalStdDev() {
 		return prevCalStdDev;
 	}

@@ -560,7 +560,7 @@ public class Robot extends IterativeRobot {
 		
 		//Set the rumble on if the driver is attempting to align
 		// but can't
-		if(driverCTRL.getAlignDesired()|| visionAlignCTRL.getVisionAlignState() == 0.0){
+		if(driverCTRL.getAlignDesired() && (visionAlignCTRL.getVisionAlignState() == 0.0)){
 			driverCTRL.setRightRumble(1);
 		} else {
 			driverCTRL.setRightRumble(0);

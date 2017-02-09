@@ -23,13 +23,15 @@ public class VisionTarget {
 	{
 		if(targetFound)
 		{
-			this.targetFound = targetFound;
+			this.targetFound = true;
 			this.bestX = bestX;
 			this.bestY = bestY;
 			this.bestWidth = bestWidth;
 		}
 		else
-			targetFound = false;
+		{
+			this.targetFound = false;
+		}
 	}
 	
 	public boolean isTargetFound()
