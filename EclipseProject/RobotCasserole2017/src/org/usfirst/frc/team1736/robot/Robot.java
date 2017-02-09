@@ -558,6 +558,15 @@ public class Robot extends IterativeRobot {
 		
 		driverCTRL.updateAirCompEnabled();
 		
+		//Set the rumble on if the driver is attempting to align
+		// but can't
+		if(driverCTRL.getAlignDesired()|| visionAlignCTRL.getVisionAlignState() == 0.0){
+			driverCTRL.setRightRumble(1);
+		} else {
+			driverCTRL.setRightRumble(0);
+		}
+
+		
 		//Update Gyro angle
 		int angle = gyro.getAngleOffset();
 		if(driverCTRL.getGyroReset())
