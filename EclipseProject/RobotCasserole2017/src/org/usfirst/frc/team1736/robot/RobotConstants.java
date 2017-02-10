@@ -112,6 +112,6 @@ public class RobotConstants {
 	public static final double SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI = 45.0;
 	
 	//Driver station indicators
-	public static final int VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS = 250;
+	public static final int VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS = 200;
 	
 }
