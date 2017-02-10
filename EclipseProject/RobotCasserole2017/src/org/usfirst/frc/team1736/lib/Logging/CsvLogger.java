@@ -178,7 +178,7 @@ public class CsvLogger {
 
             // Open File
             FileWriter fstream = new FileWriter(log_name, true);
-            log_file = new BufferedWriter(fstream);
+            log_file = new BufferedWriter(fstream,2048);
 
             // Write user-defined header line
             for (String header_txt : dataFieldNames) {
@@ -238,6 +238,24 @@ public class CsvLogger {
         }
 
         return 0;
+    }
+    
+    /**
+     * our wonderful attempt at optimization to do a "dry run" with all methods in an attempt to 
+     * cache the results and not bog down the first loop.
+     */
+    public static void preCacheAllMethods(){
+        try {
+            for (int i = 0; i < methodHandles.size(); i++) {
+                MethodHandle mh = methodHandles.get(i);
+                String fieldName = dataFieldNames.get(i);
+                Vector<Object> mhArgs = mhReferenceObjects.get(i);
+                getStandardLogData(mh, mhArgs,fieldName);
+            }
+        } catch (Exception ex) {
+        	//do nothing
+        }
+    	
     }
 
 

@@ -8,6 +8,7 @@ import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -93,7 +94,12 @@ public class Robot extends IterativeRobot {
     //Compressor & Sensor system
     PneumaticsSupply airCompressor;
 
+    //Autonomous Routines
     Autonomous auto;
+    
+    //Driver Station (info about the match)
+    DriverStation ds;
+    
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
     ///////////////////////////////////////////////////////////////////
@@ -137,8 +143,10 @@ public class Robot extends IterativeRobot {
 		
 		autoAlignNotPossibleDVIndState = false;
 		
+		ds = DriverStation.getInstance();
 
 		initLoggingChannels();
+		
 		initDriverView();
 		
 		//Set up and start web server (must be after all other website init functions)
@@ -362,14 +370,17 @@ public class Robot extends IterativeRobot {
 	
 	
 	
-	
 	///////////////////////////////////////////////////////////////////
-	// Utility Methods
+	// Utility MethodsS
     ///////////////////////////////////////////////////////////////////
 	
 	//Sets up all the logged channels of data. Should be called once before opening any logs
 	public void initLoggingChannels(){
 		CsvLogger.addLoggingFieldDouble("TIME","sec","getFPGATimestamp",Timer.class);
+		CsvLogger.addLoggingFieldDouble("Match_Time","sec","getMatchTime",ds);
+		CsvLogger.addLoggingFieldBoolean("DriverStation_Attached","bit","isDSAttached",ds);
+		CsvLogger.addLoggingFieldBoolean("FPGA_Active","bit","isSysActive",ds);
+		CsvLogger.addLoggingFieldBoolean("Brownout_Protection_Active","bit","isBrownedOut",ds);
 		CsvLogger.addLoggingFieldDouble("PDP_Voltage","V","getVoltage", pdp);
 		CsvLogger.addLoggingFieldDouble("PDP_Total_Current","A","getTotalCurrent", pdp);
 		CsvLogger.addLoggingFieldDouble("PDP_DT_FL_Current","A","getCurrent", pdp, RobotConstants.DRIVETRAIN_FRONT_LEFT_PDP_CH);
@@ -434,14 +445,14 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airCompressor);
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airCompressor);
-
+		CsvLogger.preCacheAllMethods();
 	}
 	
 	
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
 		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterWheelControl.ErrorRange.get(), 
-				                                                             shotCTRL.wheel_Set_Point_rpm.get() + shooterWheelControl.ErrorRange.get());
+				                                                       shotCTRL.wheel_Set_Point_rpm.get() + shooterWheelControl.ErrorRange.get());
 		CasseroleDriverView.newDial("AirPressure Psi", 0, 130, 10, 100, 120);
 		
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
