@@ -82,6 +82,14 @@ public class ADXRS453_Gyro extends GyroBase implements Gyro, PIDSource {
 
 
     }
+    
+    /**
+     * 
+     * @return True if the gyro system is running, false if not.
+     */
+    public boolean isOnline(){
+    	return !(m_spi == null);
+    }
 
     /**
      * This is a blocking calibration call. There are also non-blocking options

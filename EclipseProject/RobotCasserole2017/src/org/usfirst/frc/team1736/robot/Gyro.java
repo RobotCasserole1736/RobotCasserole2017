@@ -38,8 +38,14 @@ public class Gyro {
 	{
 		angleOffset = angle;
 	}
+	
 	public int getAngleOffset()
 	{
 		return angleOffset;
+	}
+	
+	public boolean isOnline(){
+		//return adxrs453.isOnline();
+		return true; //Temp, for bench debugging
 	}
 }
