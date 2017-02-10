@@ -465,6 +465,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airCompressor);
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airCompressor);
+		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","get", gearSolenoid);
 		CsvLogger.preCacheAllMethods();
 	}
 	
@@ -539,6 +540,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", shooterWheelControl.getShooterActualVelocityRPM());
 		CassesroleWebStates.putBoolean("Shooter Speed OK", shooterWheelControl.getShooterVelocityOK());
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   hopControl.getHopperMotorCmd());
+		CassesroleWebStates.putBoolean("Gear Release Solenoid Cmd", gearSolenoid.get());
 		CassesroleWebStates.putDouble("Intake Speed Cmd",   intakeControl.getCommandedIntakeSpeed());
 		CassesroleWebStates.putDouble("Climb Speed Cmd",   operatorCTRL.getClimbSpeedCmd());
 		CassesroleWebStates.putDouble("Robot FwdRev Velocity (ft per sec)",   poseCalc.getFwdRevVelFtPerS());
@@ -577,8 +579,6 @@ public class Robot extends IterativeRobot {
 	}
 		
 	 void updateAllHumanInputs(){
-		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
-		airCompressor.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
 		 
 		boolean rising_edge;
 		boolean falling_edge;
@@ -613,7 +613,12 @@ public class Robot extends IterativeRobot {
 		
 		pev_State = operatorCTRL.RB();
 		
+		
 		driverCTRL.updateAirCompEnabled();
+		airCompressor.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
+		
+		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
+		
 		
 		//Set the rumble on if the driver is attempting to align
 		// but vision processing isn't aligning
