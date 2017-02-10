@@ -61,9 +61,9 @@ public class RobotPoseCalculator {
 		///////////////////////////////////////////////////////////////////////////
 		
 		fwdRevDist = (dt.getFrontLeftWheelDistanceFt() + 
-				                         dt.getFrontRightWheelDistanceFt() + 
-				                         dt.getRearLeftWheelDistanceFt() + 
-				                         dt.getRearRightWheelDistanceFt()) / 4.0;
+										 dt.getFrontRightWheelDistanceFt() + 
+										 dt.getRearLeftWheelDistanceFt() + 
+										 dt.getRearRightWheelDistanceFt()) / 4.0;
 		strafeDist = (dt.getFrontLeftWheelDistanceFt() - 
 										 dt.getFrontRightWheelDistanceFt() +
 										 dt.getRearLeftWheelDistanceFt() - 

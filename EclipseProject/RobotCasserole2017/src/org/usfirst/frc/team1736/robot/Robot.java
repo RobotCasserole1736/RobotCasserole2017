@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
 	
 	///////////////////////////////////////////////////////////////////
 	// Robot Class-Scope Objects
-    ///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////
 	
 	//RIO Performance Monitoring
 	private double prevLoopStartTimestamp;
@@ -44,65 +44,65 @@ public class Robot extends IterativeRobot {
 	DriveTrain driveTrain;
 
 	//Vision Processing Algorithm
-    VisionProcessing visionProc;
-    
-    //Vision system delay measurement & Calibration
-    VisionDelayCalibration visionDelayCal;
-    
-    //Software utilities
-    RobotPoseCalculator poseCalc;
-    CalWrangler wrangler;
-    CasseroleWebServer webServer;
+	VisionProcessing visionProc;
+	
+	//Vision system delay measurement & Calibration
+	VisionDelayCalibration visionDelayCal;
+	
+	//Software utilities
+	RobotPoseCalculator poseCalc;
+	CalWrangler wrangler;
+	CasseroleWebServer webServer;
 
-    //Controllers
-    DriverController driverCTRL;
-    OperatorController operatorCTRL;
+	//Controllers
+	DriverController driverCTRL;
+	OperatorController operatorCTRL;
 
-    //Hopper Feed Control
-    HopperControl hopControl; 
-    
-    //Intake Control
-    IntakeControl intakeControl;
-    
-    //Shooter wheel control
-    ShooterWheelCtrl shooterWheelControl;
-    
-    //Climber Control
-    ClimberControl climbControl;
+	//Hopper Feed Control
+	HopperControl hopControl; 
+	
+	//Intake Control
+	IntakeControl intakeControl;
+	
+	//Shooter wheel control
+	ShooterWheelCtrl shooterWheelControl;
+	
+	//Climber Control
+	ClimberControl climbControl;
 
-    //Camera gimbal mount
-    CameraServoMount camGimbal;    
+	//Camera gimbal mount
+	CameraServoMount camGimbal;	
 
-    //Operator shooter command interpretation variables
-    boolean pev_State;
-    
-  //Shooter control
-    ShotControl shotCTRL;
+	//Operator shooter command interpretation variables
+	boolean pev_State;
+	
+	//Shooter control
+	ShotControl shotCTRL;
 
-    //Vision Alignment Control
-    VisionAlignment visionAlignCTRL;
-    
-    boolean autoAlignNotPossibleDVIndState;
-    
-    //Gear control subsystem (kinda mashed in here just cuz we're lazy)
-    Solenoid gearSolenoid;
-    
-    
-    //LED's 
-    LEDSequencer LEDseq;
-    
-    //Compressor & Sensor system
-    PneumaticsSupply airCompressor;
+	//Vision Alignment Control
+	VisionAlignment visionAlignCTRL;
+	
+	boolean autoAlignNotPossibleDVIndState;
+	
+	//Gear control subsystem (kinda mashed in here just cuz we're lazy)
+	Solenoid gearSolenoid;
+	
+	
+	//LED's 
+	LEDSequencer LEDseq;
+	
+	//Compressor & Sensor system
+	PneumaticsSupply airCompressor;
 
-    //Autonomous Routines
-    Autonomous auto;
-    
-    //Driver Station (info about the match)
-    DriverStation ds;
-    
+	//Autonomous Routines
+	Autonomous auto;
+	
+	//Driver Station (info about the match)
+	DriverStation ds;
+	
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
-    ///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -211,7 +211,7 @@ public class Robot extends IterativeRobot {
 		
 	///////////////////////////////////////////////////////////////////
 	// Autonomous top-level Methods
-    ///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////
 	/**
 	 * This method gets run right before the robot starts running autonomous mode.
 	 */
@@ -295,7 +295,7 @@ public class Robot extends IterativeRobot {
 	
 	///////////////////////////////////////////////////////////////////
 	// Teleoperated top-level Methods
-    ///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////
 	/**
 	 * This function is called periodically during operator control
 	 */
@@ -372,7 +372,7 @@ public class Robot extends IterativeRobot {
 	
 	///////////////////////////////////////////////////////////////////
 	// Utility MethodsS
-    ///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////
 	
 	//Sets up all the logged channels of data. Should be called once before opening any logs
 	public void initLoggingChannels(){
@@ -452,7 +452,7 @@ public class Robot extends IterativeRobot {
 	public void initDriverView(){
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
 		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterWheelControl.ErrorRange.get(), 
-				                                                       shotCTRL.wheel_Set_Point_rpm.get() + shooterWheelControl.ErrorRange.get());
+																	   shotCTRL.wheel_Set_Point_rpm.get() + shooterWheelControl.ErrorRange.get());
 		CasseroleDriverView.newDial("AirPressure Psi", 0, 130, 10, 100, 120);
 		
 		CasseroleDriverView.newBoolean("Vision Offline", "red");
@@ -493,8 +493,8 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
 		CasseroleDriverView.setStringBox("Auton. Routine", "None"); // temp
 		CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
-				                                (visionProc.getTarget().getTopTargetXPixelPos()/RobotConstants.VISION_X_PIXELS) * 100.0, 
-				                                (visionProc.getTarget().getTopTargetYPixelPos()/RobotConstants.VISION_Y_PIXELS) * 100.0);
+												(visionProc.getTarget().getTopTargetXPixelPos()/RobotConstants.VISION_X_PIXELS) * 100.0, 
+												(visionProc.getTarget().getTopTargetYPixelPos()/RobotConstants.VISION_Y_PIXELS) * 100.0);
 	}
 	
 	private String leftJustifyDouble(double input){
@@ -507,9 +507,9 @@ public class Robot extends IterativeRobot {
 	
 	//Puts all relevant data to the robot State webpage
 	public void updateWebStates(){
-		CassesroleWebStates.putDouble("Loop Time (ms)",    getLoopTime_ms());
-		CassesroleWebStates.putDouble("CPU Load (%)",      getCpuLoad()); 
-		CassesroleWebStates.putDouble("RAM Usage (%)",     getRAMUsage()); 
+		CassesroleWebStates.putDouble("Loop Time (ms)",	getLoopTime_ms());
+		CassesroleWebStates.putDouble("CPU Load (%)",	  getCpuLoad()); 
+		CassesroleWebStates.putDouble("RAM Usage (%)",	 getRAMUsage()); 
 		CassesroleWebStates.putDouble("Driver FwdRev Cmd", driverCTRL.getFwdRevCmd());
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", driverCTRL.getStrafeCmd());
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", driverCTRL.getRotateCmd());

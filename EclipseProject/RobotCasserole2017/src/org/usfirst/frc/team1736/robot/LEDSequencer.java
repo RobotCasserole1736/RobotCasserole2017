@@ -15,12 +15,12 @@ public class LEDSequencer {
 	private static final boolean desktop_sim = false;
 
 	static CasseroleLEDInterface ledstrip;
-    Timer timerThread;
+	Timer timerThread;
 	
-    public final int NUM_LEDS_TOTAL = 52;
-    
-    int loop_counter;
-    
+	public final int NUM_LEDS_TOTAL = 52;
+	
+	int loop_counter;
+	
 	public LEDSequencer(){
 		
 		if(desktop_sim){
@@ -32,8 +32,8 @@ public class LEDSequencer {
 		loop_counter = 0;
 		
 		//Start LED animation thread in background.
-        timerThread = new java.util.Timer("LED Sequencer Update");
-        timerThread.schedule(new LEDBackgroundUpdateTask(this), (long) (CasseroleLEDInterface.m_update_period_ms), (long) (CasseroleLEDInterface.m_update_period_ms));
+		timerThread = new java.util.Timer("LED Sequencer Update");
+		timerThread.schedule(new LEDBackgroundUpdateTask(this), (long) (CasseroleLEDInterface.m_update_period_ms), (long) (CasseroleLEDInterface.m_update_period_ms));
 	}
 	
 	public void update(){
@@ -259,40 +259,40 @@ public class LEDSequencer {
 	
 	
 	
-    // Java multithreading magic. Do not touch.
-    // Touching will incour the wrath of Cthulhu, god of java and LED Strips.
-    // May the oceans of 1's and 0's rise to praise him.
-    private class LEDBackgroundUpdateTask extends TimerTask {
-        private LEDSequencer m_sequencer;
+	// Java multithreading magic. Do not touch.
+	// Touching will incour the wrath of Cthulhu, god of java and LED Strips.
+	// May the oceans of 1's and 0's rise to praise him.
+	private class LEDBackgroundUpdateTask extends TimerTask {
+		private LEDSequencer m_sequencer;
 
 
-        public LEDBackgroundUpdateTask(LEDSequencer sequencer) {
-            if (sequencer == null) {
-                throw new NullPointerException("Given Desktop LEDs Controller Class was null");
-            }
-            
-            
-            m_sequencer = sequencer;
-        }
+		public LEDBackgroundUpdateTask(LEDSequencer sequencer) {
+			if (sequencer == null) {
+				throw new NullPointerException("Given Desktop LEDs Controller Class was null");
+			}
+			
+			
+			m_sequencer = sequencer;
+		}
 
 
-        @Override
-        public void run() {
-        	m_sequencer.update();
-        }
-    }
+		@Override
+		public void run() {
+			m_sequencer.update();
+		}
+	}
 
-    //Main method for testing locally on a PC
+	//Main method for testing locally on a PC
 	@SuppressWarnings("unused")
 	public static void main(String[] args){
 		LEDSequencer seq = new LEDSequencer();
 		
-	    JFrame frame = new JFrame("LED Test");
-	    frame.setSize(850, 200);
-	    frame.setVisible(true);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    if(desktop_sim){
-	    	frame.add((Component) ledstrip); //uncomment this to do a desktop test
-	    }
+		JFrame frame = new JFrame("LED Test");
+		frame.setSize(850, 200);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if(desktop_sim){
+			frame.add((Component) ledstrip); //uncomment this to do a desktop test
+		}
 	}
 }

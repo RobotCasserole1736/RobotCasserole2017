@@ -127,8 +127,8 @@ public class VisionAlignment {
 		
 		//If vision align is possible, and we have a new frame, and that frame has a target, update the setpoints.
 		if((visionAlignmentPossible) & 
-           (prev_frame_counter != vis.getFrameCount()) & 
-           (vis.getTarget().isTargetFound()))
+		   (prev_frame_counter != vis.getFrameCount()) & 
+		   (vis.getTarget().isTargetFound()))
 		{
 			//update the gyro-based setpoints
 			gyroAngleLastFrame = gyroHistory.getValAtTime(vis.getEstCaptureTime());

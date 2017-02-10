@@ -146,11 +146,11 @@ public class VisionProcessing {
 				i_like_big_targets_and_i_cannot_lie = 100000 * 1/(listener.getArea(i) + listener.getArea(j));
 				
 				//The better the target is, the smaller Heuristic should be
-				Heuristic= x_pos_error     * 10.0 + //We want the top/bottom centroids to be aligned in the X direction
-						   y_pos_error     * 10.0 + //Given the heights of the top/bottom, we expect a certain offset in the centroids in the Y direction
-						   width_error     * 10.0 + //We expect the top/bottom to have the same width
-						   height_error    * 5.0  +	//We expect the top to have twice the height of the bottom
-						   top_ar_error    * 1.0  + //We expect the top to have a certain aspect ratio
+				Heuristic= x_pos_error	 * 10.0 + //We want the top/bottom centroids to be aligned in the X direction
+						   y_pos_error	 * 10.0 + //Given the heights of the top/bottom, we expect a certain offset in the centroids in the Y direction
+						   width_error	 * 10.0 + //We expect the top/bottom to have the same width
+						   height_error	* 5.0  +	//We expect the top to have twice the height of the bottom
+						   top_ar_error	* 1.0  + //We expect the top to have a certain aspect ratio
 						   bottom_ar_error * 1.0  + //We expect the bottom to have a certain aspect ratio
 						   top_infill_error * 1.0 +  //We expect the top to have a certain infill percentage
 						   bottom_infill_error * 1.0 + //We expect the bottom to have a certain infill percentage

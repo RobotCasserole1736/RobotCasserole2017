@@ -46,46 +46,46 @@ public class DriveTrain{
 	private DriveTrain() {
 		//Setup Drivetrain with motors and such
 		frontLeftMotor  = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_LEFT_MOTOR);
-    	frontRightMotor = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_RIGHT_MOTOR);
-    	rearLeftMotor   = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_REAR_LEFT_MOTOR);
-    	rearRightMotor  = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_REAR_RIGHT_MOTOR);
-    	
-    	//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
-    	frontLeftMotor.setInverted(false);
-    	frontRightMotor.setInverted(false);
-    	rearLeftMotor.setInverted(true);
-    	rearRightMotor.setInverted(true);
-    	
-    	
-    	myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
-    	
-    	//Set up calibratable values
-    	fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
-    	dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.0);
-    	dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.0005);
-    	dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0);
-    	
-    	//set up encoders
-    	frontLeftEncoder  = new Encoder(RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_A,  RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
-    	frontRightEncoder = new Encoder(RobotConstants.DRIVETRAIN_FRONT_RIGHT_ENCODER_A, RobotConstants.DRIVETRAIN_FRONT_RIGHT_ENCODER_B, false);
-    	rearLeftEncoder   = new Encoder(RobotConstants.DRIVETRAIN_REAR_LEFT_ENCODER_A,   RobotConstants.DRIVETRAIN_REAR_LEFT_ENCODER_B,   false);
-    	rearRightEncoder  = new Encoder(RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_A,  RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
-    	
-    	//Note minus signs to invert right side of drivetrain
-    	frontLeftEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	frontRightEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearLeftEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	rearRightEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
-    	
-    	
-    	
-    	//Set up autonomous PI controllers
-    	frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(frontLeftMotor,  frontLeftEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
-    	frontRightAutonCtrl = new DriveTrainWheelSpeedPI(frontRightMotor, frontRightEncoder, dtFGainCal, dtPGainCal, dtIGainCal);
-    	rearLeftAutonCtrl = new DriveTrainWheelSpeedPI(rearLeftMotor,   rearLeftEncoder,   dtFGainCal, dtPGainCal, dtIGainCal);
-    	rearRightAutonCtrl = new DriveTrainWheelSpeedPI(rearRightMotor,  rearRightEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
-    	
-    	runningClosedLoop = false;
+		frontRightMotor = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_FRONT_RIGHT_MOTOR);
+		rearLeftMotor   = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_REAR_LEFT_MOTOR);
+		rearRightMotor  = new RateLimitedVictorSP(RobotConstants.DRIVETRAIN_REAR_RIGHT_MOTOR);
+		
+		//Set inversion on drivetrain motors (opposite sides need to be flipped in sign so positive command yeilds positive motion)
+		frontLeftMotor.setInverted(false);
+		frontRightMotor.setInverted(false);
+		rearLeftMotor.setInverted(true);
+		rearRightMotor.setInverted(true);
+		
+		
+		myDrive = new RobotDrive(frontLeftMotor, frontRightMotor, rearLeftMotor, rearRightMotor);
+		
+		//Set up calibratable values
+		fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
+		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.0);
+		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.0005);
+		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0);
+		
+		//set up encoders
+		frontLeftEncoder  = new Encoder(RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_A,  RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
+		frontRightEncoder = new Encoder(RobotConstants.DRIVETRAIN_FRONT_RIGHT_ENCODER_A, RobotConstants.DRIVETRAIN_FRONT_RIGHT_ENCODER_B, false);
+		rearLeftEncoder   = new Encoder(RobotConstants.DRIVETRAIN_REAR_LEFT_ENCODER_A,   RobotConstants.DRIVETRAIN_REAR_LEFT_ENCODER_B,   false);
+		rearRightEncoder  = new Encoder(RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_A,  RobotConstants.DRIVETRAIN_REAR_RIGHT_ENCODER_B,  false);
+		
+		//Note minus signs to invert right side of drivetrain
+		frontLeftEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+		frontRightEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+		rearLeftEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+		rearRightEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+		
+		
+		
+		//Set up autonomous PI controllers
+		frontLeftAutonCtrl = new DriveTrainWheelSpeedPI(frontLeftMotor,  frontLeftEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
+		frontRightAutonCtrl = new DriveTrainWheelSpeedPI(frontRightMotor, frontRightEncoder, dtFGainCal, dtPGainCal, dtIGainCal);
+		rearLeftAutonCtrl = new DriveTrainWheelSpeedPI(rearLeftMotor,   rearLeftEncoder,   dtFGainCal, dtPGainCal, dtIGainCal);
+		rearRightAutonCtrl = new DriveTrainWheelSpeedPI(rearRightMotor,  rearRightEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
+		
+		runningClosedLoop = false;
 	}
 	
 	/**
