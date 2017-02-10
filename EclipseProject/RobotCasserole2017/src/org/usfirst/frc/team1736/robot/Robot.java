@@ -81,6 +81,8 @@ public class Robot extends IterativeRobot {
     //Vision Alignment Control
     VisionAlignment visionAlignCTRL;
     
+    boolean autoAlignNotPossibleDVIndState;
+    
     //Gear control subsystem (kinda mashed in here just cuz we're lazy)
     Solenoid gearSolenoid;
     
@@ -133,6 +135,8 @@ public class Robot extends IterativeRobot {
 		
 		//LEDseq = new LEDSequencer();
 		
+		autoAlignNotPossibleDVIndState = false;
+		
 
 		initLoggingChannels();
 		initDriverView();
@@ -154,6 +158,7 @@ public class Robot extends IterativeRobot {
 		
 		//Close out any log which is running
 		CsvLogger.close();
+		autoAlignNotPossibleDVIndState = false;
 	}
 	
 	/**
@@ -443,7 +448,16 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Target in View", "green");
 		CasseroleDriverView.newBoolean("Vision Aligning", "yellow");
 		CasseroleDriverView.newBoolean("Shooter Spoolup", "yellow");
-		CasseroleDriverView.newStringBox("Orientation deg");
+		CasseroleDriverView.newBoolean("System Pressure Low", "red");
+		CasseroleDriverView.newBoolean("Cmprsr Disabled", "yellow");
+		CasseroleDriverView.newBoolean("Gyro Offline", "red");
+		CasseroleDriverView.newBoolean("Low Battery", "yellow");
+		CasseroleDriverView.newBoolean("AutoAlign Not Possible!", "red");
+		
+		CasseroleDriverView.newStringBox("Orientation Deg");
+		CasseroleDriverView.newStringBox("Vision Range Ft");
+		CasseroleDriverView.newStringBox("Vision Angle Deg");
+		CasseroleDriverView.newStringBox("Auton. Routine");
 		CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
 		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 50, 50, 0);
 
@@ -455,17 +469,29 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setDialValue("AirPressure Psi", airCompressor.getPress());
 		CasseroleDriverView.setBoolean("Vision Offline", !visionProc.isOnline());
 		CasseroleDriverView.setBoolean("Target in View", visionProc.getTarget().isTargetFound() && visionProc.isOnline());
-		CasseroleDriverView.setBoolean("Vision Aligning", visionAlignCTRL.getVisionAlignmentDesired() && visionAlignCTRL.getVisionAlignmentPossible() && !visionAlignCTRL.getVisionAlignmentOnTarget());
+		CasseroleDriverView.setBoolean("Vision Aligning", visionAlignCTRL.getVisionAlignState() == 1.0);
 		CasseroleDriverView.setBoolean("Shooter Spoolup", (shooterWheelControl.getShooterDesiredRPM() > 100) && !(shooterWheelControl.getShooterVelocityOK()));
+		CasseroleDriverView.setBoolean("System Pressure Low", (airCompressor.getPress() < RobotConstants.SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI));
+		CasseroleDriverView.setBoolean("Cmprsr Disabled", !airCompressor.isEnabled());
+		CasseroleDriverView.setBoolean("Gyro Offline", !gyro.isOnline());
+		CasseroleDriverView.setBoolean("Low Battery", false); //temp
+		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
 		
-		String temp = String.format("%.1f", gyro.getAngle() % 360.0);
-		for(int ii = 0; ii < 5 - temp.length(); ii++){
-			temp = " " + temp; 
-		}
-		CasseroleDriverView.setStringBox("Orientation deg", temp);
+		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
+		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
+		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
+		CasseroleDriverView.setStringBox("Auton. Routine", "None"); // temp
 		CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
 				                                (visionProc.getTarget().getTopTargetXPixelPos()/RobotConstants.VISION_X_PIXELS) * 100.0, 
 				                                (visionProc.getTarget().getTopTargetYPixelPos()/RobotConstants.VISION_Y_PIXELS) * 100.0);
+	}
+	
+	private String leftJustifyDouble(double input){
+		String temp = String.format("%.1f", input);
+		for(int ii = 0; ii < 5 - temp.length(); ii++){
+			temp = " " + temp; 
+		}
+		return temp;
 	}
 	
 	//Puts all relevant data to the robot State webpage
@@ -507,11 +533,11 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Target Pixel Pos Y", visionProc.getTarget().getTopTargetYPixelPos());
 		CassesroleWebStates.putDouble("Vision Target Range (ft)", visionProc.getTarget().getEstTargetDistanceFt());
 		CassesroleWebStates.putDouble("Vision Target Offset (deg)", visionProc.getTarget().getTargetOffsetDegrees());
-//		CassesroleWebStates.putDouble("Vision Heuristic Val", RobotState.visionHeuristicVal);
+		CassesroleWebStates.putDouble("Vision Heuristic Val", visionProc.getCurHeuristic());
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - visionProc.getEstCaptureTime())*1000);
 		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", visionAlignCTRL.getFwdRevCmd());
 		CassesroleWebStates.putDouble("Vision Rotate Cmd", visionAlignCTRL.getRotateCmd());
-		CassesroleWebStates.putDouble("Vision_Align_State", visionAlignCTRL.getVisionAlignState());
+		CassesroleWebStates.putString("Vision_Align_State", visionAlignCTRL.getVisionAlignStateName());
 		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleAtLastFrame());
 		CassesroleWebStates.putDouble("Vision Desired Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleDesiredAtLastFrame());
 		CassesroleWebStates.putString("Vision Cal Last Result", visionDelayCal.getLastResult().toString());
@@ -559,10 +585,12 @@ public class Robot extends IterativeRobot {
 		driverCTRL.updateAirCompEnabled();
 		
 		//Set the rumble on if the driver is attempting to align
-		// but can't
+		// but vision processing isn't aligning
 		if(driverCTRL.getAlignDesired() && (visionAlignCTRL.getVisionAlignState() == 0.0)){
+			autoAlignNotPossibleDVIndState = (((int)Math.round(Timer.getFPGATimestamp()*1000.0)%RobotConstants.VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS) > RobotConstants.VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS/2);
 			driverCTRL.setRightRumble(1);
 		} else {
+			autoAlignNotPossibleDVIndState = false;
 			driverCTRL.setRightRumble(0);
 		}
 

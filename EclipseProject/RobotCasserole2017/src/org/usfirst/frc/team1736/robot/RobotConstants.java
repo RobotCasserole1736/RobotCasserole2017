@@ -107,4 +107,11 @@ public class RobotConstants {
 	public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 4; //Where I happened to place it on Febrary 5th
 	public static final double TGT_WIDTH_FT = (6.0+5.0/16.0)/12.0; //SW test target (6 and 5/16ths inches)
 	
+	
+	//Pneumatics
+	public static final double SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI = 45.0;
+	
+	//Driver station indicators
+	public static final int VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS = 250;
+	
 }

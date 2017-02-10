@@ -6,11 +6,14 @@ import edu.wpi.first.wpilibj.Compressor;
 public class PneumaticsSupply {
 	Compressor comp;
 	
+	private boolean enabled;
+	
 	private static AnalogInput psensor;
 	
 	public PneumaticsSupply(){
 		comp = new Compressor();
 		comp.setClosedLoopControl(true); //ensure we are running by default
+		enabled = true;
 		
 		psensor = new AnalogInput(RobotConstants.AIR_PRESSURE_SENSOR_PORT);
 	}
@@ -40,6 +43,15 @@ public class PneumaticsSupply {
 		if(state == false){
 			comp.stop();
 		}
+		enabled = state;
+	}
+	
+	/**
+	 * 
+	 * @return true if compressor is enabled to run, false if disabled.
+	 */
+	public boolean isEnabled(){
+		return enabled;
 	}
 
 }

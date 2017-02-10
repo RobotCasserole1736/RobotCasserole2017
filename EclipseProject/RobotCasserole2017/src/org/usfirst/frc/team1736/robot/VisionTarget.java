@@ -6,6 +6,7 @@ public class VisionTarget {
 	private double bestX = 0;
 	private double bestY = 0;
 	private double bestWidth = 0;
+	private boolean distanceValid = false;
 	
 	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(RobotConstants.CAMERA_FOV_X_DEG/2.0));
 	
@@ -52,12 +53,27 @@ public class VisionTarget {
 	public double getEstTargetDistanceFt()
 	{
 		double cam_to_tgt_dist_ft = (RobotConstants.TGT_WIDTH_FT*RobotConstants.VISION_X_PIXELS)/(2.0*bestWidth*TANGENT_CAMERA_FOV_X); //From https://wpilib.screenstepslive.com/s/4485/m/24194/l/288985-identifying-and-processing-the-targets
-		return Math.sqrt(Math.pow(cam_to_tgt_dist_ft, 2) - Math.pow(RobotConstants.HIGH_GOAL_VISION_TARGET_HEIGHT_FT,2)); //We need to calculate distance along the ground, so use pythagorean theorem to calculate floor distance, given target height.
+		double cam_to_tgt_dist_ft_sqrd = Math.pow(cam_to_tgt_dist_ft, 2);
+		final double visionTgtHeightSqrd = Math.pow(RobotConstants.HIGH_GOAL_VISION_TARGET_HEIGHT_FT,2);
+		
+		//We need to calculate distance along the ground, so use pythagorean theorem to calculate floor distance, given target height.
+		//ensure the square root will have a positive result (otherwise something wacky is going on)
+		if(cam_to_tgt_dist_ft_sqrd > visionTgtHeightSqrd){
+			distanceValid = true;
+			return Math.sqrt(cam_to_tgt_dist_ft_sqrd - visionTgtHeightSqrd);
+		} else {
+			distanceValid = false;
+			return -1;
+		}
 	}
 	
 	public double getTargetOffsetDegrees()
 	{
 		return (bestX - RobotConstants.VISION_X_PIXELS/2) * (RobotConstants.CAMERA_FOV_X_DEG/RobotConstants.VISION_X_PIXELS);
+	}
+	
+	public boolean isDistanceValid(){
+		return distanceValid;
 	}
 	
 }

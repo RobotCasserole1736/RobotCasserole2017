@@ -24,6 +24,8 @@ public class VisionProcessing {
 	
 	private VisionTarget target = null;
 	
+	private double curHeuristic = 0;
+	
 	public static synchronized VisionProcessing getInstance()
 	{
 		if(visionProcessing == null)
@@ -109,7 +111,7 @@ public class VisionProcessing {
 	 */
 	private void alg1(){
 
-		double Heuristic;
+		double Heuristic = -1;
 		int Best_Top=-1;
 		int Best_Bottom=-1;
 		double Best_Heuristic=Double.MAX_VALUE;
@@ -166,6 +168,7 @@ public class VisionProcessing {
 		
 		if(Best_Top != -1 & Best_Bottom != -1){
 			target.updateTarget(true, listener.getX(Best_Top),listener.getY(Best_Top),listener.getWidth(Best_Top));
+			curHeuristic = Heuristic;
 		} else {
 			target.updateTarget(false,0,0,0);
 		}
@@ -214,6 +217,10 @@ public class VisionProcessing {
 	public double getNumberOfTargetsObserved()
 	{
 		return listener.getNumTargetsObserved();
+	}
+	
+	public double getCurHeuristic(){
+		return curHeuristic;
 	}
 	
 }
