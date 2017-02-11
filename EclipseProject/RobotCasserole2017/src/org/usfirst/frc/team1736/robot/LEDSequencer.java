@@ -32,7 +32,7 @@ import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
 	
-	private static final boolean desktop_sim = false;
+	private static final boolean desktop_sim = true;
 
 	static CasseroleLEDInterface ledstrip; //interface so that we can swap between desktop and robot 
 	Timer timerThread;
@@ -58,7 +58,7 @@ public class LEDSequencer {
 	
 	public void update(){
 		
-		smoothStripSweep();
+		//smoothStripSweep();
 		//smoothRainbowCycle();
 		//smoothRedWhiteCycle();
 		//sparkleWhite();
@@ -68,7 +68,9 @@ public class LEDSequencer {
 		//cometRed();
 		//cometRainbow();
 		//bounce();
-		
+		//gearSignal();
+		fuelSignal();
+		//capnjack();
 		
 		loop_counter++;
 	}
@@ -275,9 +277,62 @@ public class LEDSequencer {
 		}
 	}
 	
+	private void gearSignal(){
+		final double period = 200; //Bigger makes it change color slower
+
+			for(int led_idx = 0; led_idx < (NUM_LEDS_TOTAL/2); led_idx++){
+				if((led_idx % 2*5) < 5){
+					ledstrip.setLEDColor(led_idx, .76,.91,.28);
+					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1, .76,.91,.28);
+				}
+				else{
+					ledstrip.setLEDColor(led_idx,.91,.2,.84);
+					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1,.91,.2,.84);
+				}
+			}
+		}
+
 	
 	
+	private void fuelSignal(){
+		final double period = 200; //Bigger makes it change color slower
+
+			for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++){
+				if((led_idx % (2*7)) < 7){
+					ledstrip.setLEDColor(led_idx, .89,.71,.06);
+					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1, .89,.71,.06);
+				}
+				else{
+					ledstrip.setLEDColor(led_idx,1,0,0);
+					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1,1,0,0);
+				}
+			}
+		}
 	
+private void capnjack(){
+		
+		final double width = 2.0; //bigger means wider on-width
+		final int period = 50; //bigger means slower cycle
+		
+		double midpoint = (double)(Math.abs(((loop_counter)%period) - period/2))/((double)(period/2.0))*(NUM_LEDS_TOTAL/2.0); 
+		
+		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
+			if((led_idx % (2*1)) < 1){
+			double red_val = Math.max(0, Math.min(1.0, 1-(0.15*Math.pow((midpoint-led_idx),2))));
+			ledstrip.setLEDColor(led_idx, red_val, 0, 0);
+			ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, red_val, 0, 0);
+			}
+			else{
+				ledstrip.setLEDColor(led_idx, 0, 0.7, 0);
+				ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, 0, 0.7, 0);
+			}
+		}
+		
+	}
+
+
+
+
 	
 	// Java multithreading magic. Do not touch.
 	// Touching will incour the wrath of Cthulhu, god of java and LED Strips.
