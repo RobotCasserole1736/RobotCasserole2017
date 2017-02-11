@@ -133,6 +133,8 @@ public class DotStarsLEDStrip implements CasseroleLEDInterface {
      * 
      * @return 0 on successful write, -1 on failure
      */
+    //temp
+    int loop_counter = 0;
     private int updateColors() {
     	@SuppressWarnings("unused")
         int ret_val = 0;
@@ -150,6 +152,10 @@ public class DotStarsLEDStrip implements CasseroleLEDInterface {
                 int size = end_index - start_index;
                 byte[] tx_array = Arrays.copyOfRange(temp_ledBuff, start_index, end_index);
             	ret_val = spi.write(tx_array, size); //I think this returns number of bytes actually written?
+            	System.out.println("Loop " + Double.toString(loop_counter) + "  ||   SPI ret_val= " + Double.toString(ret_val) );
+            	System.out.println(Arrays.toString(tx_array));
+            	loop_counter++;
+            	
             }
 
         }
