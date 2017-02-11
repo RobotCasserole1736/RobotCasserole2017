@@ -114,10 +114,7 @@ public class VisionAlignment {
 		
 		
 		VisionProcessing vis = VisionProcessing.getInstance();
-		
-		//Is the driver commanding vision alignment right now?
-		visionAlignmentDesired = DriverController.getInstance().getAlignDesired();
-		
+			
 		// Is the control system capiable of performing alignment (vision and gyro are online)?
 		visionAlignmentPossible = vis.isOnline() & Gyro.getInstance().isOnline();
 		
