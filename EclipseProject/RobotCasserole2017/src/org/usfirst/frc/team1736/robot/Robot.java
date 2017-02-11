@@ -98,6 +98,9 @@ public class Robot extends IterativeRobot {
 	
 	//Shooter control
 	ShotControl shotCTRL;
+	
+	//Shot Count
+	ShotCounter shotCount;
 
 	//Vision Alignment Control
 	VisionAlignment visionAlignCTRL;
@@ -140,6 +143,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
 		shotCTRL = ShotControl.getInstance();
+		shotCount = ShotCounter.getInstance();
 		hopControl = HopperControl.getInstance();
 		shooterWheelControl = ShooterWheelCtrl.getInstance();
 		climbControl = ClimberControl.getInstance();
@@ -280,6 +284,9 @@ public class Robot extends IterativeRobot {
 		//Update shot control management subsystem
 		shotCTRL.update();
 		
+		//Update Shot Counter
+		shotCount.update();
+		
 		//Update Hopper Control
 		hopControl.update();
 		
@@ -350,6 +357,7 @@ public class Robot extends IterativeRobot {
 		visionProc.update();
 
 		//Run vision alignment algorithm
+		visionAlignCTRL.setVisionAlignmentDesired(DriverController.getInstance().getAlignDesired());
 		visionAlignCTRL.GetAligned();
 		
 		//Update any calibration which is running
@@ -357,6 +365,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update shot control management subsystem
 		shotCTRL.update();
+		
+		//Update shot counter
+		shotCount.update();
 		
 		//Update Hopper Control
 		hopControl.update();
@@ -440,6 +451,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocityRPM", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd", shooterWheelControl);
 		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","getShooterVelocityOK", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("Shot_Counter", "count", "getCurrCountLog", shotCount);
 		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFLDriveMotorCmd", driveTrain);
 		CsvLogger.addLoggingFieldDouble("FR_Motor_Cmd","cmd","getFRDriveMotorCmd", driveTrain);
 		CsvLogger.addLoggingFieldDouble("RL_Motor_Cmd","cmd","getRLDriveMotorCmd", driveTrain);
