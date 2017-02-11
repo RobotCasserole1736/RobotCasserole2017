@@ -34,7 +34,7 @@ public class LEDSequencer {
 	
 	private static final boolean desktop_sim = false;
 
-	static CasseroleLEDInterface ledstrip;
+	static CasseroleLEDInterface ledstrip; //interface so that we can swap between desktop and robot 
 	Timer timerThread;
 	
 	public final int NUM_LEDS_TOTAL = 52;
