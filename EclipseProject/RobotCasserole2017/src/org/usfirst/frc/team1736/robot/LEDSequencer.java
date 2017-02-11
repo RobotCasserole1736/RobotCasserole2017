@@ -38,16 +38,16 @@ public class LEDSequencer {
 
 
 	public enum LEDSwitchCase {
-		SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN
+		OFF, SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN, TEST
 	}
 	
 	
 	static CasseroleLEDInterface ledstrip; //interface so that we can swap between desktop and robot 
 	Timer timerThread;
 	
-	public final int NUM_LEDS_TOTAL = 52;
+	public final int NUM_LEDS_TOTAL = 25;
 	
-	int loop_counter;
+	double loop_counter;
 	
 	public LEDSequencer(){
 		
@@ -56,6 +56,8 @@ public class LEDSequencer {
 		} else {
 			ledstrip = new DotStarsLEDStrip(NUM_LEDS_TOTAL);
 		}
+		
+		cur_pattern = LEDSwitchCase.OFF;
 		
 		loop_counter = 0;
 		
@@ -67,6 +69,14 @@ public class LEDSequencer {
 	public void update(){
 
 		switch(cur_pattern){ 
+		case OFF:
+			allOff();
+		break;
+		
+		case TEST:
+			testPattern();
+		break;
+		
 		case SMOOTH_SWEEP:
 			smoothStripSweep();
 		break;
@@ -137,6 +147,19 @@ public class LEDSequencer {
 		//capnjack();
 		
 		loop_counter++;
+	}
+	
+	//Shut them all down!!!
+	@SuppressWarnings("unused")
+	private void allOff(){
+		ledstrip.clearColorBuffer();
+	}
+	
+	//Shut them all down!!!
+	@SuppressWarnings("unused")
+	private void testPattern(){
+		ledstrip.clearColorBuffer();
+		ledstrip.setLEDColor(((int)loop_counter) % NUM_LEDS_TOTAL, 1, 0, 0);
 	}
 	
 	//shift through all colors
@@ -410,12 +433,12 @@ public class LEDSequencer {
 	}
 	
 	public void setAutonPattern(){
-		cur_pattern = LEDSwitchCase.SPARKLE_RED_WHITE;
+		cur_pattern = LEDSwitchCase.TEST;
 		return;
 	}
 	
 	public void setDisabledPattern(){
-		cur_pattern = LEDSwitchCase.SMOOTH_RED_WHITE;
+		cur_pattern = LEDSwitchCase.OFF;
 		return;
 	}
 
