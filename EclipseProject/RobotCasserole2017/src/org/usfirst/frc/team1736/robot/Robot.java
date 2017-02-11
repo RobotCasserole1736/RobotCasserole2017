@@ -56,6 +56,7 @@ public class Robot extends IterativeRobot {
 	
 	// Physical Devices on the robot
 	PowerDistributionPanel pdp;
+	LowBatteryIndicator lowBatt;
 	
 	// Air pressure
 	double currAirPress;
@@ -135,6 +136,8 @@ public class Robot extends IterativeRobot {
 		//Set up physical devices
 		driveTrain = DriveTrain.getInstance();
 		pdp = new PowerDistributionPanel();
+		lowBatt = LowBatteryIndicator.getInstance();
+		lowBatt.setPDPReference(pdp);
 		gyro = Gyro.getInstance();
 		visionProc = VisionProcessing.getInstance();
 		visionAlignCTRL = VisionAlignment.getInstance();
@@ -304,6 +307,9 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control 
 		climbControl.update();
 		
+		//Update the low battery parameter checker
+		lowBatt.update();
+		
 		auto.update();
 		
 		LEDseq.setAutonPattern();
@@ -387,6 +393,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update Climber Control 
 		climbControl.update();
+		
+		//Update low battery parameter checker
+		lowBatt.update();
 		
 
 		//Update user camera
@@ -482,6 +491,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airCompressor);
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airCompressor);
 		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","get", gearSolenoid);
+		CsvLogger.addLoggingFieldBoolean("Battery_Dead", "bit", "isBatteryDead", lowBatt);
 		CsvLogger.preCacheAllMethods();
 	}
 	
@@ -523,7 +533,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setBoolean("System Pressure Low", (airCompressor.getPress() < RobotConstants.SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI));
 		CasseroleDriverView.setBoolean("Cmprsr Disabled", !airCompressor.isEnabled());
 		CasseroleDriverView.setBoolean("Gyro Offline", !gyro.isOnline());
-		CasseroleDriverView.setBoolean("Low Battery", false); //temp
+		CasseroleDriverView.setBoolean("Low Battery", lowBatt.isBatteryDead());
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
 		
 		CasseroleDriverView.setStringBox("Shot_Count", leftJustifyDouble(shotCount.getCurrCountLog()));
