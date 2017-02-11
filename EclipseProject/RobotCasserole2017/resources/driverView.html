@@ -11,7 +11,7 @@
 
 
 <div/>
-<div align="center" id="id01">COM Status: Socket Not Open</div>
+<div align="center" id="id01">COM Status: Socket Not Yet Opened...</div>
 <br>
 
 <div align="center" id="dials"></div>
@@ -416,7 +416,13 @@ dataSocket.onopen = function (event) {
 };
 
 dataSocket.onerror = function (error) {
-  document.getElementById("id01").innerHTML = "COM Status: Error with socket";
+  document.getElementById("id01").innerHTML = "COM Status: Error with socket. Reconnect to robot, open driver station, then refresh this page.";
+  alert("ERROR from Driver View: Robot Disconnected!!!\n\nAfter connecting to the robot, open the driver station, then refresh this page.");
+};
+
+dataSocket.onclose = function (error) {
+  document.getElementById("id01").innerHTML = "COM Status: Error with socket. Reconnect to robot, open driver station, then refresh this page.";
+  alert("ERROR from Driver View: Robot Disconnected!!!\n\nAfter connecting to the robot, open the driver station, then refresh this page.");
 };
 
 dataSocket.onmessage = function (event) {

@@ -12,7 +12,7 @@
 <h1>Robot Calibrations</h1>
 <hr>
 <div/>
-<div id="id01">COM Status: Socket Not Open</div>
+<div id="id01">COM Status: Socket Not Yet Opened...</div>
 
 <br>
 
@@ -47,11 +47,13 @@ dataSocket.onopen = function (event) {
 };
 
 dataSocket.onerror = function (error) {
-  document.getElementById("id01").innerHTML = "COM Status: Error with socket!";
+  document.getElementById("id01").innerHTML = "COM Status: Error with socket. Reconnect to robot, open driver station, then refresh this page.";
+  alert("ERROR from Calibration: Robot Disconnected!!!\n\nAfter connecting to the robot, open the driver station, then refresh this page.");
 };
 
 dataSocket.onclose = function (error) {
-  document.getElementById("id01").innerHTML = "COM Status: Socket Closed.";
+  document.getElementById("id01").innerHTML = "COM Status: Error with socket. Reconnect to robot, open driver station, then refresh this page.";
+  alert("ERROR from Calibration: Robot Disconnected!!!\n\nAfter connecting to the robot, open the driver station, then refresh this page.");
 };
 
 dataSocket.onmessage = function (event) {

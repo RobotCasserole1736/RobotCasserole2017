@@ -12,7 +12,7 @@
 <h1>Data From Robot</h1>
 <hr>
 <div/>
-<div id="id01">COM Status: Socket Not Open</div>
+<div id="id01">COM Status: Socket Not Yet Opened...</div>
 
 <br>
 
@@ -43,14 +43,20 @@ dataSocket.onopen = function (event) {
   document.getElementById("id01").innerHTML = "Socket Open";
 };
 
-dataSocket.onerror = function (error) {
-  document.getElementById("id01").innerHTML = "COM Status: Error with socket";
-};
-
 dataSocket.onmessage = function (event) {
   genTable(event.data);
   numTransmissions = numTransmissions + 1;
   document.getElementById("id01").innerHTML = "COM Status: Socket Open. RX Count:" + numTransmissions; 
+};
+
+dataSocket.onerror = function (error) {
+  document.getElementById("id01").innerHTML = "COM Status: Error with socket. Reconnect to robot, open driver station, then refresh this page.";
+  alert("ERROR from Present State: Robot Disconnected!!!\n\nAfter connecting to the robot, open the driver station, then refresh this page.");
+};
+
+dataSocket.onclose = function (error) {
+  document.getElementById("id01").innerHTML = "COM Status: Error with socket. Reconnect to robot, open driver station, then refresh this page.";
+  alert("ERROR from Present State: Robot Disconnected!!!\n\nAfter connecting to the robot, open the driver station, then refresh this page.");
 };
 
 function genTable(json_data) {
