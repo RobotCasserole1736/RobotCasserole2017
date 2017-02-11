@@ -217,6 +217,8 @@ public class Robot extends IterativeRobot {
 		driveTrain.updateAllCals();
 		visionAlignCTRL.updateGains();
 		
+		LEDseq.setDisabledPattern();
+		
 		updateDriverView();
 		updateWebStates();
 
@@ -304,6 +306,8 @@ public class Robot extends IterativeRobot {
 		
 		auto.update();
 		
+		LEDseq.setAutonPattern();
+		
 		//Log & display present state data
 		updateDriverView();
 		CsvLogger.logData(false);
@@ -388,6 +392,9 @@ public class Robot extends IterativeRobot {
 		//Update user camera
 		camGimbal.update();
 
+		//Temp
+		LEDseq.setBothDesiredPattern();
+		
 		
 		//Log & display present state data
 		updateDriverView();

@@ -32,8 +32,16 @@ import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
 	
-	private static final boolean desktop_sim = true;
+	private volatile LEDSwitchCase cur_pattern;
+	
+	private static final boolean desktop_sim = false;
 
+
+	public enum LEDSwitchCase {
+		SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN
+	}
+	
+	
 	static CasseroleLEDInterface ledstrip; //interface so that we can swap between desktop and robot 
 	Timer timerThread;
 	
@@ -57,6 +65,62 @@ public class LEDSequencer {
 	}
 	
 	public void update(){
+
+		switch(cur_pattern){ 
+		case SMOOTH_SWEEP:
+			smoothStripSweep();
+		break;
+		
+		case SMOOTH_RAINBOW:
+			smoothRainbowCycle();
+			break;
+			
+		case SMOOTH_RED_WHITE:
+			smoothRedWhiteCycle();
+			break;
+			
+		case SPARKLE_WHITE:
+			sparkleWhite();
+			break;
+			
+		case SPARKLE_RED_WHITE:
+			sparkleRedWhite();
+			break;
+			
+		case SPARKLE_RAIN:
+			sparkleRainbow();
+			break;
+			
+		case CYLON:
+			cylon();
+			break;
+			
+		case COMET_RED:
+			cometRed();
+			break;
+			
+		case COMET_RAIN:
+			cometRainbow();
+			break;
+			
+		case BOUNCE:
+			bounce();
+			break;
+			
+		case GEAR:
+			gearSignal();
+			break;
+			
+		case FUEL:
+			fuelSignal();
+			break;
+			
+		case CAPN:
+			capnjack();
+			break;
+		
+
+		}
 		
 		//smoothStripSweep();
 		//smoothRainbowCycle();
@@ -69,7 +133,7 @@ public class LEDSequencer {
 		//cometRainbow();
 		//bounce();
 		//gearSignal();
-		fuelSignal();
+		//fuelSignal();
 		//capnjack();
 		
 		loop_counter++;
@@ -309,7 +373,7 @@ public class LEDSequencer {
 			}
 		}
 	
-private void capnjack(){
+	private void capnjack(){
 		
 		final double width = 2.0; //bigger means wider on-width
 		final int period = 50; //bigger means slower cycle
@@ -328,6 +392,31 @@ private void capnjack(){
 			}
 		}
 		
+	}
+
+	public void setGearDesiredPattern(){
+		cur_pattern = LEDSwitchCase.BOUNCE;
+		return;
+	}
+	
+	public void setFuelDesiredPattern(){
+		cur_pattern = LEDSwitchCase.SMOOTH_RAINBOW;
+		return;
+	}
+	
+	public void setBothDesiredPattern(){
+		cur_pattern = LEDSwitchCase.CYLON;
+		return;
+	}
+	
+	public void setAutonPattern(){
+		cur_pattern = LEDSwitchCase.SPARKLE_RED_WHITE;
+		return;
+	}
+	
+	public void setDisabledPattern(){
+		cur_pattern = LEDSwitchCase.SMOOTH_RED_WHITE;
+		return;
 	}
 
 
