@@ -171,6 +171,9 @@ public class ADXRS453_Gyro extends GyroBase implements Gyro, PIDSource {
      */
     @Override
     public synchronized void reset() {
+    	if(m_spi == null){
+    		return;
+    	}
         if (m_is_calibrating) {
             cancelCalibrate();
         }

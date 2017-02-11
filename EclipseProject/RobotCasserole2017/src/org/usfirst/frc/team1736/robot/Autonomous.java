@@ -23,6 +23,7 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoSequencer;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import org.usfirst.frc.team1736.robot.auto.AutoEventDriveForward;
+import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
 
 public class Autonomous {
 	Calibration autoMode;
@@ -38,6 +39,8 @@ public class Autonomous {
 			case 1: //drive forward across base line
 				AutoEventDriveForward driveForward = new AutoEventDriveForward(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
 				AutoSequencer.addEvent(driveForward);
+				AutoEventShoot shootNow = new AutoEventShoot();
+				AutoSequencer.addEvent(shootNow);
 				break;
 				
 		}

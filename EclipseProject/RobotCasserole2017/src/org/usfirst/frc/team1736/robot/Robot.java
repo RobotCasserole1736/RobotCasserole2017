@@ -98,6 +98,9 @@ public class Robot extends IterativeRobot {
 	
 	//Shooter control
 	ShotControl shotCTRL;
+	
+	//Shot Count
+	ShotCounter shotCount;
 
 	//Vision Alignment Control
 	VisionAlignment visionAlignCTRL;
@@ -140,6 +143,7 @@ public class Robot extends IterativeRobot {
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
 		shotCTRL = ShotControl.getInstance();
+		shotCount = ShotCounter.getInstance();
 		hopControl = HopperControl.getInstance();
 		shooterWheelControl = ShooterWheelCtrl.getInstance();
 		climbControl = ClimberControl.getInstance();
@@ -280,6 +284,9 @@ public class Robot extends IterativeRobot {
 		//Update shot control management subsystem
 		shotCTRL.update();
 		
+		//Update Shot Counter
+		shotCount.update();
+		
 		//Update Hopper Control
 		hopControl.update();
 		
@@ -350,6 +357,7 @@ public class Robot extends IterativeRobot {
 		visionProc.update();
 
 		//Run vision alignment algorithm
+		visionAlignCTRL.setVisionAlignmentDesired(DriverController.getInstance().getAlignDesired());
 		visionAlignCTRL.GetAligned();
 		
 		//Update any calibration which is running
@@ -357,6 +365,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update shot control management subsystem
 		shotCTRL.update();
+		
+		//Update shot counter
+		shotCount.update();
 		
 		//Update Hopper Control
 		hopControl.update();
@@ -440,6 +451,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocityRPM", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd", shooterWheelControl);
 		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","getShooterVelocityOK", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("Shot_Counter", "count", "getCurrCountLog", shotCount);
 		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFLDriveMotorCmd", driveTrain);
 		CsvLogger.addLoggingFieldDouble("FR_Motor_Cmd","cmd","getFRDriveMotorCmd", driveTrain);
 		CsvLogger.addLoggingFieldDouble("RL_Motor_Cmd","cmd","getRLDriveMotorCmd", driveTrain);
@@ -486,6 +498,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Low Battery", "yellow");
 		CasseroleDriverView.newBoolean("AutoAlign Not Possible!", "red");
 		
+		CasseroleDriverView.newStringBox("Shot_Count");
 		CasseroleDriverView.newStringBox("Orientation Deg");
 		CasseroleDriverView.newStringBox("Vision Range Ft");
 		CasseroleDriverView.newStringBox("Vision Angle Deg");
@@ -509,6 +522,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setBoolean("Low Battery", false); //temp
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
 		
+		CasseroleDriverView.setStringBox("Shot_Count", leftJustifyDouble(shotCount.getCurrCountLog()));
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
 		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
@@ -539,6 +553,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Shooter Desired Speed (RPM)", shooterWheelControl.getShooterDesiredRPM());
 		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", shooterWheelControl.getShooterActualVelocityRPM());
 		CassesroleWebStates.putBoolean("Shooter Speed OK", shooterWheelControl.getShooterVelocityOK());
+		CassesroleWebStates.putDouble("Shot_Count", shotCount.getCurrCountLog());
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   hopControl.getHopperMotorCmd());
 		CassesroleWebStates.putBoolean("Gear Release Solenoid Cmd", gearSolenoid.get());
 		CassesroleWebStates.putDouble("Intake Speed Cmd",   intakeControl.getCommandedIntakeSpeed());
