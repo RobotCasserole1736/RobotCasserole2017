@@ -24,7 +24,7 @@ public interface CasseroleLEDInterface {
 
     // period between periodic function calls
     // in milliseconds
-    double m_update_period_ms = 100;
+    double m_update_period_ms = 50;
 	
 	public default void clearColorBuffer(){
 		return;

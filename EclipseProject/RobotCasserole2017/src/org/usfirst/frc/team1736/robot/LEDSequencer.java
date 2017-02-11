@@ -45,7 +45,7 @@ public class LEDSequencer {
 	static CasseroleLEDInterface ledstrip; //interface so that we can swap between desktop and robot 
 	Timer timerThread;
 	
-	public final int NUM_LEDS_TOTAL = 25;
+	public final int NUM_LEDS_TOTAL = 52;
 	
 	double loop_counter;
 	
@@ -159,7 +159,9 @@ public class LEDSequencer {
 	@SuppressWarnings("unused")
 	private void testPattern(){
 		ledstrip.clearColorBuffer();
-		ledstrip.setLEDColor(((int)loop_counter) % NUM_LEDS_TOTAL, 1, 0, 0);
+		ledstrip.setLEDColor(((int)loop_counter+0) % NUM_LEDS_TOTAL, 1, 0, 0);
+		ledstrip.setLEDColor(((int)loop_counter+1) % NUM_LEDS_TOTAL, 0, 1, 0);
+		ledstrip.setLEDColor(((int)loop_counter+2) % NUM_LEDS_TOTAL, 0, 0, 1);
 	}
 	
 	//shift through all colors
@@ -428,17 +430,21 @@ public class LEDSequencer {
 	}
 	
 	public void setBothDesiredPattern(){
-		cur_pattern = LEDSwitchCase.CYLON;
+		cur_pattern = LEDSwitchCase.COMET_RAIN;
 		return;
 	}
 	
+	public void setNoneDesiredPattern(){
+		cur_pattern = LEDSwitchCase.BOUNCE;
+	}
+	
 	public void setAutonPattern(){
-		cur_pattern = LEDSwitchCase.TEST;
+		cur_pattern = LEDSwitchCase.SPARKLE_RAIN;
 		return;
 	}
 	
 	public void setDisabledPattern(){
-		cur_pattern = LEDSwitchCase.OFF;
+		cur_pattern = LEDSwitchCase.SMOOTH_SWEEP;
 		return;
 	}
 

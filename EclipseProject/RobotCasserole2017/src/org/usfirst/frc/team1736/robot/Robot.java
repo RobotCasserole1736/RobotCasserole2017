@@ -391,9 +391,6 @@ public class Robot extends IterativeRobot {
 
 		//Update user camera
 		camGimbal.update();
-
-		//Temp
-		LEDseq.setBothDesiredPattern();
 		
 		
 		//Log & display present state data
@@ -691,6 +688,17 @@ public class Robot extends IterativeRobot {
 		 }
 		  */
 		gyro.setAngleOffset(angle);
+		
+		/*LED color Selections*/
+		if(operatorCTRL.DPadDown()){
+			LEDseq.setNoneDesiredPattern();
+		} else if(operatorCTRL.DPadUp()){
+			LEDseq.setBothDesiredPattern();
+		} else if(operatorCTRL.DPadLeft()){
+			LEDseq.setGearDesiredPattern();
+		} else 	if(operatorCTRL.DPadRight()){
+			LEDseq.setFuelDesiredPattern();
+		}
 		
 	}
 

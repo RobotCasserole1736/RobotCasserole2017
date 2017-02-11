@@ -3,6 +3,7 @@ package org.usfirst.frc.team1736.lib.LEDs;
 import java.util.Arrays;
 import java.util.TimerTask;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 
 
 /*
@@ -121,7 +122,6 @@ public class DotStarsLEDStrip implements CasseroleLEDInterface {
         spi.setClockActiveLow();
         spi.setClockRate(SPI_CLK_RATE);
         spi.setSampleDataOnFalling();
-
         timerThread = new java.util.Timer("DotStar LED Strip Control");
         timerThread.schedule(new DotStarsTask(this), (long) (m_update_period_ms), (long) (m_update_period_ms));
 
@@ -133,30 +133,27 @@ public class DotStarsLEDStrip implements CasseroleLEDInterface {
      * 
      * @return 0 on successful write, -1 on failure
      */
-    //temp
-    int loop_counter = 0;
     private int updateColors() {
     	@SuppressWarnings("unused")
         int ret_val = 0;
+    	final int CHUNK_SIZE = 127; // we can only TX 127 bytes at a time
 
         // If we need to write something, attempt to put it on the SPI port
         if (newBuffer) {
             // Make local copy of ledBuffer to help make color changing clean
             byte[] temp_ledBuff = Arrays.copyOfRange(ledBuffer, 0, ledBuffer.length);
 
-            // Chunk the TX'es into smaller size, since it looks like
-            // we can only TX 128 bytes at a time
-            for (int offset = 0; offset < temp_ledBuff.length; offset = offset + 128) {
+            // Chunk the TX'es into smaller size, otherwise we get -1 returned from spi.write
+            //This is undocumented, and was found by experimentation.
+            for (int offset = 0; offset < temp_ledBuff.length; offset = offset + CHUNK_SIZE) {
                 int start_index = offset;
-                int end_index = Math.min(offset + 128, temp_ledBuff.length);
+                int end_index = Math.min(offset + CHUNK_SIZE, temp_ledBuff.length);
                 int size = end_index - start_index;
                 byte[] tx_array = Arrays.copyOfRange(temp_ledBuff, start_index, end_index);
             	ret_val = spi.write(tx_array, size); //I think this returns number of bytes actually written?
-            	System.out.println("Loop " + Double.toString(loop_counter) + "  ||   SPI ret_val= " + Double.toString(ret_val) );
-            	System.out.println(Arrays.toString(tx_array));
-            	loop_counter++;
-            	
-            }
+        	}
+
+            
 
         }
 
