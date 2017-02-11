@@ -498,6 +498,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Low Battery", "yellow");
 		CasseroleDriverView.newBoolean("AutoAlign Not Possible!", "red");
 		
+		CasseroleDriverView.newStringBox("Shot_Count");
 		CasseroleDriverView.newStringBox("Orientation Deg");
 		CasseroleDriverView.newStringBox("Vision Range Ft");
 		CasseroleDriverView.newStringBox("Vision Angle Deg");
@@ -521,6 +522,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setBoolean("Low Battery", false); //temp
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
 		
+		CasseroleDriverView.setStringBox("Shot_Count", leftJustifyDouble(shotCount.getCurrCountLog()));
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
 		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
@@ -551,6 +553,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Shooter Desired Speed (RPM)", shooterWheelControl.getShooterDesiredRPM());
 		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", shooterWheelControl.getShooterActualVelocityRPM());
 		CassesroleWebStates.putBoolean("Shooter Speed OK", shooterWheelControl.getShooterVelocityOK());
+		CassesroleWebStates.putDouble("Shot_Count", shotCount.getCurrCountLog());
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   hopControl.getHopperMotorCmd());
 		CassesroleWebStates.putBoolean("Gear Release Solenoid Cmd", gearSolenoid.get());
 		CassesroleWebStates.putDouble("Intake Speed Cmd",   intakeControl.getCommandedIntakeSpeed());
