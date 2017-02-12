@@ -24,13 +24,23 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 
 public class PneumaticsSupply {
+	private static PneumaticsSupply localPS = null;
 	Compressor comp;
 	
 	private boolean enabled;
 	
 	private static AnalogInput storagePressureSensor;
 	
-	public PneumaticsSupply(){
+
+	public static PneumaticsSupply getInstance() {
+		if(localPS == null){
+			localPS = new PneumaticsSupply();
+		}
+		return localPS;
+	}
+
+	
+	private PneumaticsSupply(){
 		comp = new Compressor(RobotConstants.PCM_CAN_DEVICE_ID);
 		comp.setClosedLoopControl(true); //ensure we are running by default
 		enabled = true;

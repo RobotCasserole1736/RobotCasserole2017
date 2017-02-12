@@ -31,6 +31,7 @@ import org.usfirst.frc.team1736.lib.LEDs.DesktopTestLEDs;
 import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
+	private static LEDSequencer seqLocal = null;
 	
 	private volatile LEDSwitchCase cur_pattern;
 	
@@ -47,7 +48,14 @@ public class LEDSequencer {
 	
 	double loop_counter;
 	
-	public LEDSequencer(){
+	public static LEDSequencer getInstance(){
+		if(seqLocal == null){
+			seqLocal = new LEDSequencer();
+		}
+		return seqLocal;
+	}
+	
+	private LEDSequencer(){
 		
 		if(desktop_sim){
 			ledstrip = new DesktopTestLEDs(RobotConstants.NUM_LEDS_TOTAL);

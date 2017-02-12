@@ -94,9 +94,6 @@ public class Robot extends IterativeRobot {
 	//Camera gimbal mount
 	CameraServoMount camGimbal;	
 
-	//Operator shooter command interpretation variables
-	boolean pev_State;
-	
 	//Shooter control
 	ShotControl shotCTRL;
 	
@@ -151,7 +148,7 @@ public class Robot extends IterativeRobot {
 		shooterWheelControl = ShooterWheelCtrl.getInstance();
 		climbControl = ClimberControl.getInstance();
 		intakeControl = IntakeControl.getInstance();
-		airSupplySystem = new PneumaticsSupply();
+		airSupplySystem = PneumaticsSupply.getInstance();
 
 		camGimbal = new CameraServoMount();
 		
@@ -166,7 +163,7 @@ public class Robot extends IterativeRobot {
 		driverCTRL.setDeadzone(0.175);
 		operatorCTRL.setDeadzone(0.175);
 		
-		LEDseq = new LEDSequencer();
+		LEDseq = LEDSequencer.getInstance();
 		
 		autoAlignNotPossibleDVIndState = false;
 		
@@ -359,9 +356,14 @@ public class Robot extends IterativeRobot {
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
 		//Get all inputs from outside the robot
-		updateAllHumanInputs();
-		poseCalc.update();
+		operatorCTRL.update();
+		driverCTRL.update();
 		
+		//Update whether the gear solenoid is open or closed
+		gearSolenoidUpdate();
+		
+		//Update our estimations of how the robot is moving right now
+		poseCalc.update();
 		
 		//Update vision processing algorithm to find any targets on in view
 		visionProc.update();
@@ -397,10 +399,11 @@ public class Robot extends IterativeRobot {
 		//Update low battery parameter checker
 		lowBatt.update();
 		
-
-		//Update user camera
+		//Update user camera gimbal position
 		camGimbal.update();
 		
+		//Alert the driver if vision alignment is being requested, but is not available
+		checkAlignAllowed();
 		
 		//Log & display present state data
 		updateDriverView();
@@ -488,8 +491,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getRotateCmd", visionAlignCTRL);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","getVisionAlignmentOnTarget", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
-		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airSupplySystem);
-		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airSupplySystem);
+		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getStoragePress", airSupplySystem);
+		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompressorCurrent", airSupplySystem);
 		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","get", gearSolenoid);
 		CsvLogger.addLoggingFieldBoolean("Battery_Dead", "bit", "isBatteryDead", lowBatt);
 		CsvLogger.preCacheAllMethods();
@@ -607,48 +610,11 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Cal Time Std Dev (s)", visionDelayCal.getPrevCalStdDev());
 	}
 		
-	 void updateAllHumanInputs(){
-		 
-		boolean rising_edge;
-		boolean falling_edge;
-		
-		if( operatorCTRL.Y()){
-			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
-		}
-		
-		if(operatorCTRL.A()){
-			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.NO_Shoot);	
-		}
-		
-		if(operatorCTRL.RB()==true & pev_State==false){
-			rising_edge=true;	
-		} else{
-			rising_edge=false;
-		}
-		
-		if(operatorCTRL.RB()==false & pev_State==true){
-			falling_edge=true;	
-		}
-		else{
-			falling_edge=false;
-		}	
-		
-		
-		if(rising_edge==true){
-			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
-		} else if(falling_edge==true){
-			shotCTRL.setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
-		}
-		
-		pev_State = operatorCTRL.RB();
-		
-		
-		driverCTRL.updateAirCompEnabled();
-		airSupplySystem.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
-		
+	 void gearSolenoidUpdate(){
 		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
-		
-		
+	 }
+	 
+	 void checkAlignAllowed(){
 		//Set the rumble on if the driver is attempting to align
 		// but vision processing isn't aligning
 		if(driverCTRL.getAlignDesired() && (visionAlignCTRL.getVisionAlignState() == 0.0)){
@@ -658,60 +624,7 @@ public class Robot extends IterativeRobot {
 			autoAlignNotPossibleDVIndState = false;
 			driverCTRL.setRightRumble(0);
 		}
-
-		
-		//Update Gyro angle
-		int angle = gyro.getAngleOffset();
-		if(driverCTRL.getGyroReset())
-		{
-			angle = 0;
-		}
-		else if(driverCTRL.getGyroReset90())
-		{
-			angle = 90;
-		}
-		else if(driverCTRL.getGyroReset180())
-		{
-			angle = 180;
-		}
-		else if(driverCTRL.getGyroReset270())
-		{
-			angle = 270;
-		}
-
-		/* Alternate gyro angle update key idea
-		 * If decide to try comment out if else above
-		 * And update DriverController
-		 * 
-		 if(driverCTRL.DPadUp())
-		 {
-			 angle += 90;
-			 if (angle >= 360){
-				 angle = 0;
-			 }
-		 } else if(driverCTRL.DPadDown())
-		 {
-			 angle -= 90;
-			 if (angle < 0){
-				 angle = 270;
-			 }
-		 }
-		  */
-		gyro.setAngleOffset(angle);
-		
-		/*LED color Selections*/
-		if(operatorCTRL.DPadDown()){
-			LEDseq.setNoneDesiredPattern();
-		} else if(operatorCTRL.DPadUp()){
-			LEDseq.setBothDesiredPattern();
-		} else if(operatorCTRL.DPadLeft()){
-			LEDseq.setGearDesiredPattern();
-		} else if(operatorCTRL.DPadRight()){
-			LEDseq.setFuelDesiredPattern();
-		}
-		
-	}
-
+	 }
 	
 	
 	//Getters & setters for class-scope variables. Needed by MethodHandles logging infrastructure
