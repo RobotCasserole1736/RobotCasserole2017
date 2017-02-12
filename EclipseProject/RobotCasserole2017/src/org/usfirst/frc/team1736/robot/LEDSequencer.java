@@ -433,7 +433,7 @@ public class LEDSequencer {
 	}
 	
 	public void setNoneDesiredPattern(){
-		cur_pattern = LEDSwitchCase.BOUNCE;
+		cur_pattern = LEDSwitchCase.CAPN;
 	}
 	
 	public void setAutonPattern(){
