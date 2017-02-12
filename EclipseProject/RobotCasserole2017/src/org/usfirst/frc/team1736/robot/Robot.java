@@ -706,7 +706,7 @@ public class Robot extends IterativeRobot {
 			LEDseq.setBothDesiredPattern();
 		} else if(operatorCTRL.DPadLeft()){
 			LEDseq.setGearDesiredPattern();
-		} else 	if(operatorCTRL.DPadRight()){
+		} else if(operatorCTRL.DPadRight()){
 			LEDseq.setFuelDesiredPattern();
 		}
 		

@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1736.robot;
 
+import java.awt.Color;
+
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -133,5 +135,11 @@ public class RobotConstants {
 	
 	//Driver station indicators
 	public static final int VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS = 200;
+	
+	//LEDs
+	public static final int NUM_LEDS_TOTAL = 52;
+	public static final Color CASSEROLE_RED    = new Color(255,0  ,0  ); //TBD from Zach
+	public static final Color CASSEROLE_WHITE  = new Color(255,255,255); //TBD from Zach
+	public static final Color CASSEROLE_YELLOW = new Color(255,200,50 ); //TBD from Zach
 	
 }

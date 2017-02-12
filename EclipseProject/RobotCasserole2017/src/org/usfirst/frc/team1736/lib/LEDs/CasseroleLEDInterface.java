@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1736.lib.LEDs;
 
+import java.awt.Color;
+
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -33,6 +35,9 @@ public interface CasseroleLEDInterface {
 		return;
 	}
 	
+	public default void setLEDColor(int index, Color c){
+		setLEDColor(index, ((double)c.getRed())/255.0, ((double)c.getGreen())/255.0, ((double)c.getBlue())/255.0);
+	}
 
 	public default void setLEDColorHSL(int idx, double h, double s, double l){
 	    double r, g, b;
@@ -63,6 +68,22 @@ public interface CasseroleLEDInterface {
 	    if (t < 2f/3f)
 	        return p + (q - p) * (2f/3f - t) * 6f;
 	    return p;
+	}
+	
+	/**
+	 * Get an intermediate color between two colors
+	 * Super simple cross-fade in RGB space with no regard for
+	 * HSV or any actual science on how colors work.
+	 * @param ratio 0 is full c0, 1 is full c1
+	 * @param c0 one color
+	 * @param c1 the other color
+	 * @return an intermediate color
+	 */
+	public static Color getIntermedeateColor(double ratio, Color c0, Color c1){
+		double red   = (double)(c0.getRed())   * (1.0-ratio) + (double)(c1.getRed())   * (ratio);
+		double green = (double)(c0.getGreen()) * (1.0-ratio) + (double)(c1.getGreen()) * (ratio);
+		double blue  = (double)(c0.getBlue())  * (1.0-ratio) + (double)(c1.getBlue())  * (ratio);
+		return new Color((int)red, (int)green, (int)blue);
 	}
 	
 }
