@@ -22,25 +22,36 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoSequencer;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
-import org.usfirst.frc.team1736.robot.auto.AutoEventDriveForward;
+import org.usfirst.frc.team1736.robot.auto.AutoEventCrossBaseLine;
+import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromBlue;
+import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
 
 public class Autonomous {
 	Calibration autoMode;
-	DriveTrain driveTrain;
-	public Autonomous(DriveTrain driveTrain){
+	public Autonomous(){
 		autoMode = new Calibration("Auto Mode",0,0,5);
-		this.driveTrain = driveTrain;
 	}
 	
 	public void executeAutonomus(){
+		DriveTrain driveTrain = DriveTrain.getInstance();
 		int mode = (int) Math.round(autoMode.get());
 		switch(mode){
 			case 1: //drive forward across base line
-				AutoEventDriveForward driveForward = new AutoEventDriveForward(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
 				AutoSequencer.addEvent(driveForward);
+				break;
+			case 2:
+				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoSequencer.addEvent(driveBlue);
 				AutoEventShoot shootNow = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow);
+				break;
+			case 3:
+				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoSequencer.addEvent(driveRed);
+				AutoEventShoot shootNow2 = new AutoEventShoot();
+				AutoSequencer.addEvent(shootNow2);
 				break;
 				
 		}

@@ -6,7 +6,7 @@ import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
-public class AutoEventDriveForward extends AutoEvent {
+public class AutoEventMoveFromBlue extends AutoEvent {
 	PathPlannerAutoEvent driveForward;
 	ShotControl shotCTRL;
 	
@@ -15,7 +15,7 @@ public class AutoEventDriveForward extends AutoEvent {
 		{0,9,0}
 	};
 	private static final double time = 10;
-	public AutoEventDriveForward(DriveTrainWheelSpeedPI frontLeftAutonCtrl,DriveTrainWheelSpeedPI frontRightAutonCtrl,
+	public AutoEventMoveFromBlue(DriveTrainWheelSpeedPI frontLeftAutonCtrl,DriveTrainWheelSpeedPI frontRightAutonCtrl,
 			DriveTrainWheelSpeedPI rearLeftAutonCtrl,DriveTrainWheelSpeedPI rearRightAutonCtrl) {
 		driveForward = new PathPlannerAutoEvent(waypoints,time,frontLeftAutonCtrl,frontRightAutonCtrl,rearLeftAutonCtrl,rearRightAutonCtrl);
 	}
