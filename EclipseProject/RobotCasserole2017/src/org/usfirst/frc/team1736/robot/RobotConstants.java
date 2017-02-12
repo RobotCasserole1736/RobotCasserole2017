@@ -177,7 +177,7 @@ public class RobotConstants {
 	public static final double GEAR_PAN_ANGLE = 180;
 	public static final double GEAR_TILT_ANGLE = 90; //Bigger tilt makes the camera look up
 	public static final double SHOOT_PAN_ANGLE = 90;
-	public static final double SHOOT_TILT_ANGLE = 15;
+	public static final double SHOOT_TILT_ANGLE = 50;
 	public static final double INTAKE_PAN_ANGLE = 0;
 	public static final double INTAKE_TILT_ANGLE = 100;
 	
