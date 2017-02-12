@@ -26,6 +26,10 @@ public class OperatorController extends Xbox360Controller {
 	
 	private static OperatorController controller = null;
 	
+	//Operator shooter command interpretation variables
+	boolean pev_State;
+	
+	
 	public static synchronized OperatorController getInstance()
 	{
 		if(controller == null)
@@ -65,6 +69,64 @@ public class OperatorController extends Xbox360Controller {
 	public boolean getHopperRevOverride()
 	{
 		return BackButton();
+	}
+	
+	/**
+	 * Do everything needed to update the operator control states.
+	 * Must be called every loop.
+	 */
+	public void update(){
+		 
+		boolean rising_edge;
+		boolean falling_edge;
+		
+		if( Y()){
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
+		}
+		
+		if(A()){
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.NO_SHOOT);	
+		}
+		
+		if(RB()==true & pev_State==false){
+			rising_edge=true;	
+		} else{
+			rising_edge=false;
+		}
+		
+		if(RB()==false & pev_State==true){
+			falling_edge=true;	
+		}
+		else{
+			falling_edge=false;
+		}	
+		
+		
+		if(rising_edge==true){
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
+		} else if(falling_edge==true){
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
+		}
+		
+		pev_State = RB();
+		
+		
+
+		
+		/*LED color Selections*/
+		if(DPadDown()){
+			LEDSequencer.getInstance().setNoneDesiredPattern();
+		} else if(DPadUp()){
+			LEDSequencer.getInstance().setBothDesiredPattern();
+		} else if(DPadLeft()){
+			LEDSequencer.getInstance().setGearDesiredPattern();
+		} else if(DPadRight()){
+			LEDSequencer.getInstance().setFuelDesiredPattern();
+		}
+		
+
+		
+		
 	}
 
 }

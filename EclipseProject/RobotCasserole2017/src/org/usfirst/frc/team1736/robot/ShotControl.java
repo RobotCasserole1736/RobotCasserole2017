@@ -27,11 +27,11 @@ public class ShotControl {
 	Calibration wheel_Set_Point_rpm;
 	private HopperControl.HopperStates hopperFeedCmd = HopperControl.HopperStates.HOPPER_OFF;
 	private ShooterWheelCtrl wheelCtrl;
-	private ShooterStates desiredShooterState = ShooterStates.NO_Shoot;
+	private ShooterStates desiredShooterState = ShooterStates.NO_SHOOT;
 	
 	public enum ShooterStates 
 	{
-		NO_Shoot,PREP_TO_SHOOT,SHOOT;	
+		NO_SHOOT,PREP_TO_SHOOT,SHOOT;	
 	}
 	
 	public static synchronized ShotControl getInstance()
@@ -50,7 +50,7 @@ public class ShotControl {
 
 		 
 	 public void update(){
-		  if(ShooterStates.NO_Shoot == desiredShooterState){
+		  if(ShooterStates.NO_SHOOT == desiredShooterState){
 			  //Operator requests everything turned off.
 			  hopperFeedCmd=HopperControl.HopperStates.HOPPER_OFF;
 			  wheelCtrl.setShooterDesiredRPM(0);

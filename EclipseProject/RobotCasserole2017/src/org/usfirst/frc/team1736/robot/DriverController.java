@@ -106,5 +106,51 @@ public class DriverController extends Xbox360Controller {
 	{
 		return RB();
 	}
+	
+	public void update(){
+
+		updateAirCompEnabled();
+		PneumaticsSupply.getInstance().setCompressorEnabled(getAirCompEnableCmd());
+		
+		//Update Gyro angle
+		int angle = Gyro.getInstance().getAngleOffset();
+		if(getGyroReset())
+		{
+			angle = 0;
+		}
+		else if(getGyroReset90())
+		{
+			angle = 90;
+		}
+		else if(getGyroReset180())
+		{
+			angle = 180;
+		}
+		else if(getGyroReset270())
+		{
+			angle = 270;
+		}
+
+		/* Alternate gyro angle update key idea
+		 * If decide to try comment out if else above
+		 * And update DriverController
+		 * 
+		 if(DPadUp())
+		 {
+			 angle += 90;
+			 if (angle >= 360){
+				 angle = 0;
+			 }
+		 } else if(DPadDown())
+		 {
+			 angle -= 90;
+			 if (angle < 0){
+				 angle = 270;
+			 }
+		 }
+		  */
+		Gyro.getInstance().setAngleOffset(angle);
+		
+	}
 
 }

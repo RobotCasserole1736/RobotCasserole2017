@@ -31,6 +31,7 @@ import org.usfirst.frc.team1736.lib.LEDs.DesktopTestLEDs;
 import org.usfirst.frc.team1736.lib.LEDs.DotStarsLEDStrip;
 
 public class LEDSequencer {
+	private static LEDSequencer seqLocal = null;
 	
 	private volatile LEDSwitchCase cur_pattern;
 	
@@ -45,16 +46,21 @@ public class LEDSequencer {
 	static CasseroleLEDInterface ledstrip; //interface so that we can swap between desktop and robot 
 	Timer timerThread;
 	
-	public final int NUM_LEDS_TOTAL = 52;
-	
 	double loop_counter;
 	
-	public LEDSequencer(){
+	public static LEDSequencer getInstance(){
+		if(seqLocal == null){
+			seqLocal = new LEDSequencer();
+		}
+		return seqLocal;
+	}
+	
+	private LEDSequencer(){
 		
 		if(desktop_sim){
-			ledstrip = new DesktopTestLEDs(NUM_LEDS_TOTAL);
+			ledstrip = new DesktopTestLEDs(RobotConstants.NUM_LEDS_TOTAL);
 		} else {
-			ledstrip = new DotStarsLEDStrip(NUM_LEDS_TOTAL);
+			ledstrip = new DotStarsLEDStrip(RobotConstants.NUM_LEDS_TOTAL);
 		}
 		
 		cur_pattern = LEDSwitchCase.OFF;
@@ -159,9 +165,9 @@ public class LEDSequencer {
 	@SuppressWarnings("unused")
 	private void testPattern(){
 		ledstrip.clearColorBuffer();
-		ledstrip.setLEDColor(((int)loop_counter+0) % NUM_LEDS_TOTAL, 1, 0, 0);
-		ledstrip.setLEDColor(((int)loop_counter+1) % NUM_LEDS_TOTAL, 0, 1, 0);
-		ledstrip.setLEDColor(((int)loop_counter+2) % NUM_LEDS_TOTAL, 0, 0, 1);
+		ledstrip.setLEDColor(((int)loop_counter+0) % RobotConstants.NUM_LEDS_TOTAL, 1, 0, 0);
+		ledstrip.setLEDColor(((int)loop_counter+1) % RobotConstants.NUM_LEDS_TOTAL, 0, 1, 0);
+		ledstrip.setLEDColor(((int)loop_counter+2) % RobotConstants.NUM_LEDS_TOTAL, 0, 0, 1);
 	}
 	
 	//shift through all colors
@@ -169,7 +175,7 @@ public class LEDSequencer {
 	private void smoothRainbowCycle(){
 		final double period = 200; //Bigger makes it change color slower
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
 			double hue   = Math.abs((loop_counter)%period - period/2)/(period/2);
 			ledstrip.setLEDColorHSL(led_idx, hue, 1, 0.5);
 		}
@@ -180,7 +186,7 @@ public class LEDSequencer {
 	private void smoothRedWhiteCycle(){
 		final double period = 200; //Bigger makes it change color slower
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
 			double lightness   = Math.abs((loop_counter)%period - period/2)/(period/2);
 			ledstrip.setLEDColorHSL(led_idx, 0, 1, lightness);
 		}
@@ -195,7 +201,7 @@ public class LEDSequencer {
 		final double period = 5.0; //bigger means slower cycle
 		final double edgeSharpness = 1.0; //bigger means less blurred edges between stripe colors
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
 			double not_red_comp = Math.min(1, Math.max(0, (0.5+edgeSharpness*Math.sin((led_idx/width + loop_counter/period)))));
 			ledstrip.setLEDColor(led_idx, 1, not_red_comp, not_red_comp);
 
@@ -207,7 +213,7 @@ public class LEDSequencer {
 	private void sparkleWhite(){
 		final double density = 0.05; //0 means never on, 1 means always on
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
 			double rand = Math.random();
 			if(rand < density){
 				ledstrip.setLEDColor(led_idx, 1, 1, 1);
@@ -223,7 +229,7 @@ public class LEDSequencer {
 	private void sparkleRedWhite(){
 		final double density = 0.1; //0 means never on, 1 means always on
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
 			double rand = Math.random();
 			if(rand < density){
 				if(rand < density/2){
@@ -243,7 +249,7 @@ public class LEDSequencer {
 	private void sparkleRainbow(){
 		final double density = 0.2; //0 means never on, 1 means always on
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
 			double rand = Math.random();
 			if(rand < density){
 				ledstrip.setLEDColorHSL(led_idx, rand/density, 1, 0.5);
@@ -261,12 +267,12 @@ public class LEDSequencer {
 		final double width = 2.0; //bigger means wider on-width
 		final int period = 50; //bigger means slower cycle
 		
-		double midpoint = (double)(Math.abs(((loop_counter)%period) - period/2))/((double)(period/2.0))*(NUM_LEDS_TOTAL/2.0); 
+		double midpoint = (double)(Math.abs(((loop_counter)%period) - period/2))/((double)(period/2.0))*(RobotConstants.NUM_LEDS_TOTAL/2.0); 
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL/2; led_idx++ ){
 			double red_val = Math.max(0, Math.min(1.0, 1-(0.15*Math.pow((midpoint-led_idx),2))));
 			ledstrip.setLEDColor(led_idx, red_val, 0, 0);
-			ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, red_val, 0, 0);
+			ledstrip.setLEDColor(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, red_val, 0, 0);
 
 		}
 	}
@@ -280,16 +286,16 @@ public class LEDSequencer {
 		
 		double red_val;
 		
-		double endpoint = (double)(((loop_counter)%period)/((double)period))*((NUM_LEDS_TOTAL+width*10)/2.0); 
+		double endpoint = (double)(((loop_counter)%period)/((double)period))*((RobotConstants.NUM_LEDS_TOTAL+width*10)/2.0); 
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL/2; led_idx++ ){
 			if(led_idx <= endpoint+2 ){
 				red_val = Math.max(0, Math.min(1.0, (1-(endpoint-led_idx)/width)));
 			} else {
 				red_val = 0;
 			}
 			ledstrip.setLEDColor(led_idx, red_val, 0, 0);
-			ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, red_val, 0, 0);
+			ledstrip.setLEDColor(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, red_val, 0, 0);
 
 		}
 	}
@@ -303,16 +309,16 @@ public class LEDSequencer {
 		
 		double val;
 		
-		double endpoint = (double)(((loop_counter)%period)/((double)period))*((NUM_LEDS_TOTAL+width*10)/2.0); 
+		double endpoint = (double)(((loop_counter)%period)/((double)period))*((RobotConstants.NUM_LEDS_TOTAL+width*10)/2.0); 
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL/2; led_idx++ ){
 			if(led_idx <= endpoint+2 ){
 				val = Math.max(0, Math.min(1.0, (1-(endpoint-led_idx)/width)));
 			} else {
 				val = 0;
 			}
 			ledstrip.setLEDColorHSL(led_idx, val, 1, (val*0.5)+0.25);
-			ledstrip.setLEDColorHSL(led_idx+NUM_LEDS_TOTAL/2, val, 1, (val*0.5)+0.25);
+			ledstrip.setLEDColorHSL(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, val, 1, (val*0.5)+0.25);
 
 		}
 	}
@@ -328,10 +334,10 @@ public class LEDSequencer {
 	private void bounce(){
 
 		//Super simple mostly-elastic colisison model
-		if(pos1 <= 0 | pos1 >= NUM_LEDS_TOTAL/2){
+		if(pos1 <= 0 | pos1 >= RobotConstants.NUM_LEDS_TOTAL/2){
 			vel1 = -vel1*0.95;
 		}
-		if(pos2 <= 0 | pos2 >= NUM_LEDS_TOTAL/2){
+		if(pos2 <= 0 | pos2 >= RobotConstants.NUM_LEDS_TOTAL/2){
 			vel2 = -vel2*0.95;
 		}
 		if(Math.abs(pos1-pos2) < Math.max(Math.abs(vel1), Math.abs(vel2))){ //collision
@@ -357,11 +363,11 @@ public class LEDSequencer {
 		pos2 += vel2;
 		
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL/2; led_idx++ ){
 			double val1 = Math.max(0, Math.min(1.0, 1-(0.75*Math.pow((pos1-led_idx),2))));
 			double val2 = Math.max(0, Math.min(1.0, 1-(0.75*Math.pow((pos2-led_idx),2))));
 			ledstrip.setLEDColor(led_idx, val1, 0, val2);
-			ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, val1, 0, val2);
+			ledstrip.setLEDColor(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, val1, 0, val2);
 
 		}
 	}
@@ -369,14 +375,14 @@ public class LEDSequencer {
 	private void gearSignal(){
 		final double period = 200; //Bigger makes it change color slower
 
-			for(int led_idx = 0; led_idx < (NUM_LEDS_TOTAL/2); led_idx++){
+			for(int led_idx = 0; led_idx < (RobotConstants.NUM_LEDS_TOTAL/2); led_idx++){
 				if((led_idx % 2*5) < 5){
 					ledstrip.setLEDColor(led_idx, .76,.91,.28);
-					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1, .76,.91,.28);
+					ledstrip.setLEDColor(RobotConstants.NUM_LEDS_TOTAL-(led_idx)-1, .76,.91,.28);
 				}
 				else{
 					ledstrip.setLEDColor(led_idx,.91,.2,.84);
-					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1,.91,.2,.84);
+					ledstrip.setLEDColor(RobotConstants.NUM_LEDS_TOTAL-(led_idx)-1,.91,.2,.84);
 				}
 			}
 		}
@@ -386,14 +392,14 @@ public class LEDSequencer {
 	private void fuelSignal(){
 		final double period = 200; //Bigger makes it change color slower
 
-			for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL; led_idx++){
+			for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++){
 				if((led_idx % (2*7)) < 7){
 					ledstrip.setLEDColor(led_idx, .89,.71,.06);
-					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1, .89,.71,.06);
+					ledstrip.setLEDColor(RobotConstants.NUM_LEDS_TOTAL-(led_idx)-1, .89,.71,.06);
 				}
 				else{
 					ledstrip.setLEDColor(led_idx,1,0,0);
-					ledstrip.setLEDColor(NUM_LEDS_TOTAL-(led_idx)-1,1,0,0);
+					ledstrip.setLEDColor(RobotConstants.NUM_LEDS_TOTAL-(led_idx)-1,1,0,0);
 				}
 			}
 		}
@@ -403,17 +409,17 @@ public class LEDSequencer {
 		final double width = 2.0; //bigger means wider on-width
 		final int period = 50; //bigger means slower cycle
 		
-		double midpoint = (double)(Math.abs(((loop_counter)%period) - period/2))/((double)(period/2.0))*(NUM_LEDS_TOTAL/2.0); 
+		double midpoint = (double)(Math.abs(((loop_counter)%period) - period/2))/((double)(period/2.0))*(RobotConstants.NUM_LEDS_TOTAL/2.0); 
 		
-		for(int led_idx = 0; led_idx < NUM_LEDS_TOTAL/2; led_idx++ ){
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL/2; led_idx++ ){
 			if((led_idx % (2*1)) < 1){
 			double red_val = Math.max(0, Math.min(1.0, 1-(0.15*Math.pow((midpoint-led_idx),2))));
 			ledstrip.setLEDColor(led_idx, red_val, 0, 0);
-			ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, red_val, 0, 0);
+			ledstrip.setLEDColor(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, red_val, 0, 0);
 			}
 			else{
 				ledstrip.setLEDColor(led_idx, 0, 0.7, 0);
-				ledstrip.setLEDColor(led_idx+NUM_LEDS_TOTAL/2, 0, 0.7, 0);
+				ledstrip.setLEDColor(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, 0, 0.7, 0);
 			}
 		}
 		
@@ -435,7 +441,7 @@ public class LEDSequencer {
 	}
 	
 	public void setNoneDesiredPattern(){
-		cur_pattern = LEDSwitchCase.BOUNCE;
+		cur_pattern = LEDSwitchCase.CAPN;
 	}
 	
 	public void setAutonPattern(){

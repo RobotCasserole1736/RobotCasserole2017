@@ -42,17 +42,6 @@ public class CameraServoMount {
 	//Startup conditions
 	private static final CamPos startupPos = CamPos.SHOOT;
 	
-	//Position constants (in degrees)
-	//Bigger tilt makes the camera look up
-	private static final double GEAR_PAN_ANGLE = 180;
-	private static final double GEAR_TILT_ANGLE = 30;
-	
-	private static final double SHOOT_PAN_ANGLE = 90;
-	private static final double SHOOT_TILT_ANGLE = 30;
-	
-	private static final double INTAKE_PAN_ANGLE = 0;
-	private static final double INTAKE_TILT_ANGLE = 0;
-	
 
 	
 	//Servo objects for mount servos
@@ -102,16 +91,16 @@ public class CameraServoMount {
 		
 		switch(in){
 		case INTAKE:
-			cur_pan_angle =  INTAKE_PAN_ANGLE;
-			cur_tilt_angle = INTAKE_TILT_ANGLE;
+			cur_pan_angle =  RobotConstants.INTAKE_PAN_ANGLE;
+			cur_tilt_angle = RobotConstants.INTAKE_TILT_ANGLE;
 			break;			
 		case SHOOT:
-			cur_pan_angle =  SHOOT_PAN_ANGLE;
-			cur_tilt_angle = SHOOT_TILT_ANGLE;
+			cur_pan_angle =  RobotConstants.SHOOT_PAN_ANGLE;
+			cur_tilt_angle = RobotConstants.SHOOT_TILT_ANGLE;
 			break;
 		case GEAR:
-			cur_pan_angle =  GEAR_PAN_ANGLE;
-			cur_tilt_angle = GEAR_TILT_ANGLE;
+			cur_pan_angle =  RobotConstants.GEAR_PAN_ANGLE;
+			cur_tilt_angle = RobotConstants.GEAR_TILT_ANGLE;
 			break;
 		default:
 			System.out.println("Warning - commanded camera position " + in.name() + " is not recognized!");

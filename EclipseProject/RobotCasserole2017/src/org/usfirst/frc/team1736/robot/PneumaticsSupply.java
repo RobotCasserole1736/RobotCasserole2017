@@ -24,33 +24,43 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 
 public class PneumaticsSupply {
+	private static PneumaticsSupply localPS = null;
 	Compressor comp;
 	
 	private boolean enabled;
 	
-	private static AnalogInput psensor;
+	private static AnalogInput storagePressureSensor;
 	
-	public PneumaticsSupply(){
-		comp = new Compressor();
+
+	public static PneumaticsSupply getInstance() {
+		if(localPS == null){
+			localPS = new PneumaticsSupply();
+		}
+		return localPS;
+	}
+
+	
+	private PneumaticsSupply(){
+		comp = new Compressor(RobotConstants.PCM_CAN_DEVICE_ID);
 		comp.setClosedLoopControl(true); //ensure we are running by default
 		enabled = true;
 		
-		psensor = new AnalogInput(RobotConstants.AIR_PRESSURE_SENSOR_PORT);
+		storagePressureSensor = new AnalogInput(RobotConstants.AIR_PRESSURE_SENSOR_PORT);
 	}
 	
 	/**
 	 * 
 	 * @return System unregulated pressure in psi
 	 */
-	public double getPress(){
-		return ((psensor.getVoltage()/5.0)-0.1)*150.0/0.8;
+	public double getStoragePress(){
+		return ((storagePressureSensor.getVoltage()/5.0)-0.1)*150.0/0.8;
 	}
 	
 	/**\
 	 * 
 	 * @return Compressor current draw in amps
 	 */
-	public double getCompCurrent(){
+	public double getCompressorCurrent(){
 		return comp.getCompressorCurrent();
 	}
 	
@@ -70,7 +80,7 @@ public class PneumaticsSupply {
 	 * 
 	 * @return true if compressor is enabled to run, false if disabled.
 	 */
-	public boolean isEnabled(){
+	public boolean compressorIsEnabled(){
 		return enabled;
 	}
 
