@@ -33,6 +33,8 @@ public class RobotConstants {
 	public static final String DRIVER_CAMERA_URL = "http://10.17.36.8/mjpg/video.mjpg";
 	public static final double EXPECTED_NETWORK_LATENCY_SEC = ((0.345+0.275)*0.5)/1000.0; //An educated guess, based off of measurements with "ping"
 	
+	
+	
 	///////////////////////////////////////////////////////////////////////////
 	// Electrical IO Map
 	///////////////////////////////////////////////////////////////////////////
@@ -62,6 +64,8 @@ public class RobotConstants {
 
 	//CAN Device ID's
 	public static final int SHOOTER_CAN_TALON_DEVICE_ID = 0;
+	public static final int PDP_CAN_DEVICE_ID = 0;
+	public static final int PCM_CAN_DEVICE_ID = 0;
 	
 	//Encoder Input Ports
 	public static final int DRIVETRAIN_FRONT_LEFT_ENCODER_A = 2;
@@ -85,11 +89,11 @@ public class RobotConstants {
 	public static final int LED_RING_CONTROL_OUTPORT = 8;
 	
 	
-	///////////////////////////////////////////////////////////////////////////
-	// Physical Constants
-	///////////////////////////////////////////////////////////////////////////
-	//Camera & Vision Properties
 	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Vision Proc Camera & Vision Properties
+	///////////////////////////////////////////////////////////////////////////
 	/*
 	//Axis M1013
 	public static final int VISION_X_PIXELS = 800;
@@ -117,29 +121,64 @@ public class RobotConstants {
 	
 	
 	
-	//Drivetrain
+	///////////////////////////////////////////////////////////////////////////
+	// Drivetrain Physical
+	///////////////////////////////////////////////////////////////////////////
 	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0; //2048 cycles per revolution (encoder libraries handle 4x decoding
 	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
 
-	//Playing Field (Real)
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// High Goal Vision Target
+	///////////////////////////////////////////////////////////////////////////
+	//Real
 	//public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 7.0 + (2.0/12.0); //7 ft 2 inches, per game manual 
 	//private final double TGT_WIDTH_FT = 1.0 + (3.0/12.0); //1 ft 3 in, per game manual
 	
-	//Playing Field (Test 1/3 size Target)
+	//Test 1/3 size Target
 	public static final double HIGH_GOAL_VISION_TARGET_HEIGHT_FT = 4; //Where I happened to place it on Febrary 5th
 	public static final double TGT_WIDTH_FT = (6.0+5.0/16.0)/12.0; //SW test target (6 and 5/16ths inches)
 	
 	
-	//Pneumatics
-	public static final double SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI = 45.0;
 	
-	//Driver station indicators
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Driver View Warning Indicator Settings
+	///////////////////////////////////////////////////////////////////////////
+	public static final double SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI = 45.0;
 	public static final int VISION_ALIGN_NOT_ALLOWED_BLINK_PERIOD_MS = 200;
 	
-	//LEDs
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// LED Strips
+	///////////////////////////////////////////////////////////////////////////
 	public static final int NUM_LEDS_TOTAL = 52;
 	public static final Color CASSEROLE_RED    = new Color(255,0  ,0  ); //TBD from Zach
 	public static final Color CASSEROLE_WHITE  = new Color(255,255,255); //TBD from Zach
 	public static final Color CASSEROLE_YELLOW = new Color(255,200,50 ); //TBD from Zach
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Driver Camera gimbal mount position constants
+	///////////////////////////////////////////////////////////////////////////
+	
+	//Large Metal Mount 
+	/*
+	private static final double GEAR_PAN_ANGLE = 180;
+	private static final double GEAR_TILT_ANGLE = 30; //Bigger tilt makes the camera look up
+	private static final double SHOOT_PAN_ANGLE = 90;
+	private static final double SHOOT_TILT_ANGLE = 30;
+	private static final double INTAKE_PAN_ANGLE = 0;
+	private static final double INTAKE_TILT_ANGLE = 0;
+	*/
+	//Small 3d printed red mount
+	public static final double GEAR_PAN_ANGLE = 180;
+	public static final double GEAR_TILT_ANGLE = 90; //Bigger tilt makes the camera look up
+	public static final double SHOOT_PAN_ANGLE = 90;
+	public static final double SHOOT_TILT_ANGLE = 15;
+	public static final double INTAKE_PAN_ANGLE = 0;
+	public static final double INTAKE_TILT_ANGLE = 100;
 	
 }

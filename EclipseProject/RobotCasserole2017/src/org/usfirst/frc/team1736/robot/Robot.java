@@ -116,7 +116,7 @@ public class Robot extends IterativeRobot {
 	LEDSequencer LEDseq;
 	
 	//Compressor & Sensor system
-	PneumaticsSupply airCompressor;
+	PneumaticsSupply airSupplySystem;
 
 	//Autonomous Routines
 	Autonomous auto;
@@ -135,7 +135,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit(){
 		//Set up physical devices
 		driveTrain = DriveTrain.getInstance();
-		pdp = new PowerDistributionPanel();
+		pdp = new PowerDistributionPanel(RobotConstants.PDP_CAN_DEVICE_ID);
 		lowBatt = LowBatteryIndicator.getInstance();
 		lowBatt.setPDPReference(pdp);
 		gyro = Gyro.getInstance();
@@ -151,7 +151,7 @@ public class Robot extends IterativeRobot {
 		shooterWheelControl = ShooterWheelCtrl.getInstance();
 		climbControl = ClimberControl.getInstance();
 		intakeControl = IntakeControl.getInstance();
-		airCompressor = new PneumaticsSupply();
+		airSupplySystem = new PneumaticsSupply();
 
 		camGimbal = new CameraServoMount();
 		
@@ -488,8 +488,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getRotateCmd", visionAlignCTRL);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","getVisionAlignmentOnTarget", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
-		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airCompressor);
-		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airCompressor);
+		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getPress", airSupplySystem);
+		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompCurrent", airSupplySystem);
 		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","get", gearSolenoid);
 		CsvLogger.addLoggingFieldBoolean("Battery_Dead", "bit", "isBatteryDead", lowBatt);
 		CsvLogger.preCacheAllMethods();
@@ -525,13 +525,13 @@ public class Robot extends IterativeRobot {
 	public void updateDriverView(){
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", poseCalc.getNetSpeedFtPerS());
 		CasseroleDriverView.setDialValue("Shooter Speed RPM", shooterWheelControl.getShooterActualVelocityRPM());
-		CasseroleDriverView.setDialValue("AirPressure Psi", airCompressor.getPress());
+		CasseroleDriverView.setDialValue("AirPressure Psi", airSupplySystem.getStoragePress());
 		CasseroleDriverView.setBoolean("Vision Offline", !visionProc.isOnline());
 		CasseroleDriverView.setBoolean("Target in View", visionProc.getTarget().isTargetFound() && visionProc.isOnline());
 		CasseroleDriverView.setBoolean("Vision Aligning", visionAlignCTRL.getVisionAlignState() == 1.0);
 		CasseroleDriverView.setBoolean("Shooter Spoolup", (shooterWheelControl.getShooterDesiredRPM() > 100) && !(shooterWheelControl.getShooterVelocityOK()));
-		CasseroleDriverView.setBoolean("System Pressure Low", (airCompressor.getPress() < RobotConstants.SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI));
-		CasseroleDriverView.setBoolean("Cmprsr Disabled", !airCompressor.isEnabled());
+		CasseroleDriverView.setBoolean("System Pressure Low", (airSupplySystem.getStoragePress() < RobotConstants.SYS_AIR_PRESSURE_CRITICAL_THRESH_PSI));
+		CasseroleDriverView.setBoolean("Cmprsr Disabled", !airSupplySystem.compressorIsEnabled());
 		CasseroleDriverView.setBoolean("Gyro Offline", !gyro.isOnline());
 		CasseroleDriverView.setBoolean("Low Battery", lowBatt.isBatteryDead());
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
@@ -644,7 +644,7 @@ public class Robot extends IterativeRobot {
 		
 		
 		driverCTRL.updateAirCompEnabled();
-		airCompressor.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
+		airSupplySystem.setCompressorEnabled(driverCTRL.getAirCompEnableCmd());
 		
 		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
 		
