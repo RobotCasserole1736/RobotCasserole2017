@@ -85,7 +85,7 @@ public class OperatorController extends Xbox360Controller {
 		}
 		
 		if(A()){
-			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.NO_Shoot);	
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.NO_SHOOT);	
 		}
 		
 		if(RB()==true & pev_State==false){

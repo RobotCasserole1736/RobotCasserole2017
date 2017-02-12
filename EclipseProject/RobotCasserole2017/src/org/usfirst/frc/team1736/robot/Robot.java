@@ -27,6 +27,7 @@ import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
+import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -191,6 +192,9 @@ public class Robot extends IterativeRobot {
 		//Close out any log which is running
 		CsvLogger.close();
 		autoAlignNotPossibleDVIndState = false;
+		
+		//Ensure we turn everything off
+		setZeroState();
 	}
 	
 	/**
@@ -420,6 +424,14 @@ public class Robot extends IterativeRobot {
 	///////////////////////////////////////////////////////////////////
 	// Utility MethodsS
 	///////////////////////////////////////////////////////////////////
+	
+	//Ensures all outputs of the robot are zeroed when going into disabled.
+	public void setZeroState(){
+		ShotControl.getInstance().setDesiredShooterState(ShooterStates.NO_SHOOT);
+		auto.stop();
+		//and that's all??
+		
+	}
 	
 	//Sets up all the logged channels of data. Should be called once before opening any logs
 	public void initLoggingChannels(){

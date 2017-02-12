@@ -32,7 +32,7 @@ public class AutoEventDriveForward extends AutoEvent {
 	public void userForceStop() {
 		driveForward.userForceStop();
 		shotCTRL = ShotControl.getInstance();
-		shotCTRL.setDesiredShooterState(ShooterStates.NO_Shoot);
+		shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
 
 	}
 
