@@ -3,7 +3,6 @@ package org.usfirst.frc.team1736.lib.LEDs;
 import java.util.Arrays;
 import java.util.TimerTask;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
 
 
 /*

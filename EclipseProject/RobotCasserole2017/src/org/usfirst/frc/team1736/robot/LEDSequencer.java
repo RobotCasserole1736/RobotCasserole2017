@@ -373,7 +373,6 @@ public class LEDSequencer {
 	}
 	
 	private void gearSignal(){
-		final double period = 200; //Bigger makes it change color slower
 
 			for(int led_idx = 0; led_idx < (RobotConstants.NUM_LEDS_TOTAL/2); led_idx++){
 				if((led_idx % 2*5) < 5){
@@ -390,7 +389,6 @@ public class LEDSequencer {
 	
 	
 	private void fuelSignal(){
-		final double period = 200; //Bigger makes it change color slower
 
 			for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++){
 				if((led_idx % (2*7)) < 7){
@@ -406,7 +404,6 @@ public class LEDSequencer {
 	
 	private void capnjack(){
 		
-		final double width = 2.0; //bigger means wider on-width
 		final int period = 50; //bigger means slower cycle
 		
 		double midpoint = (double)(Math.abs(((loop_counter)%period) - period/2))/((double)(period/2.0))*(RobotConstants.NUM_LEDS_TOTAL/2.0); 

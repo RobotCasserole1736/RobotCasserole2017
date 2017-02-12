@@ -39,7 +39,7 @@ public class VisionAlignment {
 	private double angleTol = 1.0;
 	private double distTol = 0.5;
 	private double angleTolHyst = 0.025;//get within half a degree lined up
-	private double distTolHyst = 0.025; //get within one foot lined up
+	//private double distTolHyst = 0.025; 
 	private double distanceDesiredLastFrame = 0;
 	private double distanceLastFrame = 0;
 	private double gyroAngleDesiredLastFrame = 0;
