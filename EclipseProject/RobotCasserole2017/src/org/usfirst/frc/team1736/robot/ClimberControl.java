@@ -99,6 +99,12 @@ public class ClimberControl {
 	 * before resetting flag.
 	 */
 	private void evalCurrentDraw(){
+		//Guard against potential develompent errors.
+		if(pdp_ref == null){
+			System.out.println("WARNING - Software team has made a mistake! Tell them! They did not call setPDPReference from climber at the right time.");
+			return;
+		}
+		
 		if(Math.abs(pdp_ref.getCurrent(RobotConstants.CLIMBER_MOTOR1_PDP_CH)) > RobotConstants.CLIMBER_MOTOR_MAX_ALLOWABLE_CURRENT_A ||
 		   Math.abs(pdp_ref.getCurrent(RobotConstants.CLIMBER_MOTOR2_PDP_CH)) > RobotConstants.CLIMBER_MOTOR_MAX_ALLOWABLE_CURRENT_A){
 			climbCurrentTooHigh = true;

@@ -148,6 +148,7 @@ public class Robot extends IterativeRobot {
 		hopControl = HopperControl.getInstance();
 		shooterWheelControl = ShooterWheelCtrl.getInstance();
 		climbControl = ClimberControl.getInstance();
+		climbControl.setPDPReference(pdp);
 		intakeControl = IntakeControl.getInstance();
 		airSupplySystem = PneumaticsSupply.getInstance();
 
