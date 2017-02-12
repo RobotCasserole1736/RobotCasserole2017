@@ -99,7 +99,7 @@ public class ShooterWheelCtrl {
 	
 	
 	public void update(){
-		shooterTalon.set(desiredVelocity); // set what speed the wheel should be running at 
+		shooterTalon.setSetpoint(desiredVelocity);// set what speed the wheel should be running at 
 		actualVelocity = shooterTalon.getSpeed();
 		motorCmd = shooterTalon.get();
 		double Error = Math.abs(desiredVelocity - actualVelocity);
