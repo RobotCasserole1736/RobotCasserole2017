@@ -127,7 +127,11 @@ public class RobotConstants {
 	public static final double DRIVETRAIN_WHEELS_REV_PER_TICK = 1.0/2048.0; //2048 cycles per revolution (encoder libraries handle 4x decoding
 	public static final double DRIVETRAIN_WHEELS_RADIUS_FT= 4.0/2.0/12.0; //4 inch diameter wheel, converted to radius in feet
 
-	
+	///////////////////////////////////////////////////////////////////////////
+	// Climber
+	///////////////////////////////////////////////////////////////////////////
+	public static final double CLIMBER_MOTOR_MAX_ALLOWABLE_CURRENT_A = 80.0;
+	public static final int CLIMBER_MOTOR_EXCESS_CURRENT_DBNC_LOOPS = 25;
 	
 	///////////////////////////////////////////////////////////////////////////
 	// High Goal Vision Target

@@ -52,11 +52,11 @@ public class ShooterWheelCtrl {
 	
 	private ShooterWheelCtrl(){
 		shooterTalon = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
-		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0);
-		Shooter_P_Gain = new Calibration("Shooter P Gain",0.001);
+		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",1.0/4000.0);
+		Shooter_P_Gain = new Calibration("Shooter P Gain",0.1/400.0);
 		Shooter_I_Gain = new Calibration("Shooter I Gain",0);
 		Shooter_D_Gain = new Calibration("Shooter D Gain",0);
-		ErrorRange = new Calibration("Shooter Error Limit RPM",10,10,1000);
+		ErrorRange = new Calibration("Shooter Error Limit RPM",100,10,1000);
 
 		shooterTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative); //Tells the SRX an encoder is attached to its input.
 		shooterTalon.setProfile(0); //Select slot 0 for PID gains

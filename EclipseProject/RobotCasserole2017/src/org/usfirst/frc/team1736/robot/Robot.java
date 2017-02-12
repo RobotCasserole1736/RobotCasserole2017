@@ -428,7 +428,9 @@ public class Robot extends IterativeRobot {
 	//Ensures all outputs of the robot are zeroed when going into disabled.
 	public void setZeroState(){
 		ShotControl.getInstance().setDesiredShooterState(ShooterStates.NO_SHOOT);
+		ShotControl.getInstance().update();
 		auto.stop();
+		auto.update();
 		//and that's all??
 		
 	}
@@ -474,7 +476,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Intake_Speed_Cmd","cmd","getCommandedIntakeSpeed", intakeControl);
 		CsvLogger.addLoggingFieldBoolean("Op_Intake_Desired","bit","getIntakeDesiredCmd", operatorCTRL);
 		CsvLogger.addLoggingFieldBoolean("Op_Eject_Desired","bit","getEjectDesiredCmd",operatorCTRL);
-		CsvLogger.addLoggingFieldDouble("Climb_Speed_Cmd","cmd","getClimbSpeedCmd", operatorCTRL);
+		CsvLogger.addLoggingFieldDouble("Op_Climb_Speed_Cmd","cmd","getClimbSpeedCmd", operatorCTRL);
+		CsvLogger.addLoggingFieldBoolean("Climber_Current_Limit","bit","isCurrentTooHigh", climbControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredRPM", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocityRPM", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd", shooterWheelControl);
@@ -526,6 +529,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("Gyro Offline", "red");
 		CasseroleDriverView.newBoolean("Low Battery", "yellow");
 		CasseroleDriverView.newBoolean("AutoAlign Not Possible!", "red");
+		CasseroleDriverView.newBoolean("Climber Current Too High", "red");
 		
 		CasseroleDriverView.newStringBox("Shot_Count");
 		CasseroleDriverView.newStringBox("Orientation Deg");
@@ -550,6 +554,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setBoolean("Gyro Offline", !gyro.isOnline());
 		CasseroleDriverView.setBoolean("Low Battery", lowBatt.isBatteryDead());
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
+		CasseroleDriverView.setBoolean("Climber Current Too High", climbControl.isCurrentTooHigh());
 		
 		CasseroleDriverView.setStringBox("Shot_Count", leftJustifyDouble(shotCount.getCurrCountLog()));
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
