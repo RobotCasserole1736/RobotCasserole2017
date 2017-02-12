@@ -72,11 +72,11 @@ public class ClimberControl {
 		if(climbCurrentTooHigh || !isClimbEnabled){
 			climb_speed = 0.0;
 		} else {
-			climb_speed = Math.abs(operatorClimbCmd); //Only allow climb in one direction
+			climb_speed = -Math.abs(operatorClimbCmd); //Only allow climb in one direction (must be negative)
 		}
 		
-		climbMotor1.set(Math.abs(climb_speed));
-		climbMotor2.set(Math.abs(climb_speed));
+		climbMotor1.set(climb_speed);
+		climbMotor2.set(climb_speed);
 	}
 	
 	public void setClimbEnabled(boolean isEnabled)
