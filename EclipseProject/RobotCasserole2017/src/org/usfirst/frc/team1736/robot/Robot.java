@@ -481,7 +481,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("Climber_Current_Limit","bit","isCurrentTooHigh", climbControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredRPM", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocityRPM", shooterWheelControl);
-		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Cmd","rpm","getShooterMotorCmd", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Voltage","rpm","getShooterMotorVoltage", shooterWheelControl);
 		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","getShooterVelocityOK", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shot_Counter", "count", "getCurrCountLog", shotCount);
 		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFLDriveMotorCmd", driveTrain);
@@ -584,7 +584,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Driver Strafe Cmd", driverCTRL.getStrafeCmd());
 		CassesroleWebStates.putDouble("Driver Rotate Cmd", driverCTRL.getRotateCmd());
 		CassesroleWebStates.putString("Op Shot Command", shotCTRL.getDesiredShooterState().toString());
-		CassesroleWebStates.putDouble("Shooter Wheel Command", shooterWheelControl.getShooterMotorCmd());
+		CassesroleWebStates.putDouble("Shooter Wheel Voltage", shooterWheelControl.getShooterMotorVoltage());
 		CassesroleWebStates.putDouble("Shooter Desired Speed (RPM)", shooterWheelControl.getShooterDesiredRPM());
 		CassesroleWebStates.putDouble("Shooter Actual Speed (RPM)", shooterWheelControl.getShooterActualVelocityRPM());
 		CassesroleWebStates.putBoolean("Shooter Speed OK", shooterWheelControl.getShooterVelocityOK());

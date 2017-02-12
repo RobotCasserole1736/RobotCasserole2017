@@ -39,7 +39,7 @@ public class ShooterWheelCtrl {
 	
 	private double desiredVelocity = 0;
 	private double actualVelocity = 0;
-	private double motorCmd = 0;
+	private double motorVoltage = 0;
 	private boolean isVelocityOk = false;
 	
 	
@@ -52,8 +52,8 @@ public class ShooterWheelCtrl {
 	
 	private ShooterWheelCtrl(){
 		shooterTalon = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
-		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",1.0/4000.0);
-		Shooter_P_Gain = new Calibration("Shooter P Gain",0.1/400.0);
+		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0.0269);
+		Shooter_P_Gain = new Calibration("Shooter P Gain",0.05);
 		Shooter_I_Gain = new Calibration("Shooter I Gain",0);
 		Shooter_D_Gain = new Calibration("Shooter D Gain",0);
 		ErrorRange = new Calibration("Shooter Error Limit RPM",100,10,1000);
@@ -66,7 +66,11 @@ public class ShooterWheelCtrl {
 		shooterTalon.setP(Shooter_P_Gain.get());
 		shooterTalon.setI(Shooter_I_Gain.get()); 
 		shooterTalon.setD(Shooter_D_Gain.get());
-
+		
+		shooterTalon.enableBrakeMode(true); //Brake when 0 commanded (to stop shooter as fast as possible)
+		shooterTalon.reverseOutput(false);
+		shooterTalon.reverseSensor(true);
+		shooterTalon.setIZone(100);
 	}
 	
 	/**
@@ -101,7 +105,7 @@ public class ShooterWheelCtrl {
 	public void update(){
 		shooterTalon.setSetpoint(desiredVelocity);// set what speed the wheel should be running at 
 		actualVelocity = shooterTalon.getSpeed();
-		motorCmd = shooterTalon.get();
+		motorVoltage = shooterTalon.getOutputVoltage();
 		double Error = Math.abs(desiredVelocity - actualVelocity);
 		if (Error > ErrorRange.get()){
 			isVelocityOk = false;
@@ -131,9 +135,9 @@ public class ShooterWheelCtrl {
 		return actualVelocity;
 	}
 	
-	public double getShooterMotorCmd()
+	public double getShooterMotorVoltage()
 	{
-		return motorCmd;
+		return motorVoltage;
 	}
 	
 	public double getOutputCurrent()
