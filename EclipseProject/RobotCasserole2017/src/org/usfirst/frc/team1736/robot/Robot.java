@@ -154,7 +154,7 @@ public class Robot extends IterativeRobot {
 		
 		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
 
-		auto = new Autonomous(driveTrain);
+		auto = new Autonomous();
 
 		
 

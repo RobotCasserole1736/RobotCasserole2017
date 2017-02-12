@@ -29,13 +29,12 @@ import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
 
 public class Autonomous {
 	Calibration autoMode;
-	DriveTrain driveTrain;
-	public Autonomous(DriveTrain driveTrain){
+	public Autonomous(){
 		autoMode = new Calibration("Auto Mode",0,0,5);
-		this.driveTrain = driveTrain;
 	}
 	
 	public void executeAutonomus(){
+		DriveTrain driveTrain = DriveTrain.getInstance();
 		int mode = (int) Math.round(autoMode.get());
 		switch(mode){
 			case 1: //drive forward across base line
