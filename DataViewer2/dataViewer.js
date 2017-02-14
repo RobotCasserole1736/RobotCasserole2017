@@ -1,11 +1,21 @@
 //dataViewer.js
 var global_chart;
 
-//this set of presets is specific to 2015 - update as needed!
-var presets = [["PDP_Voltage (V)", "PDP_Total_Current (A)"],
-               ["PDP_Total_Current (A)", "PDP_DT_FL_Current (A)",  "PDP_DT_FR_Current (A)",  "PDP_DT_RL_Current (A)",  "PDP_DT_RR_Current (A)", "Hopper_Motor_Current (A)", "Climber_Motor_Current (A)", "Intake_Motor_Current (A)", "Shooter_Motor_Current (A)"],
-			   ["Shooter_Motor_Current (A)", "Shooter_Desired_Velocity (rpm)", "Shooter_Actual_Velocity(rpm)", "Shooter_Motor_Cmd (rpm)", "Shooter_Velocity_OK (bit)"],
-			   ["PDP_DT_FL_Current (A)",  "PDP_DT_FR_Current (A)",  "PDP_DT_RL_Current (A)",  "PDP_DT_RR_Current (A)", "Driver_FwdRev_cmd (cmd)", "Driver_Strafe_cmd (cmd)", "Driver_Rotate_cmd (cmd)", "Driver_Vision_Align_Desired (bit)", "FL_Motor_Cmd (cmd)", "FR_Motor_Cmd (cmd)", "RL_Motor_Cmd (cmd)", "RR_Motor_Cmd (cmd)", "FL_Wheel_Velocity (rpm)", "FR_Wheel_Velocity (rpm)", "RL_Wheel_Velocity (rpm)", "RR_Wheel_Velocity (rpm)"]];
+//this set of presets is specific to 2017 - update as needed!
+var presets = [["PDP_Voltage (V)", "PDP_Total_Current (A)", "Brownout_Protection_Active (bit)", "Battery_Dead (bit)"],
+               ["PDP_Total_Current (A)", "PDP_DT_FL_Current (A)",  "PDP_DT_FR_Current (A)",  "PDP_DT_RL_Current (A)",  "PDP_DT_RR_Current (A)", "Hopper_Motor_Current (A)", "Climber_Motor1_Current (A)", "Climber_Motor2_Current (A)", "Intake_Motor_Current (A)", "Shooter_Motor_Current (A)"],
+			   ["Shooter_Motor_Current (A)", "Shooter_Desired_Velocity (rpm)", "Shooter_Actual_Velocity (rpm)", "Shooter_Motor_Cmd (rpm)", "Shooter_Velocity_OK (bit)"],
+               ["Robot_Pose_Angle (deg)", "Robot_Strafe_Vel (ft/sec)", "Robot_FwdRev_Vel (ft/sec)"],
+               ["Shot_State_Command (bits)", "Shooter_Velocity_OK (bit)", "Shooter_Actual_Velocity (rpm)", "Hopper_Motor_Current (A)", "Shot_Counter (count)"],
+			   ["Compressor_Current (A)", "Air_Pressure (psi)", "Gear_Solenoid_Cmd (bit)"],
+			   ["RIO_Loop_Time (msec)", "RIO_Cpu_Load (%)", "RIO_RAM_Usage (%)"],
+			   ["Vision_CoProc_FPS (frames/sec)", "Vision_CoProc_CPU_load (%)", "Vision_CoProc_Mem_load (%)"],
+			   ["Vision_Align_Possible (bit)", "Valid_Vision_Target_Found (bit)", "Vision_System_Online (bit)", "Vision_System_Online (bit)", "Vision_Target_Angle_From_Camera (deg)", "Vision_Target_Range (ft)"],
+			   ["Vision_DT_FwdRev_Cmd (cmd)", "Vision_DT_Rotate_Cmd (cmd)", "Vision_Align_On_Target (bit)", "Vision_Align_State (states)"],
+			   ["Vision_Target_Gyro_Actual_Angle_At_Frame (deg)", "Vision_Target_Gyro_Desired_Angle_At_Frame (deg)", "Robot_Pose_Angle (deg)"],
+               ["Vision_Target_Encoders_Actual_Distance_At_Frame (ft)", "Vision_Target_Encoders_Desired_Distance_At_Frame (ft)", "Robot_FwdRev_Dist (ft)"],
+			   ["FL_Actual_Wheel_Velocity (rpm)", "FR_Actual_Wheel_Velocity (rpm)", "RL_Actual_Wheel_Velocity (rpm)", "RR_Actual_Wheel_Velocity (rpm)", "FL_Desired_Wheel_Velocity (rpm)", "FR_Desired_Wheel_Velocity (rpm)", "RL_Desired_Wheel_Velocity (rpm)", "RR_Desired_Wheel_Velocity (rpm)"],
+			   ["Driver_FwdRev_cmd (cmd)", "Driver_Strafe_cmd (cmd)", "Driver_Rotate_cmd (cmd)", "Driver_Vision_Align_Desired (bit)", "Robot_Strafe_Vel (ft/sec)", "Robot_FwdRev_Vel (ft/sec)"]];
 
 var dflt_options =  {    
 

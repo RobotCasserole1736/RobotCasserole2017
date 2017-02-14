@@ -461,10 +461,6 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Driver_Strafe_cmd","cmd","getStrafeCmd", driverCTRL);
 		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getRotateCmd", driverCTRL);
 		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","getVisionAlignmentDesired", visionAlignCTRL);
-//		CsvLogger.addLoggingFieldDouble("Auton_DT_FL_Desired_Velocity","RPM","getAutonDtfrontLeftWheelVelocityCmd_rpm", RobotState.class);
-//		CsvLogger.addLoggingFieldDouble("Auton_DT_FR_Desired_Velocity","RPM","getAutonDtfrontRightWheelVelocityCmd_rpm", RobotState.class);
-//		CsvLogger.addLoggingFieldDouble("Auton_DT_RL_Desired_Velocity","RPM","getAutonDtrearLeftWheelVelocityCmd_rpm", RobotState.class);
-//		CsvLogger.addLoggingFieldDouble("Auton_DT_RR_Desired_Velocity","RPM","getAutonDtrearRightWheelVelocityCmd_rpm", RobotState.class);
 		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",driveTrain);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getFwdRevVelFtPerS", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getStrafeVelFtPerS", poseCalc);
@@ -501,6 +497,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getTargetOffsetDegrees", visionProc.getTarget());
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Actual_Angle_At_Frame","deg","getGyroAngleAtLastFrame", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Desired_Angle_At_Frame","deg","getGyroAngleDesiredAtLastFrame", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Encoder_Actual_Distance_At_Frame","ft","getDistanceAtLastFrame", visionAlignCTRL);
+		CsvLogger.addLoggingFieldDouble("Vision_Target_Encoder_Desired_Distance_At_Frame","ft","getDistanceDesiredAtLastFrame", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getEstTargetDistanceFt", visionProc.getTarget());
 		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getVisionProcessTimeMs",visionProc);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getCoProcessorFPS", visionProc);
@@ -509,7 +507,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_Possible","bit","getVisionAlignmentPossible", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getFwdRevCmd", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getRotateCmd", visionAlignCTRL);
-		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","cmd","getVisionAlignmentOnTarget", visionAlignCTRL);
+		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","bit","getVisionAlignmentOnTarget", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getStoragePress", airSupplySystem);
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompressorCurrent", airSupplySystem);
