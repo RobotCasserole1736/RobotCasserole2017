@@ -106,8 +106,8 @@ public class Robot extends IterativeRobot {
 	
 	boolean autoAlignNotPossibleDVIndState;
 	
-	//Gear control subsystem (kinda mashed in here just cuz we're lazy)
-	Solenoid gearSolenoid;
+	//Gear control subsystem
+	GearControl gearControl;
 	
 	
 	//LED's 
@@ -154,7 +154,7 @@ public class Robot extends IterativeRobot {
 
 		camGimbal = new CameraServoMount();
 		
-		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
+		gearControl = GearControl.getInstance();
 
 		auto = new Autonomous();
 
@@ -365,7 +365,7 @@ public class Robot extends IterativeRobot {
 		driverCTRL.update();
 		
 		//Update whether the gear solenoid is open or closed
-		gearSolenoidUpdate();
+		gearControl.update();
 		
 		//Update our estimations of how the robot is moving right now
 		poseCalc.update();
@@ -513,7 +513,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Air_Pressure", "psi", "getStoragePress", airSupplySystem);
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompressorCurrent", airSupplySystem);
-		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","get", gearSolenoid);
+		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","isSolenoidOpen", gearControl);
 		CsvLogger.addLoggingFieldBoolean("Battery_Dead", "bit", "isBatteryDead", lowBatt);
 		CsvLogger.preCacheAllMethods();
 	}
@@ -594,7 +594,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putBoolean("Shooter Speed OK", shooterWheelControl.getShooterVelocityOK());
 		CassesroleWebStates.putDouble("Shot_Count", shotCount.getCurrCountLog());
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   hopControl.getHopperMotorCmd());
-		CassesroleWebStates.putBoolean("Gear Release Solenoid Cmd", gearSolenoid.get());
+		CassesroleWebStates.putBoolean("Gear Release Solenoid Cmd", gearControl.isSolenoidOpen());
 		CassesroleWebStates.putDouble("Intake Speed Cmd",   intakeControl.getCommandedIntakeSpeed());
 		CassesroleWebStates.putDouble("Climb Speed Cmd",   operatorCTRL.getClimbSpeedCmd());
 		CassesroleWebStates.putDouble("Robot FwdRev Velocity (ft per sec)",   poseCalc.getFwdRevVelFtPerS());
@@ -636,9 +636,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Cal Time Std Dev (s)", visionDelayCal.getPrevCalStdDev());
 	}
 		
-	 void gearSolenoidUpdate(){
-		gearSolenoid.set(operatorCTRL.getGearSolenoidCmd());
-	 }
 	 
 	 void checkAlignAllowed(){
 		//Set the rumble on if the driver is attempting to align

@@ -22,9 +22,12 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoSequencer;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
+import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayFromLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventCrossBaseLine;
+import org.usfirst.frc.team1736.robot.auto.AutoEventDriveToCenterLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromBlue;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
+import org.usfirst.frc.team1736.robot.auto.AutoEventOpenGearMechanism;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
 
 public class Autonomous {
@@ -54,7 +57,14 @@ public class Autonomous {
 				AutoEventShoot shootNow2 = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow2);
 				break;
-				
+			case 4: //put a gear on the center lift
+				AutoEventDriveToCenterLift gearDeliver = new AutoEventDriveToCenterLift(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoSequencer.addEvent(gearDeliver);
+				AutoEventOpenGearMechanism openGear = new AutoEventOpenGearMechanism();
+				AutoSequencer.addEvent(openGear);
+				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoSequencer.addEvent(backAway);
+				break;
 		}
 		AutoSequencer.start();
 		
