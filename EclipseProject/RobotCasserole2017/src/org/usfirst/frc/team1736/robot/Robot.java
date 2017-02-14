@@ -189,6 +189,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		//Make disabled LEDs a random pattern
+		LEDseq.pickRandomPattern();
 		
 		//Close out any log which is running
 		CsvLogger.close();
@@ -221,8 +223,6 @@ public class Robot extends IterativeRobot {
 		shooterWheelControl.updateGains();
 		driveTrain.updateAllCals();
 		visionAlignCTRL.updateGains();
-		
-		LEDseq.setDisabledPattern();
 		
 		updateDriverView();
 		updateWebStates();

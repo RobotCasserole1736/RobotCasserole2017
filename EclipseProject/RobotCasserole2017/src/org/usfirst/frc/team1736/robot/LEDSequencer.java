@@ -39,7 +39,7 @@ public class LEDSequencer {
 
 
 	public enum LEDSwitchCase {
-		OFF, SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN, TEST
+		OFF, SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN, TEST, SMOOTH_GREEN, SMOOTH_BLUE, BLUE_GREEN_SWEEP
 	}
 	
 	
@@ -134,7 +134,18 @@ public class LEDSequencer {
 		case CAPN:
 			capnjack();
 			break;
-		
+			
+		case SMOOTH_GREEN:
+			smoothGreenCycle();
+			break;
+			
+		case BLUE_GREEN_SWEEP:
+			smoothBlueGreenSweep();
+			break;
+			
+		case SMOOTH_BLUE:
+			smoothBlueCycle();
+			break;
 
 		}
 		
@@ -151,6 +162,9 @@ public class LEDSequencer {
 		//gearSignal();
 		//fuelSignal();
 		//capnjack();
+		//smoothGreenCycle();
+		//smoothBlueGreenSweep();
+		//smoothBlueCycle();
 		
 		loop_counter++;
 	}
@@ -304,7 +318,7 @@ public class LEDSequencer {
 	@SuppressWarnings("unused")
 	private void cometRainbow(){
 		
-		final double width = 15.0; //bigger means wider on-width
+		final double width = 5.0; //bigger means wider on-width
 		final int period = 30; //bigger means slower cycle
 		
 		double val;
@@ -320,6 +334,24 @@ public class LEDSequencer {
 			ledstrip.setLEDColorHSL(led_idx, val, 1, (val*0.5)+0.25);
 			ledstrip.setLEDColorHSL(led_idx+RobotConstants.NUM_LEDS_TOTAL/2, val, 1, (val*0.5)+0.25);
 
+		}
+	}
+	
+	private void smoothGreenCycle(){
+		final double period = 54; //Bigger makes it change color slower
+		
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
+			double greeness   = Math.abs((loop_counter)%period - period/2)/(period/2);
+			ledstrip.setLEDColor(led_idx, 0, greeness, 0);
+		}
+	}
+	
+	private void smoothBlueCycle(){
+		final double period = 54; //Bigger makes it change color slower
+		
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
+			double blueness   = Math.abs((loop_counter)%period - period/2)/(period/2);
+			ledstrip.setLEDColor(led_idx, 0, 0, blueness);
 		}
 	}
 	
@@ -421,34 +453,51 @@ public class LEDSequencer {
 		}
 		
 	}
+	
+	private void smoothBlueGreenSweep(){
+		
+		final double width = 1.0; //bigger means wider color strips
+		final double period = 4.0; //bigger means slower cycle
+		final double edgeSharpness = 1.0; //bigger means less blurred edges between stripe colors
+		
+		for(int led_idx = 0; led_idx < RobotConstants.NUM_LEDS_TOTAL; led_idx++ ){
+			double not_green_comp = Math.min(1, Math.max(0, (0.3+edgeSharpness*Math.sin((led_idx/width + loop_counter/period)))));
+			ledstrip.setLEDColor(led_idx, 0.1, 1, not_green_comp);
+
+		}
+	}
 
 	public void setGearDesiredPattern(){
-		cur_pattern = LEDSwitchCase.BOUNCE;
+		cur_pattern = LEDSwitchCase.SMOOTH_GREEN;
 		return;
 	}
 	
 	public void setFuelDesiredPattern(){
-		cur_pattern = LEDSwitchCase.SMOOTH_RAINBOW;
+		cur_pattern = LEDSwitchCase.SMOOTH_BLUE;
 		return;
 	}
 	
 	public void setBothDesiredPattern(){
-		cur_pattern = LEDSwitchCase.COMET_RAIN;
+		cur_pattern = LEDSwitchCase.BLUE_GREEN_SWEEP;
 		return;
 	}
 	
 	public void setNoneDesiredPattern(){
-		cur_pattern = LEDSwitchCase.CAPN;
+		cur_pattern = LEDSwitchCase.COMET_RAIN;
 	}
 	
 	public void setAutonPattern(){
-		cur_pattern = LEDSwitchCase.SPARKLE_RAIN;
+		cur_pattern = LEDSwitchCase.SPARKLE_RED_WHITE;
 		return;
 	}
 	
 	public void setDisabledPattern(){
-		cur_pattern = LEDSwitchCase.SMOOTH_SWEEP;
+		cur_pattern = LEDSwitchCase.BLUE_GREEN_SWEEP;
 		return;
+	}
+	
+	public void pickRandomPattern(){
+		cur_pattern = LEDSwitchCase.values()[(int)(Math.random()*((double)(LEDSwitchCase.values().length)))];
 	}
 
 
@@ -482,6 +531,8 @@ public class LEDSequencer {
 	@SuppressWarnings("unused")
 	public static void main(String[] args){
 		LEDSequencer seq = new LEDSequencer();
+		
+		seq.setDisabledPattern();
 		
 		JFrame frame = new JFrame("LED Test");
 		frame.setSize(850, 200);
