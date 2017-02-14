@@ -127,8 +127,9 @@ public class PathPlannerAutoEvent extends AutoEvent {
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+		path.calculate(time_duration_s, taskRate,trackWidth,trackLength);
+        timestep = 0;
+        pathCalculated = true;
 	}
 
 

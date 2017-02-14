@@ -62,6 +62,7 @@ public class AutoSequencer {
 
         if (events.size() > 0) {
             activeEvent = events.get(globalEventIndex);
+            activeEvent.userStart();
         }
     }
 
@@ -96,6 +97,7 @@ public class AutoSequencer {
             } else {
                 // update the active event.
                 activeEvent = events.get(globalEventIndex);
+                activeEvent.userStart();
             }
 
             // Update the active event. This will probably set motors or stuff like that.

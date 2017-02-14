@@ -42,8 +42,7 @@ public class AutoEventCrossBaseLine extends AutoEvent {
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+		driveForward.userStart();
 	}
 	
 }

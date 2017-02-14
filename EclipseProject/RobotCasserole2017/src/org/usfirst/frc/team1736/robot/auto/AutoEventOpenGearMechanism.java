@@ -9,8 +9,6 @@ public class AutoEventOpenGearMechanism extends AutoEvent {
 	Timer timer;
 	public AutoEventOpenGearMechanism(){
 		timer = new Timer();
-		timer.start();
-		GearControl.getInstance().openGearSolenoid();
 	}
 	
 	@Override
@@ -38,8 +36,8 @@ public class AutoEventOpenGearMechanism extends AutoEvent {
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+		timer.start();
+		GearControl.getInstance().openGearSolenoid();
 	}
 	
 	

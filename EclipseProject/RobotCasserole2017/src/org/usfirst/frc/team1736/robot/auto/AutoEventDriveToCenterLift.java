@@ -36,8 +36,7 @@ public class AutoEventDriveToCenterLift extends AutoEvent{
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+		driveSideways.userStart();
 	}
 	
 }
