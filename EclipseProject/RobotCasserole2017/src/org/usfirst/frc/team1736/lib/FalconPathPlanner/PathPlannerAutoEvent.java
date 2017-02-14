@@ -22,6 +22,7 @@ package org.usfirst.frc.team1736.lib.FalconPathPlanner;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.CasserolePID.CasserolePID;
+import org.usfirst.frc.team1736.robot.DriveTrain;
 
 /**
  * Interface into the Casserole autonomous sequencer for a path-planned traversal. Simply wraps
@@ -82,10 +83,17 @@ public class PathPlannerAutoEvent extends AutoEvent {
             timestep = 0;
             pathCalculated = true;
         }
-        leftFrontMotor.setSetpoint(path.smoothLeftFrontVelocity[timestep][1]);
-        rightFrontMotor.setSetpoint(path.smoothRightFrontVelocity[timestep][1]);
-        leftRearMotor.setSetpoint(path.smoothLeftRearVelocity[timestep][1]);
-        rightRearMotor.setSetpoint(path.smoothRightRearVelocity[timestep][1]);
+        leftFrontMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothLeftFrontVelocity[timestep][1]));
+        rightFrontMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothRightFrontVelocity[timestep][1]));
+        leftRearMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothLeftRearVelocity[timestep][1]));
+        rightRearMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothRightRearVelocity[timestep][1]));
+        //PID Tune
+        //leftFrontMotor.setSetpoint(0);
+        //rightFrontMotor.setSetpoint(500);
+        //leftRearMotor.setSetpoint(0);
+        //rightRearMotor.setSetpoint(0);
+        
+        
         timestep++;
     }
 

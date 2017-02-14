@@ -35,7 +35,8 @@ public class Autonomous {
 	
 	public void executeAutonomus(){
 		DriveTrain driveTrain = DriveTrain.getInstance();
-		int mode = (int) Math.round(autoMode.get());
+		//int mode = (int) Math.round(autoMode.get());
+		int mode = 1;
 		switch(mode){
 			case 1: //drive forward across base line
 				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());

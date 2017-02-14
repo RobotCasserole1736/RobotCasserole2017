@@ -24,7 +24,7 @@ public class AutoEventCrossBaseLine extends AutoEvent {
 	public void userUpdate() {
 		driveForward.userUpdate();
 		shotCTRL = ShotControl.getInstance();
-		shotCTRL.setDesiredShooterState(ShooterStates.PREP_TO_SHOOT);
+		//shotCTRL.setDesiredShooterState(ShooterStates.PREP_TO_SHOOT);
 
 	}
 
@@ -32,7 +32,7 @@ public class AutoEventCrossBaseLine extends AutoEvent {
 	public void userForceStop() {
 		driveForward.userForceStop();
 		shotCTRL = ShotControl.getInstance();
-		shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
+		//shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
 
 	}
 

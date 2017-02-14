@@ -82,8 +82,8 @@ public class DriveTrain{
 		
 		//Set up calibratable values
 		fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
-		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.0);
-		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.0005);
+		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.1/100.0);
+		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 1.0/800.0);
 		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0);
 		
 		//set up encoders
@@ -105,6 +105,12 @@ public class DriveTrain{
 		frontRightAutonCtrl = new DriveTrainWheelSpeedPI(frontRightMotor, frontRightEncoder, dtFGainCal, dtPGainCal, dtIGainCal);
 		rearLeftAutonCtrl = new DriveTrainWheelSpeedPI(rearLeftMotor,   rearLeftEncoder,   dtFGainCal, dtPGainCal, dtIGainCal);
 		rearRightAutonCtrl = new DriveTrainWheelSpeedPI(rearRightMotor,  rearRightEncoder,  dtFGainCal, dtPGainCal, dtIGainCal);
+		
+		//Invert controls on proper motors
+		frontRightAutonCtrl.setOutputInverted(true);
+		frontRightAutonCtrl.setSensorInverted(true);
+		rearLeftAutonCtrl.setOutputInverted(true);
+		rearLeftAutonCtrl.setSensorInverted(true);
 		
 		runningClosedLoop = false;
 	}
@@ -265,6 +271,26 @@ public class DriveTrain{
 		return rearRightEncoder.getRate()*60.0;
 	}
 	
+	public double getFrontLeftDesiredWheelSpeedRPM()
+	{
+		return frontLeftAutonCtrl.getSetpoint();
+	}
+	
+	public double getFrontRightDesiredWheelSpeedRPM()
+	{
+		return frontRightAutonCtrl.getSetpoint();
+	}
+	
+	public double getRearLeftDesiredWheelSpeedRPM()
+	{
+		return rearLeftAutonCtrl.getSetpoint();
+	}
+	
+	public double getRearRightDesiredWheelSpeedRPM()
+	{
+		return rearRightAutonCtrl.getSetpoint();
+	}
+	
 	public double getFrontLeftWheelDistanceFt()
 	{
 		return frontLeftEncoder.getDistance()*2.0*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT;
@@ -288,5 +314,9 @@ public class DriveTrain{
 	public void disableSafety()
 	{
 		myDrive.setSafetyEnabled(false);
+	}
+	
+	public static double FtPerSec_to_RPM(double ft_per_sec_in){
+		return ft_per_sec_in * 60.0 / (2*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT);
 	}
 }

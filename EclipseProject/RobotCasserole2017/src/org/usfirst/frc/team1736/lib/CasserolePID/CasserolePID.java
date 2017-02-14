@@ -85,6 +85,8 @@ public abstract class CasserolePID {
     protected boolean useErrForDerivTerm; // If true, derivative term is calculated using the error
                                           // signal. Otherwise, use the "actual" value from the PID
                                           // system.
+    protected boolean invertOutput = false; // If true, we will use the opposite sign at the output.
+    protected boolean invertActual = false; // If true, we will use the opposite sign when reading the input.
 
     // Things for doing math
     DerivativeCalculator dTermDeriv;
@@ -212,6 +214,23 @@ public abstract class CasserolePID {
     public void setSetpoint(double setpoint_in) {
         setpoint = setpoint_in;
     }
+    
+    
+    /**
+     * Sets the control effort to be inverted from the normal calculation
+     * @param inv
+     */
+    public void setOutputInverted(boolean inv){
+    	invertOutput = inv;
+    }
+    
+    /**
+     * Sets the sensor input (actual) to be inverted in the normal calculation
+     * @param inv
+     */
+    public void setSensorInverted(boolean inv){
+    	invertActual = inv;
+    }
 
 
     /**
@@ -242,6 +261,11 @@ public abstract class CasserolePID {
     // The big kahuna. This is where the magic happens.
     protected void periodicUpdate() {
         double curInput = returnPIDInput();
+        
+        if(invertActual){
+        	curInput = -1.0 * curInput;
+        }
+        
         double curOutput = 0.0;
         double curSetpoint = setpoint; // latch the setpoint at start of loop
         double curError = curSetpoint - curInput;
@@ -285,6 +309,10 @@ public abstract class CasserolePID {
         }
 
 
+        if(invertOutput){
+        	curOutput = curOutput * -1.0;
+        }
+        
         // Assign output
         if (curOutput > outputMax) {
             usePIDOutput(outputMax);
