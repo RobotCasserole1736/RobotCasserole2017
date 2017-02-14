@@ -32,48 +32,49 @@ import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
 
 public class Autonomous {
 	Calibration autoMode;
+	
 	public Autonomous(){
 		autoMode = new Calibration("Auto Mode",0,0,5);
 	}
 	
 	public void executeAutonomus(){
-		DriveTrain driveTrain = DriveTrain.getInstance();
 		//int mode = (int) Math.round(autoMode.get());
 		int mode = 1;
 		switch(mode){
 			case 1: //drive forward across base line
-				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine();
 				AutoSequencer.addEvent(driveForward);
 				break;
 			case 2:
-				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue();
 				AutoSequencer.addEvent(driveBlue);
 				AutoEventShoot shootNow = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow);
 				break;
 			case 3:
-				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed();
 				AutoSequencer.addEvent(driveRed);
 				AutoEventShoot shootNow2 = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow2);
 				break;
 			case 4: //put a gear on the center lift
-				AutoEventDriveToCenterLift gearDeliver = new AutoEventDriveToCenterLift(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoEventDriveToCenterLift gearDeliver = new AutoEventDriveToCenterLift();
 				AutoSequencer.addEvent(gearDeliver);
 				AutoEventOpenGearMechanism openGear = new AutoEventOpenGearMechanism();
 				AutoSequencer.addEvent(openGear);
-				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift(driveTrain.getFrontLeftCTRL(),driveTrain.getFrontRightCTRL(),driveTrain.getRearLeftCTRL(),driveTrain.getRearRightCTRL());
+				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
 				AutoSequencer.addEvent(backAway);
+				break;
+			default: //Do nothing
 				break;
 		}
 		AutoSequencer.start();
-		
-		
 	}
 	
 	public void update(){
 		AutoSequencer.update();
 	}
+	
 	public void stop(){
 		AutoSequencer.stop();
 	}

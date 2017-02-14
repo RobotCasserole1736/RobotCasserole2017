@@ -2,6 +2,7 @@ package org.usfirst.frc.team1736.robot.auto;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
+import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
@@ -15,9 +16,10 @@ public class AutoEventMoveFromBlue extends AutoEvent {
 		{0,9,0}
 	};
 	private static final double time = 10;
-	public AutoEventMoveFromBlue(DriveTrainWheelSpeedPI frontLeftAutonCtrl,DriveTrainWheelSpeedPI frontRightAutonCtrl,
-			DriveTrainWheelSpeedPI rearLeftAutonCtrl,DriveTrainWheelSpeedPI rearRightAutonCtrl) {
-		driveForward = new PathPlannerAutoEvent(waypoints,time,frontLeftAutonCtrl,frontRightAutonCtrl,rearLeftAutonCtrl,rearRightAutonCtrl);
+	public AutoEventMoveFromBlue() {
+		driveForward = new PathPlannerAutoEvent(waypoints,time,
+				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
+				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
 	}
 
 	@Override
@@ -48,8 +50,7 @@ public class AutoEventMoveFromBlue extends AutoEvent {
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+		driveForward.userStart();
 	}
 	
 }

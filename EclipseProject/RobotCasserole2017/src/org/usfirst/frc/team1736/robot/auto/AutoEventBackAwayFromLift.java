@@ -2,6 +2,7 @@ package org.usfirst.frc.team1736.robot.auto;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
+import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
 public class AutoEventBackAwayFromLift extends AutoEvent{
@@ -13,9 +14,10 @@ public class AutoEventBackAwayFromLift extends AutoEvent{
 	}	;
 	
 	private static final double time = 3;
-	public AutoEventBackAwayFromLift(DriveTrainWheelSpeedPI frontLeftAutonCtrl,DriveTrainWheelSpeedPI frontRightAutonCtrl,
-			DriveTrainWheelSpeedPI rearLeftAutonCtrl,DriveTrainWheelSpeedPI rearRightAutonCtrl) {
-		driveSideways = new PathPlannerAutoEvent(waypoints,time,frontLeftAutonCtrl,frontRightAutonCtrl,rearLeftAutonCtrl,rearRightAutonCtrl);
+	public AutoEventBackAwayFromLift() {
+		driveSideways = new PathPlannerAutoEvent(waypoints,time,
+				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
+				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
 	}
 	
 	public void userForceStop() {
@@ -36,8 +38,7 @@ public class AutoEventBackAwayFromLift extends AutoEvent{
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+		driveSideways.userStart();		
 	}
 	
 }
