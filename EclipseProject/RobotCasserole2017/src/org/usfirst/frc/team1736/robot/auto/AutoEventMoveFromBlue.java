@@ -45,5 +45,11 @@ public class AutoEventMoveFromBlue extends AutoEvent {
 	public boolean isDone() {
 		return driveForward.isDone();
 	}
+
+	@Override
+	public void userStart() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

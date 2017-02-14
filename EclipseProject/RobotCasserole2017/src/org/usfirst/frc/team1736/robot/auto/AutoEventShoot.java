@@ -42,4 +42,10 @@ public class AutoEventShoot extends AutoEvent {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public void userStart() {
+		// TODO Auto-generated method stub
+		
+	}
 }

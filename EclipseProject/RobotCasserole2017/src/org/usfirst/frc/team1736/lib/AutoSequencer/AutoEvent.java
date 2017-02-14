@@ -99,6 +99,9 @@ public abstract class AutoEvent {
         userUpdate();
         localUpdateCount++;
     }
+    
+    /** perform all actions needed at the start of the event*/
+    public abstract void userStart();
 
 
     /** Perform all actions needed during periodic update for this event */
