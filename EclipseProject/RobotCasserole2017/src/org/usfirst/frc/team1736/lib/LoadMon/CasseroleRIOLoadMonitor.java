@@ -175,6 +175,11 @@ public class CasseroleRIOLoadMonitor {
 			double deltaSystemTime = curSystemTime - prevSystemTime;
 			double deltaIdleTime = curIdleTime - prevIdleTime;
 			
+			prevUserTime = curUserTime;
+			prevNicedTime = curNicedTime;
+			prevSystemTime = curSystemTime;
+			prevIdleTime = curIdleTime;
+			
 			//Add up totals
 			double totalInUseTime = (deltaUserTime + deltaNicedTime + deltaSystemTime);
 			double totalTime = totalInUseTime + deltaIdleTime;
