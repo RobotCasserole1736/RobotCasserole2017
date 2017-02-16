@@ -50,6 +50,11 @@ import edu.wpi.first.wpilibj.Timer;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	
+	///////////////////////////////////////////////////////////////////
+	// Development Switches
+	///////////////////////////////////////////////////////////////////
+	public final boolean DISPLAY_VISION_PROC_CAM_IN_DS = true;
 
 	
 	///////////////////////////////////////////////////////////////////
@@ -555,7 +560,9 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newStringBox("Vision Range Ft");
 		CasseroleDriverView.newStringBox("Vision Angle Deg");
 		CasseroleDriverView.newStringBox("Auton. Routine");
-		CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
+		if(DISPLAY_VISION_PROC_CAM_IN_DS){
+			CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
+		}
 		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 50, 50, 0);
 
 	}
@@ -579,10 +586,12 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
 		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
-		CasseroleDriverView.setStringBox("Auton. Routine", "None"); // temp
-		CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
-												(visionProc.getTarget().getTopTargetXPixelPos()/RobotConstants.VISION_X_PIXELS) * 100.0, 
-												(visionProc.getTarget().getTopTargetYPixelPos()/RobotConstants.VISION_Y_PIXELS) * 100.0);
+		CasseroleDriverView.setStringBox("Auton. Routine", auto.autoModeName);
+		if(DISPLAY_VISION_PROC_CAM_IN_DS){
+			CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
+													(visionProc.getTarget().getTopTargetXPixelPos()/RobotConstants.VISION_X_PIXELS) * 100.0, 
+													(visionProc.getTarget().getTopTargetYPixelPos()/RobotConstants.VISION_Y_PIXELS) * 100.0);
+		}
 	}
 	
 	private String leftJustifyDouble(double input){

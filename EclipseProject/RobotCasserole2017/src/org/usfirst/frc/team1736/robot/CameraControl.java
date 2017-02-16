@@ -19,8 +19,8 @@ public class CameraControl {
 		visionProcCam.setResolution(RobotConstants.VISION_X_PIXELS, RobotConstants.VISION_Y_PIXELS);
 		visionProcCam.setExposureManual(5);
 		visionProcCam.setWhiteBalanceManual(9000);
-		MjpegServer visionCamServer = new MjpegServer("VisionProcCamServer", 1181);
-		visionCamServer.setSource(visionProcCam);
+		MjpegServer visionCamServerHighRes = new MjpegServer("VisionProcCamServer", 1181);
+		visionCamServerHighRes.setSource(visionProcCam);
 		
 		//Start Driver Camera
 		UsbCamera DriverCam = new UsbCamera("VisionProcCam", 1);

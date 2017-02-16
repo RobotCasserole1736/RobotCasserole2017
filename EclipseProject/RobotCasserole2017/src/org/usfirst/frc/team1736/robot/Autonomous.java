@@ -33,6 +33,8 @@ import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
 public class Autonomous {
 	Calibration autoMode;
 	
+	String autoModeName = "Not Initalized";
+	
 	public Autonomous(){
 		autoMode = new Calibration("Auto Mode",0,0,5);
 	}
@@ -44,18 +46,21 @@ public class Autonomous {
 			case 1: //drive forward across base line
 				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine();
 				AutoSequencer.addEvent(driveForward);
+				autoModeName = "Cross Baseline";
 				break;
 			case 2:
 				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue();
 				AutoSequencer.addEvent(driveBlue);
 				AutoEventShoot shootNow = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow);
+				autoModeName = "Align and Shoot Blue";
 				break;
 			case 3:
 				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed();
 				AutoSequencer.addEvent(driveRed);
 				AutoEventShoot shootNow2 = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow2);
+				autoModeName = "Align and Shoot Red";
 				break;
 			case 4: //put a gear on the center lift
 				AutoEventDriveToCenterLift gearDeliver = new AutoEventDriveToCenterLift();
@@ -64,8 +69,10 @@ public class Autonomous {
 				AutoSequencer.addEvent(openGear);
 				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
 				AutoSequencer.addEvent(backAway);
+				autoModeName = "Gear";
 				break;
 			default: //Do nothing
+				autoModeName = "Do Nothing";
 				break;
 		}
 		AutoSequencer.start();
