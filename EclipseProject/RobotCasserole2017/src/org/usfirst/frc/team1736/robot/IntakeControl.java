@@ -34,7 +34,8 @@ public class IntakeControl {
 	Spark intakeMotor = new Spark(RobotConstants.INTAKE_MOTOR_PWM_PORT);
 	
 	//Declare Extender Control
-	Solenoid intakeExtend = new Solenoid(RobotConstants.INTAKE_EXTEND_SOLENOID_PORT);
+	Solenoid intakeHPExtend = new Solenoid(RobotConstants.INTAKE_HP_EXTEND_SOLENOID_PORT);
+	Solenoid intakeLPExtend = new Solenoid(RobotConstants.INTAKE_HP_EXTEND_SOLENOID_PORT);
 	
 	//Declaring Intake Calibration
 	Calibration intakeMotorFwdCmd = new Calibration("Ground Pickup Intake Motor Command", 0.5, 0.0, 1.0);
@@ -56,8 +57,8 @@ public class IntakeControl {
 		//Init Motor to off
 		intakeMotor.set(0.0);
 		
-		//Init Extender to retracted
-		intakeExtend.set(true);
+		//Init Extender to extended (by default)
+		IntakeExtend();
 	}
 	
 	public void update(){
@@ -73,7 +74,13 @@ public class IntakeControl {
 	}
 	
 	public void IntakeExtend(){
-		intakeExtend.set(true);
+		intakeHPExtend.set(true);
+		intakeLPExtend.set(true);
+	}
+	
+	public void IntakeRetract(){
+		intakeHPExtend.set(false);
+		intakeLPExtend.set(false);
 	}
 	
 	public double getCommandedIntakeSpeed()
