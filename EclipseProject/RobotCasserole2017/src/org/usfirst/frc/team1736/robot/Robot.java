@@ -238,6 +238,9 @@ public class Robot extends IterativeRobot {
 		//Update any calibration which is running
 		visionDelayCal.update();
 		
+		//Update autonomous selection
+		auto.updateAutoSelection();
+		
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterWheelControl.updateGains();
 		driveTrain.updateAllCals();
@@ -281,6 +284,8 @@ public class Robot extends IterativeRobot {
 		//Open a new log
 		CsvLogger.init();
 		
+		//Update autonomous selection and start
+		auto.updateAutoSelection();
 		auto.executeAutonomus();
 
 	}

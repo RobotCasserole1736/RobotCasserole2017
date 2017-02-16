@@ -35,32 +35,53 @@ public class Autonomous {
 	
 	String autoModeName = "Not Initalized";
 	
+	int mode;
+	
 	public Autonomous(){
 		autoMode = new Calibration("Auto Mode",0,0,5);
 	}
 	
+	public void updateAutoSelection(){
+		mode = (int) Math.round(autoMode.get());
+		
+		//The following must be aligned to the below selection
+		switch(mode){
+		case 1: //drive forward across base line
+			autoModeName = "Cross Baseline";
+			break;
+		case 2:
+			autoModeName = "Align and Shoot Blue";
+			break;
+		case 3:
+			autoModeName = "Align and Shoot Red";
+			break;
+		case 4: //put a gear on the center lift
+			autoModeName = "Gear";
+			break;
+		default: //Do nothing
+			autoModeName = "Do Nothing";
+			break;
+	}
+	}
+	
 	public void executeAutonomus(){
-		//int mode = (int) Math.round(autoMode.get());
-		int mode = 1;
+		
 		switch(mode){
 			case 1: //drive forward across base line
 				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine();
 				AutoSequencer.addEvent(driveForward);
-				autoModeName = "Cross Baseline";
 				break;
 			case 2:
 				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue();
 				AutoSequencer.addEvent(driveBlue);
 				AutoEventShoot shootNow = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow);
-				autoModeName = "Align and Shoot Blue";
 				break;
 			case 3:
 				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed();
 				AutoSequencer.addEvent(driveRed);
 				AutoEventShoot shootNow2 = new AutoEventShoot();
 				AutoSequencer.addEvent(shootNow2);
-				autoModeName = "Align and Shoot Red";
 				break;
 			case 4: //put a gear on the center lift
 				AutoEventDriveToCenterLift gearDeliver = new AutoEventDriveToCenterLift();
@@ -69,10 +90,8 @@ public class Autonomous {
 				AutoSequencer.addEvent(openGear);
 				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
 				AutoSequencer.addEvent(backAway);
-				autoModeName = "Gear";
 				break;
 			default: //Do nothing
-				autoModeName = "Do Nothing";
 				break;
 		}
 		AutoSequencer.start();
