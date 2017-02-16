@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1736.robot;
 
 
+import org.opencv.core.Mat;
+
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -29,10 +31,14 @@ import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
 
@@ -122,6 +128,8 @@ public class Robot extends IterativeRobot {
 	//Driver Station (info about the match)
 	DriverStation ds;
 	
+	CameraControl camCTRL;
+	
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
 	///////////////////////////////////////////////////////////////////
@@ -181,6 +189,12 @@ public class Robot extends IterativeRobot {
 		
 		//Load any saved calibration values (must be last to ensure all calibrations have been initialized first)
 		CalWrangler.loadCalValues();
+		
+		camCTRL = new CameraControl();
+
+		
+
+
 		
 	}
 	
@@ -347,6 +361,8 @@ public class Robot extends IterativeRobot {
 		
 		driveTrain.resetAllIntegrators();
 		
+		LEDseq.setNoneDesiredPattern();
+		
 		//Open a new log
 		CsvLogger.init();
 	}	
@@ -359,6 +375,9 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//Initialize Timer
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
+		
+		
+		camCTRL.sampleVisionProcImg();
 		
 		//Get all inputs from outside the robot
 		operatorCTRL.update();

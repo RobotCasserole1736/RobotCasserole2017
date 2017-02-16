@@ -17,10 +17,13 @@ import pyMjpgStreamer
 #Config Data
 ################################################################################
 
-#Fixed IP address of IP Camera
-camera_IP = '10.17.36.10'
+#Fixed IP address of IP Camera (Axis)
+#camera_url = 'http://10.17.36.10/mjpg/video.mjpg'
 
-#Set to true to configure for USB, false for IP camera
+#Fixed IP address of MJPG Stream from RIO (USB Camera Streamed)
+camera_url = 'http://roborio-1736-frc.local:1181/stream.mjpg'
+
+#Set to true to configure for USB, false for IP camera (mjpg stream)
 USE_USB_CAM=False
 
 
@@ -140,7 +143,6 @@ def readMjpgStream():
         #Open data stream from IP camera
         # Robust connect should hopefullyprevent race conditions between the camera
         # booting and this software attemptting to connect to it.
-        camera_url = 'http://'+camera_IP+'/mjpg/video.mjpg'
         readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
         readMjpgStream.bytes = ''
 
@@ -192,19 +194,20 @@ def img_process(img):
         x, y, w, h = cv2.boundingRect(c)
         curObservation.addTarget(x, y, 0, w, h) #area unused for now.
     """
-    if(USE_USB_CAM == False):    
-        #Axis M1013 tunings.... kinda... it doesn't work too well.
-        #hsv_thres_lower = np.array([29,32, 71])
-        #hsv_thres_upper = np.array([131,255,255])
-        
-        #Axis M1011 tunings. This camera works better.
-        hsv_thres_lower = np.array([37,128, 67])
-        hsv_thres_upper = np.array([92,255,255])
-    else:
-        #Microsoft Lifecam values
-        hsv_thres_lower = np.array([31,172,163])
-        hsv_thres_upper = np.array([97,255,255])
+   
+    #Axis M1013 tunings.... kinda... it doesn't work too well.
+    #hsv_thres_lower = np.array([29,32, 71])
+    #hsv_thres_upper = np.array([131,255,255])
     
+    #Axis M1011 tunings. This camera works better.
+    #hsv_thres_lower = np.array([37,128, 67])
+    #hsv_thres_upper = np.array([92,255,255])
+
+    #Microsoft Lifecam values. For best results, stream from RIO.
+    # Presumes roboRIO settings
+    hsv_thres_lower = np.array([31,128,30])
+    hsv_thres_upper = np.array([97,255,229])
+
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hsv_mask = cv2.inRange(hsv, hsv_thres_lower, hsv_thres_upper)

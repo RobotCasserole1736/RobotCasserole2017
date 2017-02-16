@@ -95,28 +95,37 @@ public class RobotConstants {
 	// Vision Proc Camera & Vision Properties
 	///////////////////////////////////////////////////////////////////////////
 	/*
-	//Axis M1013
+	//Axis M1013. Not-so-good COTS IP Camera
 	public static final int VISION_X_PIXELS = 800;
 	public static final int VISION_Y_PIXELS = 600;
 	public static final double CAMERA_FOV_X_DEG = 67; 
 	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.10/mjpg/video.mjpg";
 	*/
 	
-	
-	//Axis M1011
+	/*
+	//Axis M1011. Best COTS IP camera
 	public static final int VISION_X_PIXELS = 640;
 	public static final int VISION_Y_PIXELS = 480;
 	public static final double CAMERA_FOV_X_DEG = 48; 
 	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.10/mjpg/video.mjpg";
+	*/
 	
 	
 	/*
-	//Microsoft Lifecam
+	//Microsoft Lifecam (attached to BBB). Poor solution.
 	public static final int VISION_X_PIXELS = 800;
 	public static final int VISION_Y_PIXELS = 600;
 	public static final double CAMERA_FOV_X_DEG = 61; 
 	public static final String VISION_PROC_CAMERA_URL = "http://10.17.36.9:8080/cam.mjpg";
 	*/
+	
+	
+	//Microsoft Lifecam (attached to RIO) Appears to be the best solution? Maybe?
+	public static final int VISION_X_PIXELS = 1280;
+	public static final int VISION_Y_PIXELS = 720;
+	public static final double CAMERA_FOV_X_DEG = 61; 
+	public static final String VISION_PROC_CAMERA_URL = "http://roborio-1736-frc.local:1181/stream.mjpg";
+	
 	
 	
 	
