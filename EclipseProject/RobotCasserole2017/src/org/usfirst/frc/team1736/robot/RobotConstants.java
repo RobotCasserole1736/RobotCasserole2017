@@ -79,7 +79,8 @@ public class RobotConstants {
 	
 	//Solenoid Ports
 	public static final int GEAR_SOLENOID_PORT = 1; 
-	public static final int INTAKE_EXTEND_SOLENOID_PORT = 2;
+	public static final int INTAKE_HP_EXTEND_SOLENOID_PORT = 2;
+	public static final int INTAKE_LP_EXTEND_SOLENOID_PORT = 3;
 	//public static final int SW_TEST_BOARD_SOLENOID_PORT = 4; 
 	
 	//Analog Inputs
