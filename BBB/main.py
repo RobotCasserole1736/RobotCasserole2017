@@ -101,13 +101,13 @@ def millis():
 #  On all stream reads, be sure to catch issues reading (usually timeouts) and perhaps
 #  attempt to reconnect if needed.
 def robust_url_connect(url):
+    indicateLEDsNotRunning()
     local_stream = None
     print("Attempting to connect to \"" + url + "\"")
     while local_stream  is None:
         try:
             local_stream  = u.urlopen(url, timeout=2.0)
         except Exception as e:
-            indicateLEDsNotRunning()
             print("Could not connect to \"" + url + "\".")
             print("Reason: " + str(e))
             time.sleep(1)
@@ -149,7 +149,7 @@ def readMjpgStream():
     # Read data from the network in 1kb chunks
     #  Catch any issues reading. if we have issues, try to reset the connection.
     try:
-        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(2048)
+        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(8192*10)
     except Exception as e:
         print("WARNING: problems reading camera data from stream.")
         print("Reason: " + str(e))
@@ -179,6 +179,8 @@ def readMjpgStream():
         return readMjpgStream.img_local, readMjpgStream.cap_time
     else:
         return None, None
+        
+        
 ################################################################################
 # Main Processing algorithm... or a thin wrapper around it?
 ################################################################################

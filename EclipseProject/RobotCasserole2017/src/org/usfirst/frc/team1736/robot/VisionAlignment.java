@@ -104,8 +104,8 @@ public class VisionAlignment {
 		//Make sure controller is off
 		visionAlignmentOnTarget = false;
 		
-		gyroHistory = new InterpValueHistoryBuffer(30, 0);
-		distanceHistory = new InterpValueHistoryBuffer(30, 0);
+		gyroHistory = new InterpValueHistoryBuffer(50, 0);
+		distanceHistory = new InterpValueHistoryBuffer(50, 0);
 		prev_frame_counter = 0;
 	}
 

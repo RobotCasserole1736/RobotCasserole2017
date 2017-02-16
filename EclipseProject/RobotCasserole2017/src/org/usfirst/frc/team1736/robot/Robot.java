@@ -376,9 +376,6 @@ public class Robot extends IterativeRobot {
 		//Initialize Timer
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
-		
-		camCTRL.sampleVisionProcImg();
-		
 		//Get all inputs from outside the robot
 		operatorCTRL.update();
 		driverCTRL.update();
