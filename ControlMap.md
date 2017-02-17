@@ -34,22 +34,29 @@
 | LY        | Axis   | Climb           | Pull back to run the climber |
 | RX        | Axis   |                 |                 |
 | RY        | Axis   |                 |                 |
-| LBumper   | Button | Intake          | Hold to pull in fuel from the ground via intake |
-| RBumper   | Button | Shoot           | Hold to inject fuel into the shooter wheel |
-| R Trigger | Axis   | Gear Deploy     | Press and hold to release the gear |
+| RStick Btn| Button |                 | Press and hold to release the gear |
+| LBumper   | Button | Intake Reverse  | Hold to run intake backward |
+| RBumper   | Button | Intake Forward  | Hold to pull in fuel from the ground via intake |
+| R Trigger | Axis   | Shoot     	   | Tap to turn shooter wheel on to preset shot RPM |
 | L Trigger | Axis   |                 |                 |
-| B         | Button | Intake Eject    | Hold to run intake backward |
-| A         | Button | Disable Shooter | Tap to turn off shooter wheel |
-| Y         | Button | Prep to Shoot   | Tap to turn shooter wheel on to preset shot RPM |
+| B         | Button | Disable Shooter | Tap to turn off shooter wheel |
+| A         | Button | Prep to Shoot   | Hold to inject fuel into the shooter wheel |
+| Y         | Button | Shoot           | Tap to turn shooter wheel on to preset shot RPM |
 | X         | Button |                 |                 |
-| POV UP    | POVHAT |                 |                 |
-| POV DN    | POVHAT |                 |                 |
-| POV RT    | POVHAT |                 |                 |
-| POV LF    | POVHAT |                 |                 |
-| Back      | Button |                 | Hold to run the hopper feeder backward (regardless of shooter RPM) |
+| POV UP    | POVHAT |     LEDs        |  set to both patterns |
+| POV DN    | POVHAT |     LEDs        |  set to no pattern |
+| POV RT    | POVHAT |     LEDs        |  set to gear desired pattern |
+| POV LF    | POVHAT |     LEDs        |  set to fuel desired pattern |
+| Back      | Button | Hopper Feed Rev | Hold to run the hopper feeder backward (regardless of shooter RPM) |
 | Start     | Button | Hopper Feed Ovd | Hold to run the hopper feeder forward (regardless of shooter RPM) |
 |           |        |                 |                 |
 |           |        |                 |                 |
-
+RB: Intake Forward
+LB: Intake Reverse
+A: Prep to Shoot
+B: Disable Shooter
+R Trigger and/or Y: Shoot
+Right Stick Button: Gear Deploy
+LY: Climb (Currently mapped to LX)
 
 (1) - image created by Alphathon
