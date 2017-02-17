@@ -12,6 +12,7 @@ import TargetObservation
 import UDPServer
 import subprocess
 import pyMjpgStreamer
+import httplib  
 
 ################################################################################
 #Config Data
@@ -22,9 +23,6 @@ import pyMjpgStreamer
 
 #Fixed IP address of MJPG Stream from RIO (USB Camera Streamed)
 camera_url = 'http://roborio-1736-frc.local:1181/stream.mjpg'
-
-#Set to true to configure for USB, false for IP camera (mjpg stream)
-USE_USB_CAM=False
 
 
 ################################################################################
@@ -67,10 +65,6 @@ procPipeline = Pipeline.Pipeline()
 # Server to transmit processed data over UDP to the roboRIO
 outputDataServer = UDPServer.UDPServer(send_to_address = "roborio-1736-frc.local", send_to_port = 5800)
 
-if(USE_USB_CAM):
-    # Server to broadcast mjpg stream of raw captured video
-    outputVideoStreamer= pyMjpgStreamer.pyMjpgStreamer();
-
 ################################################################################
 # Utility Functions
 ################################################################################
@@ -106,7 +100,9 @@ def robust_url_connect(url):
     print("Attempting to connect to \"" + url + "\"")
     while local_stream  is None:
         try:
-            local_stream  = u.urlopen(url, timeout=2.0)
+            robust_url_connect.conn = httplib.HTTPConnection('roborio-1736-frc.local:1181')
+            robust_url_connect.conn.request("GET",'/stream.mjpg')
+            local_stream  = robust_url_connect.conn.getresponse()
         except Exception as e:
             print("Could not connect to \"" + url + "\".")
             print("Reason: " + str(e))
@@ -117,24 +113,6 @@ def robust_url_connect(url):
     print("Successfully connected to camera image stream at \"" + url + "\"")
     return local_stream
 
-#Reads image from a webcam and returns whatever new frame is found
-def readWebCam():
-    time.sleep(0.01) #Provide some hacky framerate limit
-    if(readWebCam.webcamCap is None):
-        readWebCam.webcamCap =  cv2.VideoCapture(0)
-        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 800); 
-        readWebCam.webcamCap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 600);
-        os.system('v4l2-ctl -c brightness=40 -c contrast=9 -c saturation=180 -c exposure_auto=1 -c exposure_absolute=10')
-        print('Webcam stream opened')
-        
-    local_status,local_image = readWebCam.webcamCap.read()
-    cap_time = millis()
-    
-    if(local_status):
-        return local_image,cap_time
-    else:
-        return None,None
-    
     
 #Reads from a socket connection and returns a new frame if found.
 def readMjpgStream():
@@ -149,7 +127,7 @@ def readMjpgStream():
     # Read data from the network in 1kb chunks
     #  Catch any issues reading. if we have issues, try to reset the connection.
     try:
-        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(8192*10)
+        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(4096) #8192*10 
     except Exception as e:
         print("WARNING: problems reading camera data from stream.")
         print("Reason: " + str(e))
@@ -173,7 +151,7 @@ def readMjpgStream():
         # Extract the raw image data
         jpg = readMjpgStream.bytes[a:b+2]
         # Clear processed bytes from the input data buffer
-        readMjpgStream.bytes = readMjpgStream.bytes[b+2:]
+        readMjpgStream.bytes = ''
         # Convert the raw image bytes into an image structure openCV can use
         readMjpgStream.img_local = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
         return readMjpgStream.img_local, readMjpgStream.cap_time
@@ -207,8 +185,8 @@ def img_process(img):
 
     #Microsoft Lifecam values. For best results, stream from RIO.
     # Presumes roboRIO settings
-    hsv_thres_lower = np.array([31,128,30])
-    hsv_thres_upper = np.array([97,255,229])
+    hsv_thres_lower = np.array([36,154,39])
+    hsv_thres_upper = np.array([85,255,255])
 
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -241,10 +219,7 @@ def img_process(img):
 ledStatus = False
 indicateLEDsNotRunning()
 
-readWebCam.webcamCap = None
 readMjpgStream.camera_data_stream = None
- 
-#subprocess.call(['./LifeCamSettings.sh']) # Thanks @Jim Dennis for suggesting the []
 
 #Reset frame counter
 frame_counter = 0
@@ -278,10 +253,8 @@ if(displayDebugImg):
 # Main execution loop
 while True:
     try:
-        if(USE_USB_CAM):
-            img,cap_time_tmp = readWebCam()
-        else:
-            img,cap_time_tmp = readMjpgStream()
+
+        img,cap_time_tmp = readMjpgStream()
         
         if(img is not None):
             # Mark the time we found this image
@@ -314,10 +287,6 @@ while True:
             # Transmit the vision processing results to the roboRIO
             outputDataServer.sendString(curObservation.toJsonString())
             indicateLEDsProcessingActive()
-            
-            #Broadcast image mjpg stream when using usb camera
-            if(USE_USB_CAM):
-                outputVideoStreamer.setImg(img, True)
 
 
             # Debug printing
@@ -337,8 +306,8 @@ while True:
                 cv2.imshow('Video', img)
 
             # I'm presuming this is needed to allow background things to hapapen
-            if(USE_USB_CAM):
-                time.sleep(.01)
+            #time.sleep(.01)
+
             
     except KeyboardInterrupt:
         print("Shutting down at user request")
