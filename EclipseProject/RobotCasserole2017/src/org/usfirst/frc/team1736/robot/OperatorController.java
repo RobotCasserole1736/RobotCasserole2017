@@ -43,22 +43,22 @@ public class OperatorController extends Xbox360Controller {
 	
 	public boolean getGearSolenoidCmd()
 	{
-		return RTrigger() > 0.5;
+		return RStickButton();
 	}
 	
 	public double getClimbSpeedCmd()
 	{
-		return LStick_X();
+		return LStick_Y();
 	}
 	
 	public boolean getIntakeDesiredCmd()
 	{
-		return LB();
+		return RB();
 	}
 	
 	public boolean getEjectDesiredCmd()
 	{
-		return B();
+		return LB();
 	}
 	
 	public boolean getHopperFwdOverride()
@@ -76,31 +76,33 @@ public class OperatorController extends Xbox360Controller {
 	 * Must be called every loop.
 	 */
 	public void update(){
-		 
+		boolean shootFlag;
 		boolean rising_edge;
 		boolean falling_edge;
 		
-		if( Y()){
+		//Prep to Shoot or Disable shoot Commands
+		if(A()){
 			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
 		
-		if(A()){
+		if(B()){
 			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.NO_SHOOT);	
 		}
 		
-		if(RB()==true & pev_State==false){
+		//Shoot Command
+		shootFlag = (RTrigger() > 0.5 || Y() == true);
+		if(shootFlag & pev_State==false){
 			rising_edge=true;	
 		} else{
 			rising_edge=false;
 		}
 		
-		if(RB()==false & pev_State==true){
+		if(!shootFlag & pev_State==true){
 			falling_edge=true;	
 		}
 		else{
 			falling_edge=false;
 		}	
-		
 		
 		if(rising_edge==true){
 			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
@@ -108,10 +110,9 @@ public class OperatorController extends Xbox360Controller {
 			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
 		
-		pev_State = RB();
+		pev_State = shootFlag;
+		//end of shooter update code
 		
-		
-
 		
 		/*LED color Selections*/
 		if(DPadDown()){
@@ -123,8 +124,6 @@ public class OperatorController extends Xbox360Controller {
 		} else if(DPadRight()){
 			LEDSequencer.getInstance().setFuelDesiredPattern();
 		}
-		
-
 		
 		
 	}
