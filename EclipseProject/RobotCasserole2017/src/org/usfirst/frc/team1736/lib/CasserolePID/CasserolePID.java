@@ -81,6 +81,8 @@ public abstract class CasserolePID {
     protected double Kf; // Setpoint Feed-Forward
     protected double Kdf; // Setpoint Derivative Feed-Forward
     protected double Kp2; // Proportional Squared
+    
+    protected double curError; 
 
     protected boolean useErrForDerivTerm; // If true, derivative term is calculated using the error
                                           // signal. Otherwise, use the "actual" value from the PID
@@ -231,6 +233,10 @@ public abstract class CasserolePID {
     public void setSensorInverted(boolean inv){
     	invertActual = inv;
     }
+    
+    public double getCurError(){
+    	return curError;
+    }
 
 
     /**
@@ -268,7 +274,7 @@ public abstract class CasserolePID {
         
         double curOutput = 0.0;
         double curSetpoint = setpoint; // latch the setpoint at start of loop
-        double curError = curSetpoint - curInput;
+        curError = curSetpoint - curInput;
 
 
         // Calculate P term

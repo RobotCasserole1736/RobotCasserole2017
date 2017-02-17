@@ -164,7 +164,7 @@ public class VisionAlignment {
 			
 			if(!(Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol + angleTolHyst) ||
 			   !(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol + angleTolHyst))
-			{ //If we get too far off target...
+			{ //If we get too far off target (based on camera input)...
 				
 				visionAlignmentOnTarget = false; //Set Off Target
 				
@@ -196,9 +196,9 @@ public class VisionAlignment {
 				//Change State
 				visionAlignState = VisionAlignStates.sNotControlling;
 				
-			} else if((Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol) && 
-			          (Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol))
-			{	//If we get within our tolerance
+			} else if((Math.abs(anglePID.getCurError()) < angleTol) && 
+			          (Math.abs(distPID.getCurError()) < distTol))
+			{	//If we get within our tolerance (via closed loop)
 				//"Take Pic"
 				anglePID.setAngle(gyroAngleDesiredLastFrame);
 				distPID.setDist(distanceDesiredLastFrame);
@@ -221,7 +221,7 @@ public class VisionAlignment {
 				
 			} else if((Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol) && 
 					(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol)){
-					//If we get within our tolerance
+					//If we get within our tolerance (based on camera)
 					//Set On Target
 					visionAlignmentOnTarget = true;
 					//"Take Pic"
