@@ -14,7 +14,7 @@ import subprocess
 import pyMjpgStreamer
 import httplib  
 
-#Hack?
+#ensure socket timeout set to what we want.
 import socket
 socket.setdefaulttimeout(3.0)
 
@@ -101,8 +101,12 @@ def millis():
 def robust_url_connect(url):
     indicateLEDsNotRunning()
     local_stream = None
+
     print("Attempting to connect to \"" + url + "\"")
     while local_stream  is None:
+        if(robust_url_connect.conn is not None):
+            print("Closing existing server...")
+            robust_url_connect.conn.close()
         try:
             robust_url_connect.conn = httplib.HTTPConnection('roborio-1736-frc.local:1181')
             robust_url_connect.conn.request("GET",'/stream.mjpg')
@@ -110,7 +114,7 @@ def robust_url_connect(url):
         except Exception as e:
             print("Could not connect to \"" + url + "\".")
             print("Reason: " + str(e))
-            time.sleep(5)
+            time.sleep(2)
             print("Retrying...")
             local_stream  = None
             continue
@@ -125,6 +129,7 @@ def readMjpgStream():
         #Open data stream from IP camera
         # Robust connect should hopefullyprevent race conditions between the camera
         # booting and this software attemptting to connect to it.
+        readMjpgStream.streamStarted = False
         readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
         readMjpgStream.bytes = ''
 
@@ -134,14 +139,15 @@ def readMjpgStream():
         startByteCount = len(readMjpgStream.bytes)
         readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(8192) #8192*10 
         endByteCount = len(readMjpgStream.bytes)
-        if(endByteCount-startByteCount == 0 and streamStarted == True):
+        if(endByteCount-startByteCount == 0 and readMjpgStream.streamStarted == True):
             raise Exception('No Bytes recieved!')
         else:
-            streamStarted = True
+            readMjpgStream.streamStarted = True
     except Exception as e:
-        streamStarted = False
+        readMjpgStream.streamStarted = False
         print("WARNING: problems reading camera data from stream.")
         print("Reason: " + str(e))
+        time.sleep(2)
         print("Attempting to restart connection...")
         readMjpgStream.camera_data_stream = robust_url_connect(camera_url)
         return None, None
@@ -230,9 +236,10 @@ def img_process(img):
 ledStatus = False
 indicateLEDsNotRunning()
 
-streamStarted = False
-
+readMjpgStream.streamStarted = False
 readMjpgStream.camera_data_stream = None
+
+robust_url_connect.conn  = None
 
 #Reset frame counter
 frame_counter = 0
