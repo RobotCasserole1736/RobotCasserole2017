@@ -43,69 +43,69 @@ public class DriverController extends Xbox360Controller {
 	{
 		
 		boolean isPos;
-	if(LStick_Y()>0){
-		isPos = true;
 		
-	}
-	else{
-		isPos = false;
-	}
-	double doug = Math.pow(LStick_Y(), 3);
-	if(isPos = false){
-		doug = -doug;
-	}
-	else{
-		doug = doug;
-	}
-	
+		//remember sign
+		if(LStick_Y()>0){
+			isPos = true;
+		} else{
+			isPos = false;
+		}
+		
+		//Scale joystick by power
+		double doug = Math.pow(Math.abs(LStick_Y()), 3);
+		
+		//re-invert if needed
+		if(isPos = false){
+			doug = -doug;
+		}
+
 		return doug;
-		//return LStick_Y();
 	}
 	
 	public double getStrafeCmd()
 	{
 		
 		boolean isPos;
-	if(LStick_X()>0){
-		isPos = true;
 		
-	}
-	else{
-		isPos = false;
-	}
-	double doug = Math.pow(LStick_X(), 3);
-	if(isPos = false){
-		doug = -doug;
-	}
-	else{
-		doug = doug;
-	}
+		//remember sign
+		if(LStick_X()>0){
+			isPos = true;
+		} else{
+			isPos = false;
+		}
+		
+		//Scale joystick by power
+		double doug = Math.pow(Math.abs(LStick_X()), 3);
+		
+		//re-invert if needed
+		if(isPos = false){
+			doug = -doug;
+		}
 	
-		return doug;
-		//return LStick_X();
+		return doug;	
 	}
 	
 	public double getRotateCmd()
 	{
 		
 		boolean isPos;
-	if(RStick_X()>0){
-		isPos = true;
 		
-	}
-	else{
-		isPos = false;
-	}
-	double doug = Math.pow(RStick_X(), 3);
-	if(isPos = false){
-		doug = -doug;
-	}
-	else{
-		doug = doug;
-	}
-	
+		//remember sign
+		if(RStick_X()>0){
+			isPos = true;
+		} else{
+			isPos = false;
+		}
+		
+		//Scale joystick by power
+		double doug = Math.pow(Math.abs(RStick_X()), 3);
+		
+		//re-invert if needed
+		if(isPos = false){
+			doug = -doug;
+		}
+
 		return doug;
-		//return RStickX();
 	}
 	
 	public boolean getGearCamAlign()
