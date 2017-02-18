@@ -42,6 +42,7 @@ public class Autonomous {
 	
 	public Autonomous(){
 		autoMode = new Calibration("Auto Mode",0,0,10);
+		mode = 100; //A number I think we will never use
 	}
 	
 	public void updateAutoSelection(){
