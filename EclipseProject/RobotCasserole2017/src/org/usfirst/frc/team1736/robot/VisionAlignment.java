@@ -47,11 +47,10 @@ public class VisionAlignment {
 	
 	//Keep track of what the most recent frame received from the coprocessor was
 	private double prev_frame_counter;
-	private boolean contFrameMode = false;
 	
 	//States of the vision align subsystem
 	public enum VisionAlignStates {
-		sNotControlling(0), sAligning(1), sOnTarget(2);
+		sNotControlling(0), sAligning(1), sConfirmTarget(2), sOnTarget(3);
 	
 		public final int value;
 	
@@ -163,21 +162,15 @@ public class VisionAlignment {
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
 			
-			if(contFrameMode){
-				//Set Desired
-				anglePID.setAngle(gyroAngleDesiredLastFrame);
-				distPID.setDist(distanceDesiredLastFrame);
-			}
-			
 			if(!(Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol + angleTolHyst) ||
 			   !(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol + angleTolHyst))
-			{ //If we get too far off target...
+			{ //If we get too far off target (based on camera input)...
 				
 				visionAlignmentOnTarget = false; //Set Off Target
-				if(!contFrameMode) {
-					anglePID.setAngle(gyroAngleDesiredLastFrame); //"Take Pic"
-					distPID.setDist(distanceDesiredLastFrame);
-				}
+				
+				anglePID.setAngle(gyroAngleDesiredLastFrame); //"Take Pic"
+				distPID.setDist(distanceDesiredLastFrame);
+					
 				visionAlignState = VisionAlignStates.sAligning; //Change State
 				
 			} else if(!alignCanContinue){ //If we shouldn't continue vision alignment...
@@ -193,27 +186,9 @@ public class VisionAlignment {
 				visionAlignState = VisionAlignStates.sOnTarget;
 			}
 			
-		} else if(visionAlignState == VisionAlignStates.sAligning){
-			
-			if(contFrameMode){
-				//Set Desired
-				anglePID.setAngle(gyroAngleDesiredLastFrame);
-				distPID.setDist(distanceDesiredLastFrame);
-			}
-			
-			if((Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol) && 
-			   (Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol))
-			{	//If we get within our tolerance
-				//Set On Target
-				visionAlignmentOnTarget = true;
-				if(!contFrameMode){ //"Take Pic"
-					anglePID.setAngle(gyroAngleDesiredLastFrame);
-					distPID.setDist(distanceDesiredLastFrame);
-				}
-				//Change State
-				visionAlignState = VisionAlignStates.sOnTarget;
-				
-			} else if(!alignCanContinue){ //If we shouldn't continue to attempt to align...
+		}else if(visionAlignState == VisionAlignStates.sAligning){
+		
+			if(!alignCanContinue){ //If we shouldn't continue to attempt to align...
 				visionAlignmentOnTarget = false;
 				//Turn off pids
 				anglePID.stop();
@@ -221,11 +196,46 @@ public class VisionAlignment {
 				//Change State
 				visionAlignState = VisionAlignStates.sNotControlling;
 				
+			} else if((Math.abs(anglePID.getCurError()) < angleTol) && 
+			          (Math.abs(distPID.getCurError()) < distTol))
+			{	//If we get within our tolerance (via closed loop)
+				//"Take Pic"
+				anglePID.setAngle(gyroAngleDesiredLastFrame);
+				distPID.setDist(distanceDesiredLastFrame);
+					
+				//Change State
+				visionAlignState = VisionAlignStates.sConfirmTarget;
+				
 			} else{ //maintain state
 				visionAlignState = VisionAlignStates.sAligning;
 			}
 			
-		} else{ // visionAlignState == VisionAlignStates.sNotControlling
+		}else if(visionAlignState == VisionAlignStates.sConfirmTarget){
+			if(!alignCanContinue){ //If we shouldn't continue to attempt to align...
+				visionAlignmentOnTarget = false;
+				//Turn off pids
+				anglePID.stop();
+				distPID.stop();
+				//Change State
+				visionAlignState = VisionAlignStates.sNotControlling;
+				
+			} else if((Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol) && 
+					(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol)){
+					//If we get within our tolerance (based on camera)
+					//Set On Target
+					visionAlignmentOnTarget = true;
+					//"Take Pic"
+					anglePID.setAngle(gyroAngleDesiredLastFrame);
+					distPID.setDist(distanceDesiredLastFrame);
+					
+					//Change State
+					visionAlignState = VisionAlignStates.sOnTarget;
+							
+			} else{ //maintain state
+				visionAlignState = VisionAlignStates.sAligning;
+			}
+				
+		}else{ // visionAlignState == VisionAlignStates.sNotControlling
 			visionAlignmentOnTarget = false;
 			
 			if(alignCanStart) { //If we should start attempting to vision track...
@@ -233,10 +243,9 @@ public class VisionAlignment {
 				anglePID.start();
 				distPID.start();
 				
-				if(!contFrameMode){
-					anglePID.setAngle(gyroAngleDesiredLastFrame);//"Take Pic"
-					distPID.setDist(distanceDesiredLastFrame);
-				}
+				//"Take Pic"
+				anglePID.setAngle(gyroAngleDesiredLastFrame);
+				distPID.setDist(distanceDesiredLastFrame);
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sAligning;
@@ -286,6 +295,8 @@ public class VisionAlignment {
 	
 	public double getVisionAlignState() {
 		if(visionAlignState == VisionAlignStates.sOnTarget){
+			return 3.0;
+		}else if(visionAlignState == VisionAlignStates.sConfirmTarget){
 			return 2.0;
 		}else if(visionAlignState == VisionAlignStates.sAligning){
 			return 1.0;
