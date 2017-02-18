@@ -785,6 +785,18 @@ public class MecanumPathPlanner
 		smoothRightFrontVelocity = velocityFix(smoothRightFrontVelocity, origRightFrontVelocity, 0.0000001);
 		smoothRightRearVelocity = velocityFix(smoothRightRearVelocity, origRightRearVelocity, 0.0000001);
 	}
+	
+	public double[][] transformHeadingToGyroFrameOfRef(double[][] input){
+		double[][] output = new double[input.length][input[0].length];
+		
+		for(int i = 0; i < input.length; i++){
+			output[i][0] = input[i][0];
+			output[i][1] = input[i][1] - 90;
+		}
+		
+		return output;
+		
+	}
 
 	//main program
 	public static void main(String[] args)
@@ -794,10 +806,11 @@ public class MecanumPathPlanner
 
 		//create waypoint path of a fairly practical example
 		double[][] waypoints = new double[][]{
-				{1, 1, 90},
-				{4, 2, 90},
-				{4, 8, 90},
-				{2, 22, 315}
+				{0,0,0},
+				{0, 1, 90},
+				{0, 2, 180},
+				{0, 8, 270},
+				{0, 22, 360}
 		};
 
 		double totalTime = 8; //seconds
@@ -841,10 +854,18 @@ public class MecanumPathPlanner
 			fig1.addData(path.leftRearPath, Color.green);
 			fig1.addData(path.rightFrontPath, Color.magenta);
 			fig1.addData(path.rightRearPath, Color.orange);
+			
+			
+			FalconLinePlot fig3 = new FalconLinePlot(path.transformHeadingToGyroFrameOfRef(path.heading),null,Color.blue);
+			
+			fig3.yGridOn();
+			fig3.xGridOn();
+			fig3.setYLabel("des heading (deg)");
+			fig3.setXLabel("time (seconds)");
 
 
 			//generate figure 8 path
-			path.figure8Example();
+			//path.figure8Example();
 
 		}
 		//example on printing useful path information

@@ -111,6 +111,9 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 	public void setGyroCompInverted(boolean inv){
 		gyroCompInverted = inv;
 	}
+	public void setDesiredHeading(double hd){
+		headingSetpoint = hd;
+	}
 
 	@Override
 	protected double returnPIDInput() {
