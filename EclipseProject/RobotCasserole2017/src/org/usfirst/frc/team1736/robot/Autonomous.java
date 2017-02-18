@@ -102,14 +102,11 @@ public class Autonomous {
 				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
 				AutoSequencer.addEvent(backAway);
 				break;
-<<<<<<< HEAD
-				
-=======
 			case 5: //drive forward across base line
 				AutoEventShootNoVision olShoot = new AutoEventShootNoVision();
 				AutoSequencer.addEvent(olShoot);
 				break;
->>>>>>> origin/ChrisG_auto_debug
+
 			default: //Do nothing
 				break;
 		}
