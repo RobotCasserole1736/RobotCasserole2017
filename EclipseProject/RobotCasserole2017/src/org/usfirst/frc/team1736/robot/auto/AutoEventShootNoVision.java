@@ -17,7 +17,7 @@ public class AutoEventShootNoVision extends AutoEvent {
 	public void userUpdate() {
 		// TODO Auto-generated method stub
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(true); 
+		visionAlignCTRL.setVisionAlignmentDesired(false); 
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.SHOOT);
 	}

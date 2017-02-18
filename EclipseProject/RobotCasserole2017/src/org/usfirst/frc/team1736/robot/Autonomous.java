@@ -31,6 +31,7 @@ import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
 import org.usfirst.frc.team1736.robot.auto.AutoEventOpenGearMechanism;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShootNoVision;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShootWithVision;
+import org.usfirst.frc.team1736.robot.auto.AutoEventSwagCrossBaseLine;
 
 public class Autonomous {
 	Calibration autoMode;
@@ -67,6 +68,9 @@ public class Autonomous {
 				break;
 			case 6: //Shoot without vision alignment or motion
 				autoModeName = "Sideways X Baseline";
+				break;
+			case 7: //Shoot without vision alignment or motion
+				autoModeName = "DO NOT USE!";
 				break;
 			default: //Do nothing
 				autoModeName = "Do Nothing";
@@ -117,6 +121,11 @@ public class Autonomous {
 			case 6:
 				AutoEventDriveSidewaysAcrossBaseline sidewaysCross = new AutoEventDriveSidewaysAcrossBaseline();
 				AutoSequencer.addEvent(sidewaysCross);
+				break;
+				
+			case 7:
+				AutoEventSwagCrossBaseLine swagCross = new AutoEventSwagCrossBaseLine();
+				AutoSequencer.addEvent(swagCross);
 				break;
 
 			default: //Do nothing

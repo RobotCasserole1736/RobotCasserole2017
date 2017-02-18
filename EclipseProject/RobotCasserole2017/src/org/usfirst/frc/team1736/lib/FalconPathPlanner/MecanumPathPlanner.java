@@ -792,12 +792,14 @@ public class MecanumPathPlanner
 
 		//create waypoint path of a fairly practical example
 		double[][] waypoints = new double[][]{
-			{0,0,0},
-			{7.5,0,0}
+				{1, 1, 90},
+				{4, 2, 90},
+				{4, 8, 90},
+				{2, 22, 315}
 		};
 
-		double totalTime = 5; //seconds
-		double timeStep = 0.02; //period of control loop on Rio, seconds
+		double totalTime = 8; //seconds
+		double timeStep = 0.1; //period of control loop on Rio, seconds
 		double robotTrackWidth = 2; //distance between left and right wheels, feet
 		double robotTrackLength = 2.5; //distance between front and rear wheels, feet
 
@@ -854,18 +856,15 @@ public class MecanumPathPlanner
 		//Normally you would use a 0 heading and drive in +y for forward, but this fits on the field plot better
 
 		double[][] waypoints = new double[][]{
-				{2, 8, 90},
-				{7, 2, 135},
-				{12, 8, 180},
-				{17, 14, 225},
-				{22, 8, 270},
-				{17, 2, 315},
-				{12, 8, 360},
-				{7, 14, 405},
-				{2, 8, 450}
+			{0,0,0},
+			//{0,2,90},
+			//{0,4,180},
+			//{0,6,270},
+			//{0,8,360},
+			{0,10,180}
 		};
 
-		double totalTime = 12; //seconds
+		double totalTime = 8; //seconds
 		double timeStep = 0.05; //period of control loop on Rio, seconds
 		double robotTrackWidth = 2; //distance between left and right wheels, feet
 		double robotTrackLength = 2.5; //distance between front and rear wheels, feet
