@@ -41,17 +41,71 @@ public class DriverController extends Xbox360Controller {
 	
 	public double getFwdRevCmd()
 	{
-		return LStick_Y();
+		
+		boolean isPos;
+	if(LStick_Y()>0){
+		isPos = true;
+		
+	}
+	else{
+		isPos = false;
+	}
+	double doug = Math.pow(LStick_Y(), 3);
+	if(isPos = false){
+		doug = -doug;
+	}
+	else{
+		doug = doug;
+	}
+	
+		return doug;
+		//return LStick_Y();
 	}
 	
 	public double getStrafeCmd()
 	{
-		return LStick_X();
+		
+		boolean isPos;
+	if(LStick_X()>0){
+		isPos = true;
+		
+	}
+	else{
+		isPos = false;
+	}
+	double doug = Math.pow(LStick_X(), 3);
+	if(isPos = false){
+		doug = -doug;
+	}
+	else{
+		doug = doug;
+	}
+	
+		return doug;
+		//return LStick_X();
 	}
 	
 	public double getRotateCmd()
 	{
-		return RStick_X();
+		
+		boolean isPos;
+	if(RStick_X()>0){
+		isPos = true;
+		
+	}
+	else{
+		isPos = false;
+	}
+	double doug = Math.pow(RStick_X(), 3);
+	if(isPos = false){
+		doug = -doug;
+	}
+	else{
+		doug = doug;
+	}
+	
+		return doug;
+		//return RStickX();
 	}
 	
 	public boolean getGearCamAlign()
