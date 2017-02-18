@@ -59,13 +59,13 @@ public class HopperControl {
 	
 	public void update() {
 		if(OperatorController.getInstance().getHopperFwdOverride())
-			motorCmd = 1 * hopperMotorCmd.get();
+			motorCmd = -1 * hopperMotorCmd.get();
 		else if(OperatorController.getInstance().getHopperRevOverride())
-			motorCmd = -1 * hopperMotorCmd.get();
-		else if(ShotControl.getInstance().getHopperFeedCmd() == HopperStates.HOPPER_FWD)
 			motorCmd = 1 * hopperMotorCmd.get();
-		else if(ShotControl.getInstance().getHopperFeedCmd() == HopperStates.HOPPER_REV)
+		else if(ShotControl.getInstance().getHopperFeedCmd() == HopperStates.HOPPER_FWD)
 			motorCmd = -1 * hopperMotorCmd.get();
+		else if(ShotControl.getInstance().getHopperFeedCmd() == HopperStates.HOPPER_REV)
+			motorCmd = 1 * hopperMotorCmd.get();
 		else{
 			motorCmd = hopSpeedOff;
 		}
