@@ -126,7 +126,11 @@ public class RobotConstants {
 	public static final int VISION_Y_PIXELS = 720;
 	public static final double CAMERA_FOV_X_DEG = 61; 
 	public static final String VISION_PROC_CAMERA_URL = "http://roborio-1736-frc.local:1181/stream.mjpg";
+	public static final String LIFECAM_USB_DEVICE_ID_SERIAL = "_LifeCam_HD-3000";
 	
+	//IDs for Logitech C270 cameras
+	public static final String LOGITECH_USB_DEVICE_ID_SERIAL_1 = "046d_0825_88D90230";
+	public static final String LOGITECH_USB_DEVICE_ID_SERIAL_2 = "046d_0825_154C0230";
 	
 	
 	
