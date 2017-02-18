@@ -151,8 +151,8 @@ public class PathPlannerAutoEvent extends AutoEvent {
         rightFrontMotor.setGyroCompEnabled(true);
         rightRearMotor.setGyroCompEnabled(true);
         
-        rightFrontMotor.setGyroCompInverted(true);
-        rightRearMotor.setGyroCompInverted(true);
+        //rightFrontMotor.setGyroCompInverted(true);
+        //rightRearMotor.setGyroCompInverted(true);
 	}
 
 
