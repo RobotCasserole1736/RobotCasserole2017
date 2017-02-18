@@ -134,9 +134,12 @@ def readMjpgStream():
         startByteCount = len(readMjpgStream.bytes)
         readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(8192) #8192*10 
         endByteCount = len(readMjpgStream.bytes)
-        if(endByteCount-startByteCount == 0):
+        if(endByteCount-startByteCount == 0 and streamStarted == True):
             raise Exception('No Bytes recieved!')
+        else:
+            streamStarted = True
     except Exception as e:
+        streamStarted = False
         print("WARNING: problems reading camera data from stream.")
         print("Reason: " + str(e))
         print("Attempting to restart connection...")
@@ -226,6 +229,8 @@ def img_process(img):
 ################################################################################
 ledStatus = False
 indicateLEDsNotRunning()
+
+streamStarted = False
 
 readMjpgStream.camera_data_stream = None
 
