@@ -137,6 +137,9 @@ public class Robot extends IterativeRobot {
 	
 	FlappyGear FG;
 	
+	double lastLoopExTime;
+	double loopExTime;
+	
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
 	///////////////////////////////////////////////////////////////////
@@ -200,7 +203,7 @@ public class Robot extends IterativeRobot {
 		
 		camCTRL = new CameraControl();
 
-		
+		lastLoopExTime = Timer.getFPGATimestamp();
 
 
 		
@@ -227,6 +230,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledPeriodic() {
+
+		//Calculate loop execution period
+		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+		lastLoopExTime = Timer.getFPGATimestamp();
 		
 		//Mark start of loop, Initialize Timer
 		//Must be as close to the start of the loop as possible
@@ -298,6 +305,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		
+		//Calculate loop execution period
+		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+		lastLoopExTime = Timer.getFPGATimestamp();
 		
 		//Mark start of loop, Initialize Timer
 		//Must be as close to the start of the loop as possible
@@ -386,6 +397,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+
+		//Calculate loop execution period
+		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+		lastLoopExTime = Timer.getFPGATimestamp();
+		
 		//Initialize Timer
 		prevLoopStartTimestamp = Timer.getFPGATimestamp();
 		
@@ -545,6 +561,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Compressor_Current", "A", "getCompressorCurrent", airSupplySystem);
 		CsvLogger.addLoggingFieldBoolean("Gear_Solenoid_Cmd","bit","isSolenoidOpen", gearControl);
 		CsvLogger.addLoggingFieldBoolean("Battery_Dead", "bit", "isBatteryDead", lowBatt);
+		CsvLogger.addLoggingFieldDouble("Loop Execution Dev", "msec", "getLoopExDev", this);
 		CsvLogger.preCacheAllMethods();
 	}
 	
@@ -668,6 +685,8 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putString("Vision Cal Last Result", visionDelayCal.getLastResult().toString());
 		CassesroleWebStates.putDouble("Vision Cal Avg Delay Time (s)", visionDelayCal.getPrevCalAvgTime());
 		CassesroleWebStates.putDouble("Vision Cal Time Std Dev (s)", visionDelayCal.getPrevCalStdDev());
+		CassesroleWebStates.putDouble("Loop Execution Time Dev (ms)", this.getLoopExDev());
+		
 	}
 		
 	 
@@ -695,6 +714,10 @@ public class Robot extends IterativeRobot {
 
 	public double getRAMUsage(){
 		return ecuStats.totalMemUsedPct;
+	}
+	
+	public double getLoopExDev(){
+		return loopExTime*1000 - 20;
 	}
 	
 
