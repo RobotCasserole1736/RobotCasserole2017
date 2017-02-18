@@ -54,6 +54,11 @@ public class AutoSequencer {
         events.add(event_in);
         System.out.println("[Auto] New event registered - " + event_in.getClass().getName());
     }
+    
+    public static void clearAllEvents() {
+        events.clear();
+        System.out.println("[Auto] Cleared event list");
+    }
 
 
     /**

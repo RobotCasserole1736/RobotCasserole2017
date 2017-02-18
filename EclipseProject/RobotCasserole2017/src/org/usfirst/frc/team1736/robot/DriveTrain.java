@@ -23,6 +23,7 @@ package org.usfirst.frc.team1736.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
@@ -82,9 +83,9 @@ public class DriveTrain{
 		
 		//Set up calibratable values
 		fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
-		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.1/100.0);
-		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 1.0/800.0);
-		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0);
+		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.003);
+		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.00125);
+		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0003);
 		
 		//set up encoders
 		frontLeftEncoder  = new Encoder(RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_A,  RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
@@ -95,8 +96,8 @@ public class DriveTrain{
 		//Note minus signs to invert right side of drivetrain
 		frontLeftEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
 		frontRightEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
-		rearLeftEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
-		rearRightEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+		rearLeftEncoder.setDistancePerPulse(RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
+		rearRightEncoder.setDistancePerPulse(-RobotConstants.DRIVETRAIN_WHEELS_REV_PER_TICK);
 		
 		
 		
@@ -108,9 +109,9 @@ public class DriveTrain{
 		
 		//Invert controls on proper motors
 		frontRightAutonCtrl.setOutputInverted(true);
-		frontRightAutonCtrl.setSensorInverted(true);
+		//frontRightAutonCtrl.setSensorInverted(true);
 		rearLeftAutonCtrl.setOutputInverted(true);
-		rearLeftAutonCtrl.setSensorInverted(true);
+		//rearLeftAutonCtrl.setSensorInverted(true);
 		
 		runningClosedLoop = false;
 	}
@@ -176,6 +177,15 @@ public class DriveTrain{
 		} else if(fieldOrientedCtrl.get() == 0.0){
 			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
 			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), 0);
+			
+			/*
+			//Tuning temp
+			frontLeftAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
+			frontRightAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
+			rearLeftAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
+			rearRightAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
+			runClosedLoop();
+			*/
 		} else {
 			//For operator control, field oriented, and no vision assist, get all commands from driver along with gyro angle
 			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), Gyro.getInstance().getAngle());

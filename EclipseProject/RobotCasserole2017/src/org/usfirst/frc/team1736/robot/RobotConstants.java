@@ -73,10 +73,10 @@ public class RobotConstants {
 	public static final int DRIVETRAIN_FRONT_LEFT_ENCODER_B = 3;
 	public static final int DRIVETRAIN_FRONT_RIGHT_ENCODER_A = 0;
 	public static final int DRIVETRAIN_FRONT_RIGHT_ENCODER_B = 1;
-	public static final int DRIVETRAIN_REAR_LEFT_ENCODER_A = 6;
-	public static final int DRIVETRAIN_REAR_LEFT_ENCODER_B = 7;
-	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_A = 4;
-	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_B = 5;
+	public static final int DRIVETRAIN_REAR_LEFT_ENCODER_A = 4;
+	public static final int DRIVETRAIN_REAR_LEFT_ENCODER_B = 5;
+	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_A = 6;
+	public static final int DRIVETRAIN_REAR_RIGHT_ENCODER_B = 7;
 	
 	//Solenoid Ports
 	public static final int GEAR_SOLENOID_PORT = 0; 

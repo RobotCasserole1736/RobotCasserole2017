@@ -11,9 +11,9 @@ public class AutoEventDriveToCenterLift extends AutoEvent{
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
 		{7.5,0,0}
-	}	;
+	};
 	
-	private static final double time = 7;
+	private static final double time = 3.25;
 	public AutoEventDriveToCenterLift() {
 		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
@@ -32,7 +32,7 @@ public class AutoEventDriveToCenterLift extends AutoEvent{
 
 	@Override
 	public void userUpdate() {
-		// TODO Auto-generated method stub
+		driveSideways.userUpdate();
 		
 	}
 

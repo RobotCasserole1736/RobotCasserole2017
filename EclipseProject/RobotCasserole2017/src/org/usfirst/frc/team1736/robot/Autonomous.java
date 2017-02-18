@@ -24,6 +24,7 @@ import org.usfirst.frc.team1736.lib.AutoSequencer.AutoSequencer;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayFromLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventCrossBaseLine;
+import org.usfirst.frc.team1736.robot.auto.AutoEventDriveSidewaysAcrossBaseline;
 import org.usfirst.frc.team1736.robot.auto.AutoEventDriveToCenterLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromBlue;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
@@ -63,6 +64,10 @@ public class Autonomous {
 				break;
 			case 5: //Shoot without vision alignment or motion
 				autoModeName = "No Move Shoot";
+				break;
+			case 6: //Shoot without vision alignment or motion
+				autoModeName = "Sideways X Baseline";
+				break;
 			default: //Do nothing
 				autoModeName = "Do Nothing";
 				break;
@@ -76,6 +81,8 @@ public class Autonomous {
 	public void executeAutonomus(){
 		
 		System.out.println("[Auto] Initalizing " + autoModeName + " auton routine.");
+		
+		AutoSequencer.clearAllEvents();
 		
 		switch(mode){
 			case 1: //drive forward across base line
@@ -105,6 +112,11 @@ public class Autonomous {
 			case 5: //drive forward across base line
 				AutoEventShootNoVision olShoot = new AutoEventShootNoVision();
 				AutoSequencer.addEvent(olShoot);
+				break;
+				
+			case 6:
+				AutoEventDriveSidewaysAcrossBaseline sidewaysCross = new AutoEventDriveSidewaysAcrossBaseline();
+				AutoSequencer.addEvent(sidewaysCross);
 				break;
 
 			default: //Do nothing

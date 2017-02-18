@@ -36,6 +36,8 @@ public class PathPlannerAutoEvent extends AutoEvent {
     private double[][] waypoints;
     private double time_duration_s;
     boolean pathCalculated;
+    
+    private static final double SIDEWAYS_FUDGE_FACTOR = 9.87/6.0; //cuz mechnum and it's nearly midnight
 
     private int timestep;
     private double taskRate = 0.02;
@@ -68,6 +70,11 @@ public class PathPlannerAutoEvent extends AutoEvent {
         rightFrontMotor = rightFrontMotor_in;
         rightRearMotor = rightRearMotor_in;
         leftRearMotor = leftRearMotor_in;
+        
+        //"Fix" waypoints
+        for(int i = 0; i < waypoints.length; i++)
+        	waypoints[i][0] *= SIDEWAYS_FUDGE_FACTOR;
+        
         path = new MecanumPathPlanner(waypoints);
         pathCalculated = false;
     }
