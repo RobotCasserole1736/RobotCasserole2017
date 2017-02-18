@@ -91,6 +91,7 @@ public class Autonomous {
 				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
 				AutoSequencer.addEvent(backAway);
 				break;
+				
 			default: //Do nothing
 				break;
 		}
