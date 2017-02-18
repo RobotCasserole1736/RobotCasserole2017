@@ -89,16 +89,6 @@ public class AutoSequencer {
 
         // Don't bother to do anything if there is no active event right now.
         if (activeEvent != null) {
-            // See what our current event is.
-            if (globalEventIndex >= events.size()) {
-                // terminal condition. we have no more states to run. Stop running things.
-                activeEvent = null;
-                return;
-            } else {
-                // update the active event.
-                activeEvent = events.get(globalEventIndex);
-                activeEvent.userStart();
-            }
 
             // Update the active event. This will probably set motors or stuff like that.
             activeEvent.update();
@@ -126,10 +116,22 @@ public class AutoSequencer {
             // Check if active event has completed. Move on to the next one if this one is done.
             // Note this sequence guarantees each event's update is called at least once.
             if (activeEvent.isDone()) {
+            	//This event is done - determine if we are done with auto, or need to do the next event.
+            	
                 activeEvent.forceStopAllChildren(); // Just in case the user is sloppy and leaves
                                                     // child events running when the parent
                                                     // finishes.
                 globalEventIndex++;
+                
+                // See what our new current event is.
+                if (globalEventIndex >= events.size()) {
+                    // terminal condition. we have no more states to run. Stop running things.
+                    activeEvent = null;
+                    return;
+                } 
+                
+                activeEvent = events.get(globalEventIndex);
+                activeEvent.userStart();
             }
 
         }
