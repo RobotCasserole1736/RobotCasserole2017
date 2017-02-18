@@ -25,6 +25,7 @@ import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 public class OperatorController extends Xbox360Controller {
 	
 	private static OperatorController controller = null;
+
 	
 	//Operator shooter command interpretation variables
 	boolean pev_State;
@@ -69,6 +70,11 @@ public class OperatorController extends Xbox360Controller {
 	public boolean getHopperRevOverride()
 	{
 		return BackButton();
+	}
+	
+	 public  double getGearFlapCommand()
+	{
+		return LTrigger();	
 	}
 	
 	/**
@@ -128,4 +134,5 @@ public class OperatorController extends Xbox360Controller {
 		
 	}
 
+	
 }

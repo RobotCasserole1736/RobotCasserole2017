@@ -135,6 +135,8 @@ public class Robot extends IterativeRobot {
 	
 	CameraControl camCTRL;
 	
+	FlappyGear FG;
+	
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
 	///////////////////////////////////////////////////////////////////
@@ -153,6 +155,7 @@ public class Robot extends IterativeRobot {
 		visionProc = VisionProcessing.getInstance();
 		visionAlignCTRL = VisionAlignment.getInstance();
 		visionDelayCal = VisionDelayCalibration.getInstance();
+		FG = new FlappyGear();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
@@ -433,6 +436,7 @@ public class Robot extends IterativeRobot {
 		//Update user camera gimbal position
 		camGimbal.update();
 		
+		
 		//Alert the driver if vision alignment is being requested, but is not available
 		checkAlignAllowed();
 		
@@ -443,6 +447,8 @@ public class Robot extends IterativeRobot {
 		//Mark end of loop and Calculate Loop Time
 		//Must be as close to the end of the loop as possible.
 		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+		
+		FG.update();
 	}
 	
 	

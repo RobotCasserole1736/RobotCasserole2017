@@ -48,9 +48,10 @@ public class RobotConstants {
 	public static final int CLIMBER_MOTOR1_PWM_PORT = 5;
 	public static final int CLIMBER_MOTOR2_PWM_PORT = 6;
 	public static final int INTAKE_MOTOR_PWM_PORT  = 7;
-
-	public static final int CAMERA_TILT_SERVO_PWM_PORT = 8; 
-	public static final int CAMERA_PAN_SERVO_PWM_PORT = 9; 
+	
+	public static final int GEAR_FLAP_SERVO_PWM_PORT = 8;
+	public static final int CAMERA_TILT_SERVO_PWM_PORT = 10; 
+	public static final int CAMERA_PAN_SERVO_PWM_PORT = 11; 
 	
 	//Motor PDP channel mappings
 	public static final int DRIVETRAIN_FRONT_RIGHT_PDP_CH = 0;
