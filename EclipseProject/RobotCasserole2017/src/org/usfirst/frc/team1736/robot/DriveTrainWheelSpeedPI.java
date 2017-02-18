@@ -36,6 +36,10 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 	Calibration K_i_cal;
 	
 	boolean enabled;
+	boolean gyroCompEnabled;
+	boolean gyroCompInverted;
+	private final double gyroCompGain_cmdPerDegErr = 0.2/10.0;
+	private double headingSetpoint;
 
 	public DriveTrainWheelSpeedPI(SpeedController spdctrl_in, Encoder encoder_in, Calibration K_ff_cal_in, Calibration K_p_cal_in, Calibration K_i_cal_in) {
 		super(K_p_cal_in.get(), K_i_cal_in.get(), 0, K_ff_cal_in.get(),0,0);
@@ -47,10 +51,15 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 		K_p_cal = K_p_cal_in;
 		K_i_cal = K_i_cal_in;
 		
+		//Set defaults
 		enabled = false;
+		headingSetpoint = 0;
+		gyroCompEnabled = false;
+		gyroCompInverted = false;
 		
 		//Motor Controllers allow a fixed 1/-1 range
 		this.setOutputRange(-1, 1);
+		
 	}
 	
 	/**
@@ -94,6 +103,14 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 			this.setKi(K_i_cal.get());
 		}
 	}
+	
+	public void setGyroCompEnabled(boolean en){
+		gyroCompEnabled = en;
+	}
+	
+	public void setGyroCompInverted(boolean inv){
+		gyroCompInverted = inv;
+	}
 
 	@Override
 	protected double returnPIDInput() {
@@ -102,8 +119,22 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 
 	@Override
 	protected void usePIDOutput(double pidOutput) {
+		double gyroCompOutput;
 		if(enabled){
-			spdctrl.set(pidOutput); //presumes pidOutput will be in -1/1 range
+			//If we wanted gyro compensation and we have a gyro, do a very simple P controller
+			// Allow for inversion of the gyro control effort since motors are flipped on each side of the drivetrain
+			// (and this class takes care of all dt motors)
+			if(gyroCompEnabled & Gyro.getInstance().isOnline()){
+					gyroCompOutput = gyroCompGain_cmdPerDegErr*(headingSetpoint - Gyro.getInstance().getAngle());
+					if(gyroCompInverted){
+						gyroCompOutput *= -1.0;
+					}
+			} else {
+				//Don't use gyro compensation
+				gyroCompOutput = 0;
+			}
+			
+			spdctrl.set(Math.max(-1,  Math.min(1, pidOutput + gyroCompOutput)));
 		}
 	}
 
