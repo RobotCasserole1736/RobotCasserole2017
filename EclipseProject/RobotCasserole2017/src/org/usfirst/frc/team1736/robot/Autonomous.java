@@ -28,7 +28,8 @@ import org.usfirst.frc.team1736.robot.auto.AutoEventDriveToCenterLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromBlue;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
 import org.usfirst.frc.team1736.robot.auto.AutoEventOpenGearMechanism;
-import org.usfirst.frc.team1736.robot.auto.AutoEventShoot;
+import org.usfirst.frc.team1736.robot.auto.AutoEventShootNoVision;
+import org.usfirst.frc.team1736.robot.auto.AutoEventShootWithVision;
 
 public class Autonomous {
 	Calibration autoMode;
@@ -38,7 +39,7 @@ public class Autonomous {
 	int mode;
 	
 	public Autonomous(){
-		autoMode = new Calibration("Auto Mode",0,0,5);
+		autoMode = new Calibration("Auto Mode",0,0,10);
 	}
 	
 	public void updateAutoSelection(){
@@ -50,18 +51,20 @@ public class Autonomous {
 			autoModeName = "Cross Baseline";
 			break;
 		case 2:
-			autoModeName = "Align and Shoot Blue";
+			autoModeName = "Vision Shoot Blue";
 			break;
 		case 3:
-			autoModeName = "Align and Shoot Red";
+			autoModeName = "Vision Shoot Red";
 			break;
 		case 4: //put a gear on the center lift
 			autoModeName = "Gear";
 			break;
+		case 5:
+			autoModeName = "No Move Shoot";
 		default: //Do nothing
 			autoModeName = "Do Nothing";
 			break;
-	}
+		}
 	}
 	
 	public void executeAutonomus(){
@@ -74,13 +77,13 @@ public class Autonomous {
 			case 2:
 				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue();
 				AutoSequencer.addEvent(driveBlue);
-				AutoEventShoot shootNow = new AutoEventShoot();
+				AutoEventShootWithVision shootNow = new AutoEventShootWithVision();
 				AutoSequencer.addEvent(shootNow);
 				break;
 			case 3:
 				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed();
 				AutoSequencer.addEvent(driveRed);
-				AutoEventShoot shootNow2 = new AutoEventShoot();
+				AutoEventShootWithVision shootNow2 = new AutoEventShootWithVision();
 				AutoSequencer.addEvent(shootNow2);
 				break;
 			case 4: //put a gear on the center lift
@@ -90,6 +93,10 @@ public class Autonomous {
 				AutoSequencer.addEvent(openGear);
 				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
 				AutoSequencer.addEvent(backAway);
+				break;
+			case 5: //drive forward across base line
+				AutoEventShootNoVision olShoot = new AutoEventShootNoVision();
+				AutoSequencer.addEvent(olShoot);
 				break;
 			default: //Do nothing
 				break;

@@ -5,7 +5,7 @@ import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 import org.usfirst.frc.team1736.robot.VisionAlignment;
 
-public class AutoEventShoot extends AutoEvent {
+public class AutoEventShootWithVision extends AutoEvent {
 	
 	//Vision Alignment Control
 	VisionAlignment visionAlignCTRL;
@@ -17,7 +17,7 @@ public class AutoEventShoot extends AutoEvent {
 	public void userUpdate() {
 		// TODO Auto-generated method stub
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(true); 
+		visionAlignCTRL.setVisionAlignmentDesired(false); 
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.SHOOT);
 	}
