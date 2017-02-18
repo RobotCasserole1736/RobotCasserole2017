@@ -43,31 +43,38 @@ public class Autonomous {
 	}
 	
 	public void updateAutoSelection(){
-		mode = (int) Math.round(autoMode.get());
 		
-		//The following must be aligned to the below selection
-		switch(mode){
-		case 1: //drive forward across base line
-			autoModeName = "Cross Baseline";
-			break;
-		case 2:
-			autoModeName = "Vision Shoot Blue";
-			break;
-		case 3:
-			autoModeName = "Vision Shoot Red";
-			break;
-		case 4: //put a gear on the center lift
-			autoModeName = "Gear";
-			break;
-		case 5:
-			autoModeName = "No Move Shoot";
-		default: //Do nothing
-			autoModeName = "Do Nothing";
-			break;
+		if((int) Math.round(autoMode.get()) != mode){
+			mode = (int) Math.round(autoMode.get());
+			
+			//The following must be aligned to the below selection
+			switch(mode){
+			case 1: //drive forward across base line
+				autoModeName = "Cross Baseline";
+				break;
+			case 2: //Move off the blue wall, vision align and shoot
+				autoModeName = "Vision Shoot Blue";
+				break;
+			case 3: //move off the red wall, vision align and shoot
+				autoModeName = "Vision Shoot Red";
+				break;
+			case 4: //put a gear on the center lift
+				autoModeName = "Gear";
+				break;
+			case 5: //Shoot without vision alignment or motion
+				autoModeName = "No Move Shoot";
+			default: //Do nothing
+				autoModeName = "Do Nothing";
+				break;
+			}
+			System.out.println("[Auto] New mode selected: " + autoModeName);
 		}
+		
 	}
 	
 	public void executeAutonomus(){
+		
+		System.out.println("[Auto] Initalizing " + autoModeName + " auton routine.");
 		
 		switch(mode){
 			case 1: //drive forward across base line
@@ -101,6 +108,7 @@ public class Autonomous {
 			default: //Do nothing
 				break;
 		}
+		
 		AutoSequencer.start();
 	}
 	

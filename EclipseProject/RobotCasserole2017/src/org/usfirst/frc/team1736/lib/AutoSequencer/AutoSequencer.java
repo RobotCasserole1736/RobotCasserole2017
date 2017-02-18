@@ -22,6 +22,8 @@ package org.usfirst.frc.team1736.lib.AutoSequencer;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * Casserole Autonomous mode event sequencer. Provides an infrastructure for defining autonomous
  * actions in a multi-layer state-machine like fashion. <br>
@@ -50,6 +52,7 @@ public class AutoSequencer {
      */
     public static void addEvent(AutoEvent event_in) {
         events.add(event_in);
+        System.out.println("[Auto] New event registered - " + event_in.getClass().getName());
     }
 
 
@@ -59,9 +62,12 @@ public class AutoSequencer {
     public static void start() {
         globalEventIndex = 0;
         globalUpdateCount = 0;
+        
+        System.out.println("[Auto] Starting...");
 
         if (events.size() > 0) {
             activeEvent = events.get(globalEventIndex);
+            System.out.println("[Auto] Starting new auto event " + activeEvent.getClass().getName());
             activeEvent.userStart();
         }
     }
@@ -79,6 +85,7 @@ public class AutoSequencer {
             activeEvent.forceStopAllChildren();
             activeEvent.userForceStop();
         }
+        System.out.println("[Auto] Stopping...");
 
         // Set activeEvent to nothing running state.
         activeEvent = null;
@@ -127,15 +134,23 @@ public class AutoSequencer {
                 if (globalEventIndex >= events.size()) {
                     // terminal condition. we have no more states to run. Stop running things.
                     activeEvent = null;
+                    System.out.println("[Auto] Finished all events in sequence.");
                     return;
                 } 
                 
                 activeEvent = events.get(globalEventIndex);
+                System.out.println("[Auto] Starting new auto event " + activeEvent.getClass().getName());
                 activeEvent.userStart();
             }
+            
+        if(globalUpdateCount % 50 == 0){
+        	System.out.println("[Auto] Running. timestep = " + Double.toString(globalUpdateCount*0.02) + "s | ActualTime = " + Double.toString(Timer.getFPGATimestamp()));
+        }
+
 
         }
         globalUpdateCount++;
+        
 
     }
 
