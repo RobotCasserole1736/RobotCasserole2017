@@ -41,48 +41,64 @@ public class DriverController extends Xbox360Controller {
 	
 	public double getFwdRevCmd()
 	{
-		
-		boolean isPos;
-		
-		//remember sign
-		if(LStick_Y()>0){
-			isPos = true;
-		} else{
-			isPos = false;
-		}
-		
-		//Scale joystick by power
-		double doug = Math.pow(Math.abs(LStick_Y()), 3);
-		
-		//re-invert if needed
-		if(isPos = false){
-			doug = -doug;
+		if (getDriveTrain45Mode())
+		{
+			return getXYRoundedToCaridinalPoints('Y');
+		}		
+		else
+		{
+			boolean isPos;
+			
+			//remember sign
+			if(LStick_Y()>0){
+				isPos = true;
+			} else{
+				isPos = false;
+			}
+			
+			//Scale joystick by power
+			double doug = Math.pow(Math.abs(LStick_Y()), 3);
+			
+			//re-invert if needed
+			if(isPos == false){
+				doug = -doug;
+			}
+
+			return doug;
 		}
 
-		return doug;
 	}
 	
 	public double getStrafeCmd()
 	{
+
+		if (getDriveTrain45Mode())
+		{
+			return getXYRoundedToCaridinalPoints('X');
+		}		
+		else
+		{
+			
+			boolean isPos;
+			
+			//remember sign
+			if(LStick_X()>0){
+				isPos = true;
+			} else{
+				isPos = false;
+			}
+			
+			//Scale joystick by power
+			double doug = Math.pow(Math.abs(LStick_X()), 3);
+			
+			//re-invert if needed
+			if(isPos == false){
+				doug = -doug;
+			}
 		
-		boolean isPos;
-		
-		//remember sign
-		if(LStick_X()>0){
-			isPos = true;
-		} else{
-			isPos = false;
+			return doug;	
 		}
-		
-		//Scale joystick by power
-		double doug = Math.pow(Math.abs(LStick_X()), 3);
-		
-		//re-invert if needed
-		if(isPos = false){
-			doug = -doug;
-		}
-	
-		return doug;	
+
 	}
 	
 	public double getRotateCmd()
@@ -101,7 +117,7 @@ public class DriverController extends Xbox360Controller {
 		double doug = Math.pow(Math.abs(RStick_X()), 3);
 		
 		//re-invert if needed
-		if(isPos = false){
+		if(isPos == false){
 			doug = -doug;
 		}
 
@@ -161,6 +177,11 @@ public class DriverController extends Xbox360Controller {
 		return RB();
 	}
 	
+	public boolean getDriveTrain45Mode()
+	{
+		return LB();	
+	}
+	
 	public void update(){
 
 		updateAirCompEnabled();
@@ -205,6 +226,43 @@ public class DriverController extends Xbox360Controller {
 		  */
 		Gyro.getInstance().setAngleOffset(angle);
 		
+		
+	}
+	private double getXYRoundedToCaridinalPoints(char dir)
+	{
+		double theta = Math.atan2(LStick_Y(),  LStick_X());
+		
+		//Caridinal points in radians
+		double east = 0;
+		double north = Math.PI/2;
+		double west = Math.PI;
+		double south = -north;
+		double ErrorMargin = Math.PI/8;
+		
+		if ((theta < ErrorMargin && theta > -ErrorMargin) || (theta > west - ErrorMargin && theta <= west) || (theta < -west + ErrorMargin && theta >= -west))
+		{
+			//Go east or west
+			if (dir == 'X')
+			{
+				return LStick_X();
+			}else
+			{
+				return 0;
+			}
+		} else if((theta < north + ErrorMargin && theta > north - ErrorMargin) || (theta < south + ErrorMargin && theta > south - ErrorMargin))
+		{
+			//go north or south
+			if(dir == 'Y')
+			{
+				return LStick_Y();
+			}else
+			{
+				return 0;
+			}
+		}else
+		{
+			return 0;
+		}
 	}
 
 }
