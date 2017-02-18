@@ -107,6 +107,11 @@ public class DriverController extends Xbox360Controller {
 		return RB();
 	}
 	
+	public boolean getDriveTrain45Mode()
+	{
+		return LB();	
+	}
+	
 	public void update(){
 
 		updateAirCompEnabled();
@@ -150,6 +155,7 @@ public class DriverController extends Xbox360Controller {
 		 }
 		  */
 		Gyro.getInstance().setAngleOffset(angle);
+		
 		
 	}
 
