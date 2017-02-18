@@ -527,21 +527,23 @@ public class MecanumPathPlanner
 			double pointsFirst = 0;
 			double pointsSecond = 0;
 			double pointsTotal = 0;
+			double maxPoints = 0;
 
-			for (int i=1; i<=5; i++)
-				for (int j=1; j<=8; j++)
-					for (int k=1; k<8; k++)
+			for (int i=1; i<=8; i++)
+				for (int j=1; j<=10; j++)
+					for (int k=1; k<10; k++)
 					{
 						pointsFirst = i *(numNodeOnlyPoints-1) + numNodeOnlyPoints;
 						pointsSecond = (j*(pointsFirst-1)+pointsFirst);
 						pointsTotal =  (k*(pointsSecond-1)+pointsSecond);
 
-						if(pointsTotal<=totalPoints)
+						if(pointsTotal<=totalPoints && pointsTotal > maxPoints)
 						{
 							first=i;
 							second=j;
 							third=k;
 							numFinalPoints=pointsTotal;
+							maxPoints = pointsTotal;
 						}
 					}
 
