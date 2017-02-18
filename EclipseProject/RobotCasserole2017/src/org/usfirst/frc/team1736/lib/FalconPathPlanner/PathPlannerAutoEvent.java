@@ -23,6 +23,7 @@ package org.usfirst.frc.team1736.lib.FalconPathPlanner;
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.CasserolePID.CasserolePID;
 import org.usfirst.frc.team1736.robot.DriveTrain;
+import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
 /**
  * Interface into the Casserole autonomous sequencer for a path-planned traversal. Simply wraps
@@ -43,10 +44,10 @@ public class PathPlannerAutoEvent extends AutoEvent {
     private double taskRate = 0.02;
     private double trackLength = 23.56 / 12;
     private double trackWidth = 24.75 / 12;
-    private CasserolePID leftFrontMotor;
-    private CasserolePID rightFrontMotor;
-    private CasserolePID leftRearMotor;
-    private CasserolePID rightRearMotor;
+    private DriveTrainWheelSpeedPI leftFrontMotor;
+    private DriveTrainWheelSpeedPI rightFrontMotor;
+    private DriveTrainWheelSpeedPI leftRearMotor;
+    private DriveTrainWheelSpeedPI rightRearMotor;
     /**
      * Constructor. Set up the parameters of the planner here.
      * 
@@ -62,8 +63,8 @@ public class PathPlannerAutoEvent extends AutoEvent {
      * @param rightRearMotor_in Reference to the PID which controls the right rear wheel of the drivetrain.
      *        Presumes the .set() method accepts units of ft/sec.              
      */
-    public PathPlannerAutoEvent(double[][] waypoints_in, double timeAllowed_in, CasserolePID leftFrontMotor_in,
-            CasserolePID rightFrontMotor_in, CasserolePID leftRearMotor_in,CasserolePID rightRearMotor_in) {        super();
+    public PathPlannerAutoEvent(double[][] waypoints_in, double timeAllowed_in, DriveTrainWheelSpeedPI leftFrontMotor_in,
+    		DriveTrainWheelSpeedPI rightFrontMotor_in, DriveTrainWheelSpeedPI leftRearMotor_in,DriveTrainWheelSpeedPI rightRearMotor_in) {        super();
         waypoints = waypoints_in;
         time_duration_s = timeAllowed_in;
         leftFrontMotor = leftFrontMotor_in;
@@ -90,15 +91,17 @@ public class PathPlannerAutoEvent extends AutoEvent {
             timestep = 0;
             pathCalculated = true;
         }
+        
+        leftFrontMotor.setDesiredHeading(path.heading[timestep][1]-90); //-90 to match gyro orientation
+        rightFrontMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        leftRearMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        rightRearMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        
         leftFrontMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothLeftFrontVelocity[timestep][1]));
         rightFrontMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothRightFrontVelocity[timestep][1]));
         leftRearMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothLeftRearVelocity[timestep][1]));
         rightRearMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothRightRearVelocity[timestep][1]));
-        //PID Tune
-        //leftFrontMotor.setSetpoint(0);
-        //rightFrontMotor.setSetpoint(500);
-        //leftRearMotor.setSetpoint(0);
-        //rightRearMotor.setSetpoint(0);
+
         
         
         timestep++;
@@ -109,6 +112,11 @@ public class PathPlannerAutoEvent extends AutoEvent {
      * Force both sides of the drivetrain to zero
      */
     public void userForceStop() {
+        leftFrontMotor.setGyroCompEnabled(false);
+        leftRearMotor.setGyroCompEnabled(false);
+        rightFrontMotor.setGyroCompEnabled(false);
+        rightRearMotor.setGyroCompEnabled(false);
+    	
         leftFrontMotor.setSetpoint(0);
         rightFrontMotor.setSetpoint(0);
         leftRearMotor.setSetpoint(0);
@@ -137,6 +145,14 @@ public class PathPlannerAutoEvent extends AutoEvent {
 		path.calculate(time_duration_s, taskRate,trackWidth,trackLength);
         timestep = 0;
         pathCalculated = true;
+        
+        leftFrontMotor.setGyroCompEnabled(true);
+        leftRearMotor.setGyroCompEnabled(true);
+        rightFrontMotor.setGyroCompEnabled(true);
+        rightRearMotor.setGyroCompEnabled(true);
+        
+        //rightFrontMotor.setGyroCompInverted(true);
+        //rightRearMotor.setGyroCompInverted(true);
 	}
 
 
