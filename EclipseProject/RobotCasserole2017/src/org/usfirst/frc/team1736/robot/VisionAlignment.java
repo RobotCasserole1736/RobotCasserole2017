@@ -28,6 +28,9 @@ import edu.wpi.first.wpilibj.Timer;
 public class VisionAlignment {
 	private static VisionAlignment visionAlignment = null;
 	
+	//Timer for sDelay state
+	Timer delayTimer;
+	
 	private VisionAlignAnglePID anglePID;
 	private VisionAlignDistPID distPID;
 	
@@ -50,7 +53,7 @@ public class VisionAlignment {
 	
 	//States of the vision align subsystem
 	public enum VisionAlignStates {
-		sNotControlling(0), sAligning(1), sConfirmTarget(2), sOnTarget(3);
+		sNotControlling(0), sAligning(1), sDelay(2), sConfirmTarget(3), sOnTarget(4);
 	
 		public final int value;
 	
@@ -106,6 +109,9 @@ public class VisionAlignment {
 		gyroHistory = new InterpValueHistoryBuffer(50, 0);
 		distanceHistory = new InterpValueHistoryBuffer(50, 0);
 		prev_frame_counter = 0;
+		
+		//Timer for sDelay state
+		delayTimer = new Timer();
 	}
 
 	public void GetAligned(){
@@ -136,6 +142,20 @@ public class VisionAlignment {
 		// moving it to setpoints determined by the vision processing system.
 		// We effectively get a boost in bandwidth of our control algorithm.
 		double timeNow = Timer.getFPGATimestamp();
+		
+		double delayTimeStart = 0;
+		
+		double angleOffset = 0;
+		double distOffset = 0;
+		double pidAngleErr = 0;
+		double pidDistErr = 0;
+		
+		angleOffset = vis.getTarget().getTargetOffsetDegrees() - angleDesired.get();
+		distOffset = vis.getTarget().getEstTargetDistanceFt() - distDesired.get();
+		
+		pidAngleErr = anglePID.getCurError();
+		pidDistErr = distPID.getCurError();
+
 		gyroHistory.insert(timeNow, Gyro.getInstance().getAngle());
 		distanceHistory.insert(timeNow, RobotPoseCalculator.getInstance().getFwdRevDistFt());
 		
@@ -148,10 +168,10 @@ public class VisionAlignment {
 		{
 			//update the gyro-based setpoints
 			gyroAngleLastFrame = gyroHistory.getValAtTime(vis.getEstCaptureTime());
-			gyroAngleDesiredLastFrame = gyroAngleLastFrame + (vis.getTarget().getTargetOffsetDegrees() - angleDesired.get());
+			gyroAngleDesiredLastFrame = gyroAngleLastFrame + (angleOffset);
 			//Update the distance-based setpoints
 			distanceLastFrame = distanceHistory.getValAtTime(vis.getEstCaptureTime());
-			distanceDesiredLastFrame = distanceLastFrame + (vis.getTarget().getEstTargetDistanceFt() - distDesired.get());
+			distanceDesiredLastFrame = distanceLastFrame + (distOffset);
 			prev_frame_counter = vis.getFrameCount();
 		}
 		
@@ -162,8 +182,8 @@ public class VisionAlignment {
 		//Execute State Machine
 		if(visionAlignState == VisionAlignStates.sOnTarget){
 			
-			if(!(Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol + angleTolHyst) ||
-			   !(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol + angleTolHyst))
+			if(!(Math.abs(angleOffset) < angleTol + angleTolHyst) ||
+			   !(Math.abs(distOffset) < distTol + angleTolHyst))
 			{ //If we get too far off target (based on camera input)...
 				
 				visionAlignmentOnTarget = false; //Set Off Target
@@ -196,15 +216,15 @@ public class VisionAlignment {
 				//Change State
 				visionAlignState = VisionAlignStates.sNotControlling;
 				
-			} else if((Math.abs(anglePID.getCurError()) < angleTol) && 
-			          (Math.abs(distPID.getCurError()) < distTol))
+			} else if((Math.abs(pidAngleErr) < angleTol) && 
+			          (Math.abs(pidDistErr) < distTol))
 			{	//If we get within our tolerance (via closed loop)
-				//"Take Pic"
-				anglePID.setAngle(gyroAngleDesiredLastFrame);
-				distPID.setDist(distanceDesiredLastFrame);
-					
+				
+				//Set delay start
+				delayTimeStart = Timer.getFPGATimestamp();
+				
 				//Change State
-				visionAlignState = VisionAlignStates.sConfirmTarget;
+				visionAlignState = VisionAlignStates.sDelay;
 				
 			} else{ //maintain state
 				visionAlignState = VisionAlignStates.sAligning;
@@ -219,23 +239,38 @@ public class VisionAlignment {
 				//Change State
 				visionAlignState = VisionAlignStates.sNotControlling;
 				
-			} else if((Math.abs(vis.getTarget().getTargetOffsetDegrees() - angleDesired.get()) < angleTol) && 
-					(Math.abs(vis.getTarget().getEstTargetDistanceFt() - distDesired.get()) < distTol)){
+			} else if((Math.abs(angleOffset) < angleTol) && 
+					(Math.abs(distOffset) < distTol)){
 					//If we get within our tolerance (based on camera)
 					//Set On Target
 					visionAlignmentOnTarget = true;
-					//"Take Pic"
-					anglePID.setAngle(gyroAngleDesiredLastFrame);
-					distPID.setDist(distanceDesiredLastFrame);
-					
+
 					//Change State
 					visionAlignState = VisionAlignStates.sOnTarget;
 							
-			} else{ //maintain state
+			} else{		
+				anglePID.setAngle(gyroAngleDesiredLastFrame); //"Take Pic"
+				distPID.setDist(distanceDesiredLastFrame);
+				
 				visionAlignState = VisionAlignStates.sAligning;
 			}
 				
+		}else if(visionAlignState == VisionAlignStates.sDelay){
+			
+			
+			if ((Timer.getFPGATimestamp() - delayTimeStart)*1000 >= 300){
+				
+				//Change State
+				visionAlignState = VisionAlignStates.sConfirmTarget;
+				
+			}else{
+				
+				//Maintain State
+				visionAlignState = VisionAlignStates.sDelay;
+			}
+			
 		}else{ // visionAlignState == VisionAlignStates.sNotControlling
+		
 			visionAlignmentOnTarget = false;
 			
 			if(alignCanStart) { //If we should start attempting to vision track...
@@ -295,8 +330,10 @@ public class VisionAlignment {
 	
 	public double getVisionAlignState() {
 		if(visionAlignState == VisionAlignStates.sOnTarget){
-			return 3.0;
+			return 4.0;
 		}else if(visionAlignState == VisionAlignStates.sConfirmTarget){
+			return 3.0;
+		}else if(visionAlignState == VisionAlignStates.sDelay){
 			return 2.0;
 		}else if(visionAlignState == VisionAlignStates.sAligning){
 			return 1.0;
