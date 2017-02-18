@@ -180,10 +180,10 @@ public class DriverController extends Xbox360Controller {
 		double east = 0;
 		double north = Math.PI/2;
 		double west = Math.PI;
-		double south = 3 * Math.PI/2;
+		double south = -north;
 		double ErrorMargin = Math.PI/8;
 		
-		if ((theta < ErrorMargin && theta > -ErrorMargin) || (theta < west + ErrorMargin && theta > west - ErrorMargin))
+		if ((theta < ErrorMargin && theta > -ErrorMargin) || (theta > west - ErrorMargin && theta <= west) || (theta < -west + ErrorMargin && theta >= -west))
 		{
 			//Go east or west
 			if (dir == 'X')
