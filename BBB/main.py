@@ -14,6 +14,10 @@ import subprocess
 import pyMjpgStreamer
 import httplib  
 
+#Hack?
+import socket
+socket.setdefaulttimeout(3.0)
+
 ################################################################################
 #Config Data
 ################################################################################
@@ -106,7 +110,7 @@ def robust_url_connect(url):
         except Exception as e:
             print("Could not connect to \"" + url + "\".")
             print("Reason: " + str(e))
-            time.sleep(1)
+            time.sleep(5)
             print("Retrying...")
             local_stream  = None
             continue
@@ -127,7 +131,11 @@ def readMjpgStream():
     # Read data from the network in 1kb chunks
     #  Catch any issues reading. if we have issues, try to reset the connection.
     try:
-        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(4096) #8192*10 
+        startByteCount = len(readMjpgStream.bytes)
+        readMjpgStream.bytes += readMjpgStream.camera_data_stream.read(8192) #8192*10 
+        endByteCount = len(readMjpgStream.bytes)
+        if(endByteCount-startByteCount == 0):
+            raise Exception('No Bytes recieved!')
     except Exception as e:
         print("WARNING: problems reading camera data from stream.")
         print("Reason: " + str(e))
@@ -290,17 +298,19 @@ while True:
 
 
             # Debug printing
-            # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            # print("Frame # "+ str(frame_counter))
-            # print(("Proc Time: %.2f ms" % proc_time_ms) +
-            #       (" | FPS: %.2f" % fps_current) +
-            #       (" | CPU: %.1fpct" % cpu_load_pct)+
-            #       (" | MEM: %.1fpct" % mem_load_pct))
-            # print("Area: " + " | ".join(map(str,targetAreas)))
-            # print("X   : " + " | ".join(map(str,targetXs)))
-            # print("Y   : " + " | ".join(map(str,targetYs)))
-            # print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
-
+            """
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print("Frame # "+ str(frame_counter))
+            print(("Proc Time: %.2f ms" % proc_time_ms) +
+                  (" | FPS: %.2f" % fps_current) +
+                  (" | CPU: %.1fpct" % cpu_load_pct)+
+                  (" | MEM: %.1fpct" % mem_load_pct))
+            print("Area: " + " | ".join(map(str,curObservation.boundedAreas)))
+            print("X   : " + " | ".join(map(str,curObservation.Xs)))
+            print("Y   : " + " | ".join(map(str,curObservation.Ys)))
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
+            """
+            
             # Show debugging image
             if(displayDebugImg):
                 cv2.imshow('Video', img)
