@@ -38,8 +38,8 @@ public class IntakeControl {
 	Solenoid intakeLPExtend = new Solenoid(RobotConstants.INTAKE_LP_EXTEND_SOLENOID_PORT);
 	
 	//Declaring Intake Calibration
-	Calibration intakeMotorFwdCmd = new Calibration("Ground Pickup Intake Motor Command", 0.5, 0.0, 1.0);
-	Calibration intakeMotorRevCmd = new Calibration("Ground Pickup Eject Motor Command", -0.5, -1.0, 0.0);
+	Calibration intakeMotorFwdCmd = new Calibration("Ground Pickup Intake Motor Command", 1.0, 0.0, 1.0);
+	Calibration intakeMotorRevCmd = new Calibration("Ground Pickup Eject Motor Command", -1.0, -1.0, 0.0);
 	
 	//Intake Speed
 	private final double INTAKE_OFF = 0.0;
