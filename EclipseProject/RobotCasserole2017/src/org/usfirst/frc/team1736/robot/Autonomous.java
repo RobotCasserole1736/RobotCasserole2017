@@ -57,7 +57,7 @@ public class Autonomous {
 			break;
 		case 4: //put a gear on the center lift
 			autoModeName = "Gear";
-			break;
+			break;	
 		default: //Do nothing
 			autoModeName = "Do Nothing";
 			break;

@@ -85,7 +85,7 @@ public class RobotConstants {
 	//public static final int SW_TEST_BOARD_SOLENOID_PORT = 4; 
 	
 	//Analog Inputs
-	public static final int AIR_PRESSURE_SENSOR_PORT = 1;
+	public static final int AIR_PRESSURE_SENSOR_PORT = 0;
 	
 	//DIO Ports
 	public static final int LED_RING_CONTROL_OUTPORT = 8;

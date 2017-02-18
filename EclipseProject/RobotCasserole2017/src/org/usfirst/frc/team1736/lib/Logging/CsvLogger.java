@@ -188,7 +188,7 @@ public class CsvLogger {
 
             // Open File
             FileWriter fstream = new FileWriter(log_name, true);
-            log_file = new BufferedWriter(fstream,2048);
+            log_file = new BufferedWriter(fstream);
 
             // Write user-defined header line
             for (String header_txt : dataFieldNames) {
