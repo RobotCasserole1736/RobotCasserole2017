@@ -41,12 +41,26 @@ public class DriverController extends Xbox360Controller {
 	
 	public double getFwdRevCmd()
 	{
-		return LStick_Y();
+		if (getDriveTrain45Mode())
+		{
+			return getXYRoundedToCaridinalPoints('Y');
+		}		
+		else
+		{
+			return LStick_Y();
+		}
 	}
 	
 	public double getStrafeCmd()
 	{
-		return LStick_X();
+		if (getDriveTrain45Mode())
+		{
+			return getXYRoundedToCaridinalPoints('X');
+		}		
+		else
+		{
+			return LStick_X();
+		}
 	}
 	
 	public double getRotateCmd()
@@ -157,6 +171,42 @@ public class DriverController extends Xbox360Controller {
 		Gyro.getInstance().setAngleOffset(angle);
 		
 		
+	}
+	private double getXYRoundedToCaridinalPoints(char dir)
+	{
+		double theta = Math.atan2(LStick_Y(),  LStick_X());
+		
+		//Caridinal points in radians
+		double east = 0;
+		double north = Math.PI/2;
+		double west = Math.PI;
+		double south = 3 * Math.PI/2;
+		double ErrorMargin = Math.PI/8;
+		
+		if ((theta < ErrorMargin && theta > -ErrorMargin) || (theta < west + ErrorMargin && theta > west - ErrorMargin))
+		{
+			//Go east or west
+			if (dir == 'X')
+			{
+				return LStick_X();
+			}else
+			{
+				return 0;
+			}
+		} else if((theta < north + ErrorMargin && theta > north - ErrorMargin) || (theta < south + ErrorMargin && theta > south - ErrorMargin))
+		{
+			//go north or south
+			if(dir == 'Y')
+			{
+				return LStick_Y();
+			}else
+			{
+				return 0;
+			}
+		}else
+		{
+			return 0;
+		}
 	}
 
 }

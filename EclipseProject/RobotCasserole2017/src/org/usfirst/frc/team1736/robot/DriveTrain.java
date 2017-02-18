@@ -186,12 +186,9 @@ public class DriveTrain{
 			rearRightAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
 			runClosedLoop();
 			*/
-		} else if(driverControl.getDriveTrain45Mode())
-		{
-		
-		}else {
-		//For operator control, field oriented, and no vision assist, get all commands from driver along with gyro angle
-		runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), Gyro.getInstance().getAngle());
+		} else {
+			//For operator control, field oriented, and no vision assist, get all commands from driver along with gyro angle
+			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), Gyro.getInstance().getAngle());
 		}
 
 	}
