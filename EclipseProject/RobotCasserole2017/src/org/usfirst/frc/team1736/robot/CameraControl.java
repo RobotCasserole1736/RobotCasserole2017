@@ -11,6 +11,7 @@ public class CameraControl {
 	
 	private HashMap<String, UsbCamera> driverCameras = new HashMap<String, UsbCamera>();
 	private MjpegServer driverStream = null;
+	private String currentDriverCamera = RobotConstants.LOGITECH_USB_DEVICE_ID_SERIAL_2;
 	
 	public CameraControl(){
 		UsbCamera visionProcCam;
@@ -72,9 +73,15 @@ public class CameraControl {
 	}
 
 	public void setDriverCamera(String serialId){
-		if(driverStream.getSource().equals(driverCameras.get(serialId)))
+		if(currentDriverCamera.equals(serialId))
 			return;
+		currentDriverCamera = serialId;
 		driverStream.setSource(driverCameras.get(serialId));
+	}
+	
+	public String getCurrentDriverCamera()
+	{
+		return RobotConstants.DRIVER_CAMERA_NAMES.get(currentDriverCamera);
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1736.robot;
 
 import java.awt.Color;
+import java.util.HashMap;
 
 /*
  *******************************************************************************************
@@ -133,6 +134,13 @@ public class RobotConstants {
 	public static final String LOGITECH_USB_DEVICE_ID_SERIAL_1 = "046d_0825_88D90230";
 	public static final String LOGITECH_USB_DEVICE_ID_SERIAL_2 = "046d_0825_154C0230";
 	
+	@SuppressWarnings("serial")
+	public static final HashMap<String, String> DRIVER_CAMERA_NAMES = new HashMap<String, String>()
+	{{
+		put(LIFECAM_USB_DEVICE_ID_SERIAL, "Vision Cam (MS Lifecam)");
+		put(LOGITECH_USB_DEVICE_ID_SERIAL_1, "Gear Cam");
+		put(LOGITECH_USB_DEVICE_ID_SERIAL_2, "Shooter Cam");
+	}};
 	
 	
 	
