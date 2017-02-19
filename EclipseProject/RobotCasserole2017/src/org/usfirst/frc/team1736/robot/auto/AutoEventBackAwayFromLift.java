@@ -13,7 +13,7 @@ public class AutoEventBackAwayFromLift extends AutoEvent{
 		{-3,0,0}
 	}	;
 	
-	private static final double time = 1.25;
+	private static final double time = 0.75;
 	public AutoEventBackAwayFromLift() {
 		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 

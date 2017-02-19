@@ -41,7 +41,7 @@ public class CameraControl {
 		logitech2.setResolution(320, 240);
 		logitech2.setFPS(15);
 		driverStream = new MjpegServer("DriverCamServer", 1182);
-		driverStream.setSource(logitech1);
+		driverStream.setSource(logitech2);
 		
 		System.out.println(logitech1.getDescription());
 		System.out.println(logitech2.getDescription());

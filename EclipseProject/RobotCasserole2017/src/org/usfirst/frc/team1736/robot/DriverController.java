@@ -41,9 +41,9 @@ public class DriverController extends Xbox360Controller {
 	
 	public double getFwdRevCmd()
 	{
-		if (getDriveTrain45Mode())
+		if (getDriveGearPlaceDriveMode())
 		{
-			return expScaleCommand(getXYRoundedToCaridinalPoints('Y'));
+			return expScaleCommand(-getXYRoundedToCaridinalPoints('X'))*0.5;
 		}		
 		else
 		{
@@ -55,9 +55,9 @@ public class DriverController extends Xbox360Controller {
 	public double getStrafeCmd()
 	{
 
-		if (getDriveTrain45Mode())
+		if (getDriveGearPlaceDriveMode())
 		{
-			return expScaleCommand(getXYRoundedToCaridinalPoints('X'));
+			return expScaleCommand(getXYRoundedToCaridinalPoints('Y'));
 		}		
 		else
 		{
@@ -69,7 +69,13 @@ public class DriverController extends Xbox360Controller {
 	
 	public double getRotateCmd()
 	{
-		return expScaleCommand(RStick_X());
+		if (getDriveGearPlaceDriveMode())
+		{
+			return expScaleCommand(RStick_X())*0.5;
+		} 
+		else{
+			return expScaleCommand(RStick_X());
+		}
 	}
 	
 	public boolean getGearCamAlign()
@@ -125,7 +131,7 @@ public class DriverController extends Xbox360Controller {
 		return RB();
 	}
 	
-	public boolean getDriveTrain45Mode()
+	public boolean getDriveGearPlaceDriveMode()
 	{
 		return LB();	
 	}
