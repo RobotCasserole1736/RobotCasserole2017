@@ -43,28 +43,11 @@ public class DriverController extends Xbox360Controller {
 	{
 		if (getDriveTrain45Mode())
 		{
-			return getXYRoundedToCaridinalPoints('Y');
+			return expScaleCommand(getXYRoundedToCaridinalPoints('Y'));
 		}		
 		else
 		{
-			boolean isPos;
-			
-			//remember sign
-			if(LStick_Y()>0){
-				isPos = true;
-			} else{
-				isPos = false;
-			}
-			
-			//Scale joystick by power
-			double doug = Math.pow(Math.abs(LStick_Y()), 3);
-			
-			//re-invert if needed
-			if(isPos == false){
-				doug = -doug;
-			}
-
-			return doug;
+			return expScaleCommand(LStick_Y());
 		}
 
 	}
@@ -74,54 +57,19 @@ public class DriverController extends Xbox360Controller {
 
 		if (getDriveTrain45Mode())
 		{
-			return getXYRoundedToCaridinalPoints('X');
+			return expScaleCommand(getXYRoundedToCaridinalPoints('X'));
 		}		
 		else
 		{
 			
-			boolean isPos;
-			
-			//remember sign
-			if(LStick_X()>0){
-				isPos = true;
-			} else{
-				isPos = false;
-			}
-			
-			//Scale joystick by power
-			double doug = Math.pow(Math.abs(LStick_X()), 3);
-			
-			//re-invert if needed
-			if(isPos == false){
-				doug = -doug;
-			}
-		
-			return doug;	
+			return expScaleCommand(LStick_X());
 		}
 
 	}
 	
 	public double getRotateCmd()
 	{
-		
-		boolean isPos;
-		
-		//remember sign
-		if(RStick_X()>0){
-			isPos = true;
-		} else{
-			isPos = false;
-		}
-		
-		//Scale joystick by power
-		double doug = Math.pow(Math.abs(RStick_X()), 3);
-		
-		//re-invert if needed
-		if(isPos == false){
-			doug = -doug;
-		}
-
-		return doug;
+		return expScaleCommand(RStick_X());
 	}
 	
 	public boolean getGearCamAlign()
@@ -228,6 +176,30 @@ public class DriverController extends Xbox360Controller {
 		
 		
 	}
+	
+	private double expScaleCommand(double input){
+		boolean isPos;
+		
+		//remember sign
+		if(input>0){
+			isPos = true;
+		} else{
+			isPos = false;
+		}
+		
+		//Scale joystick by power
+		double doug = Math.pow(Math.abs(input), 3);
+		
+		//re-invert if needed
+		if(isPos == false){
+			doug = -doug;
+		}
+
+		return doug;
+	}
+	
+	
+	
 	private double getXYRoundedToCaridinalPoints(char dir)
 	{
 		double theta = Math.atan2(LStick_Y(),  LStick_X());
