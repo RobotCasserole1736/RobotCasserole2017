@@ -44,6 +44,10 @@ public class ShooterWheelCtrl {
 	
 	double prevVel = 0;
 	
+	int velocityOkDbncTimer = 0;
+	
+	final int VELOCITY_RECOVERY_DBNC_LOOPS = 4;
+	
 	
 	public static synchronized ShooterWheelCtrl getInstance()
 	{
@@ -122,12 +126,22 @@ public class ShooterWheelCtrl {
 		actualVelocity = shooterTalon.getSpeed();
 		motorVoltage = shooterTalon.getOutputVoltage();
 		double Error = Math.abs(desiredVelocity - actualVelocity);
-		if (Error > ErrorRange.get()){
+		
+		//Debounce the recovery of shooter velocity.
+		//As soon as the error gets too big, declare the velocity out of range
+		//But after it comes back in range, wait some number of loops before calling the velocity good again
+		if (Error > ErrorRange.get()){ //Robust controls == Threshold and debounce.
 			isVelocityOk = false;
-		}else{
+			velocityOkDbncTimer = 0;
+		}else if(velocityOkDbncTimer < VELOCITY_RECOVERY_DBNC_LOOPS){
+			velocityOkDbncTimer++;
+		}
+		
+		if(velocityOkDbncTimer >=VELOCITY_RECOVERY_DBNC_LOOPS){
 			isVelocityOk = true;
 		}
 		
+		//Update desired velocity previous state
 		prevVel = desiredVelocity;
 	
 	}
