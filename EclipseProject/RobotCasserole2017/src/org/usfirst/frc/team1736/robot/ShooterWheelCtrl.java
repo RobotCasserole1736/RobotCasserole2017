@@ -42,6 +42,8 @@ public class ShooterWheelCtrl {
 	private double motorVoltage = 0;
 	private boolean isVelocityOk = false;
 	
+	double prevVel = 0;
+	
 	
 	public static synchronized ShooterWheelCtrl getInstance()
 	{
@@ -53,10 +55,11 @@ public class ShooterWheelCtrl {
 	private ShooterWheelCtrl(){
 		shooterTalon = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
 		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0.0269);
-		Shooter_P_Gain = new Calibration("Shooter P Gain",0.05);
+		Shooter_P_Gain = new Calibration("Shooter P Gain",0.25);
 		Shooter_I_Gain = new Calibration("Shooter I Gain",0);
-		Shooter_D_Gain = new Calibration("Shooter D Gain",0);
+		Shooter_D_Gain = new Calibration("Shooter D Gain",0.2);
 		ErrorRange = new Calibration("Shooter Error Limit RPM",100,10,1000);
+
 
 		shooterTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative); //Tells the SRX an encoder is attached to its input.
 		shooterTalon.setProfile(0); //Select slot 0 for PID gains
@@ -103,7 +106,19 @@ public class ShooterWheelCtrl {
 	
 	
 	public void update(){
-		shooterTalon.setSetpoint(desiredVelocity);// set what speed the wheel should be running at 
+		
+		if(prevVel <= 0 && desiredVelocity > 0){
+			shooterTalon.changeControlMode(TalonControlMode.Speed);
+		} else if(prevVel > 0 && desiredVelocity <= 0){
+			shooterTalon.changeControlMode(TalonControlMode.Voltage);
+		}
+		
+		if(desiredVelocity > 0){
+			shooterTalon.setSetpoint(desiredVelocity);// set what speed the wheel should be running at 
+		} else {
+			shooterTalon.set(0);// set what speed the wheel should be running at 
+		}
+		
 		actualVelocity = shooterTalon.getSpeed();
 		motorVoltage = shooterTalon.getOutputVoltage();
 		double Error = Math.abs(desiredVelocity - actualVelocity);
@@ -112,6 +127,8 @@ public class ShooterWheelCtrl {
 		}else{
 			isVelocityOk = true;
 		}
+		
+		prevVel = desiredVelocity;
 	
 	}
 	

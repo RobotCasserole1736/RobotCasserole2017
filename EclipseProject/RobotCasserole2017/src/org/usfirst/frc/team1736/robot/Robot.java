@@ -525,7 +525,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("Climber_Current_Limit","bit","isCurrentTooHigh", climbControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Desired_Velocity","rpm","getShooterDesiredRPM", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shooter_Actual_Velocity","rpm","getShooterActualVelocityRPM", shooterWheelControl);
-		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Voltage","rpm","getShooterMotorVoltage", shooterWheelControl);
+		CsvLogger.addLoggingFieldDouble("Shooter_Motor_Voltage","V","getShooterMotorVoltage", shooterWheelControl);
 		CsvLogger.addLoggingFieldBoolean("Shooter_Velocity_OK","bit","getShooterVelocityOK", shooterWheelControl);
 		CsvLogger.addLoggingFieldDouble("Shot_Counter", "count", "getCurrCountLog", shotCount);
 		CsvLogger.addLoggingFieldDouble("FL_Motor_Cmd","cmd","getFLDriveMotorCmd", driveTrain);

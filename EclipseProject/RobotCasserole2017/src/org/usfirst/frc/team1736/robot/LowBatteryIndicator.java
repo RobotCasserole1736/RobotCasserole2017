@@ -29,8 +29,8 @@ public class LowBatteryIndicator {
 	private boolean lowVoltageTriggered = false;
 	private PowerDistributionPanel pdp = null;
 	private AveragingFilter voltageFilter = null;
-	private final double MIN_AVG_VOLTAGE = 9.0;
-	private final double MIN_INSTANT_VOLTAGE = 7.0;
+	private final double MIN_AVG_VOLTAGE = 8.0;
+	private final double MIN_INSTANT_VOLTAGE = 6.0;
 	
 	public static LowBatteryIndicator getInstance() {
 		if(batteryIndicator == null)
@@ -39,7 +39,7 @@ public class LowBatteryIndicator {
 	}
 	
 	private LowBatteryIndicator() {
-		voltageFilter = new AveragingFilter(5, 12);
+		voltageFilter = new AveragingFilter(7, 12);
 	}
 	
 	public void update() {
