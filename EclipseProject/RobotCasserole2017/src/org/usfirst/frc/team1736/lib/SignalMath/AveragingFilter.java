@@ -75,5 +75,9 @@ public class AveragingFilter {
         // Return average = sum/length
         return sum / N;
     }
+    
+    public void reset(){
+    	Arrays.fill(circ_buffer, 0.0);
+    }
 
 }
