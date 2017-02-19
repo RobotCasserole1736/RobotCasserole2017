@@ -204,7 +204,7 @@ public class DriverController extends Xbox360Controller {
 	{
 		double theta = Math.atan2(LStick_Y(),  LStick_X());
 		
-		//Caridinal points in radians
+		//Cardinal points in radians
 		double east = 0;
 		double north = Math.PI/2;
 		double west = Math.PI;
