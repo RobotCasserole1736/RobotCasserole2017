@@ -119,15 +119,15 @@ public class IntegralCalculator {
         if (choice == 0) /* rectangular rule */ {
             value += in * (cur_time - prev_time);
         } else if (choice == 1) /* trapezoid rule */ {
-            value = ((cur_time - prev_time) / 2) * (point_num[0] + point_num[1]);
+            value = ((cur_time - prev_time) / 2.0) * (point_num[0] + point_num[1]);
         } else if (choice == 2) /* simpson's rule */ {
-            value = (1 / 2) * ((cur_time - prev_time) / 6) * (point_num[0] + (4 * point_num[1]) + point_num[2]);
+            value = (1.0 / 2.0) * ((cur_time - prev_time) / 6.0) * (point_num[0] + (4.0 * point_num[1]) + point_num[2]);
         } else if (choice == 3) /* simpson's 3/8 rule */ {
-            value = (1 / 3) * ((cur_time - prev_time) / 8)
-                    * (point_num[0] + (3 * point_num[1]) + (3 * point_num[2]) + point_num[3]);
+            value = (1.0 / 3.0) * ((cur_time - prev_time) / 8.0)
+                    * (point_num[0] + (3.0 * point_num[1]) + (3.0 * point_num[2]) + point_num[3]);
         } else if (choice == 4) /* boole's rule */ {
-            value = (1 / 4) * ((cur_time - prev_time) / 90) * ((7 * point_num[0]) + (32 * point_num[1])
-                    + (12 * point_num[2]) + (32 * point_num[3]) + (7 * point_num[4]));
+            value = (1.0 / 4.0) * ((cur_time - prev_time) / 90.0) * ((7.0 * point_num[0]) + (32.0 * point_num[1])
+                    + (12.0 * point_num[2]) + (32.0 * point_num[3]) + (7.0 * point_num[4]));
         } else { // invalid number. Don't do any calculation
             System.out.println("Warning: invalid number choice in IntegralCalculator. No calculation will be done.");
 
