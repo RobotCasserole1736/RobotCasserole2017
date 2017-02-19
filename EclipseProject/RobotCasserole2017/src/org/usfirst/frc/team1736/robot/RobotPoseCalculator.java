@@ -32,6 +32,8 @@ public class RobotPoseCalculator {
 	private double strafeDist = 0;
 	private double netDist = 0;
 	
+	private VelocityEstimator velEst;
+	
 	public static synchronized RobotPoseCalculator getInstance()
 	{
 		if(poseCalculator == null)
@@ -40,6 +42,8 @@ public class RobotPoseCalculator {
 	}
 	
 	private RobotPoseCalculator(){
+		velEst = new VelocityEstimator();
+		
 		return;
 	}
 	
@@ -54,6 +58,9 @@ public class RobotPoseCalculator {
 		double Vx;
 		double Vy;
 		DriveTrain dt = DriveTrain.getInstance();
+		
+		//Update the accelerometer- based velocity estimation.
+		velEst.update();
 		
 		///////////////////////////////////////////////////////////////////////////
 		// Speed calculations
@@ -90,6 +97,8 @@ public class RobotPoseCalculator {
 										 dt.getRearRightWheelDistanceFt()) / 4.0;
 		
 		netDist +=  netSpeed*0.02; //meh, just a guess at sample time. This isn't used for anything now that I know of.
+		
+		
 	}
 	
 	public double getNetSpeedFtPerS()
@@ -120,5 +129,13 @@ public class RobotPoseCalculator {
 	public double getNetDistFt()
 	{
 		return netDist;
+	}
+	
+	public double getFwdRevVelEstFtPerS(){
+		return velEst.getEstFwdRevVel_ftpers();
+	}
+	
+	public double getStrafeVelEstFtPerS(){
+		return velEst.getEstStrafeVel_ftpers();
 	}
 }
