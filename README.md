@@ -34,6 +34,4 @@ Eclipse project containing [2017-specific code](https://github.com/RobotCasserol
 
 A javascript/HTML based viewer of data logs captured from the robot during operation.
 
-![Casserole dataviewer 2 sasmple](http://i.imgur.com/Ii8zkLQ.png)
-
 
