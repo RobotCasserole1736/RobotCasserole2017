@@ -38,7 +38,7 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 	boolean enabled;
 	boolean gyroCompEnabled;
 	boolean gyroCompInverted;
-	private final double gyroCompGain_cmdPerDegErr = 0.2/10.0;
+	private final double gyroCompGain_cmdPerDegErr = 0.5/5.0;
 	private double headingSetpoint;
 
 	public DriveTrainWheelSpeedPI(SpeedController spdctrl_in, Encoder encoder_in, Calibration K_ff_cal_in, Calibration K_p_cal_in, Calibration K_i_cal_in) {
@@ -114,6 +114,9 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 	public void setDesiredHeading(double hd){
 		headingSetpoint = hd;
 	}
+	public double getDesiredHeading(){
+		return headingSetpoint;
+	}
 
 	@Override
 	protected double returnPIDInput() {
@@ -128,7 +131,7 @@ public class DriveTrainWheelSpeedPI extends CasserolePID {
 			// Allow for inversion of the gyro control effort since motors are flipped on each side of the drivetrain
 			// (and this class takes care of all dt motors)
 			if(gyroCompEnabled & Gyro.getInstance().isOnline()){
-					gyroCompOutput = gyroCompGain_cmdPerDegErr*(headingSetpoint - Gyro.getInstance().getAngle());
+					gyroCompOutput = -gyroCompGain_cmdPerDegErr*(headingSetpoint - Gyro.getInstance().getAngle());
 					if(gyroCompInverted){
 						gyroCompOutput *= -1.0;
 					}

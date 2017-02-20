@@ -10,13 +10,12 @@ public class AutoEventSwagCrossBaseLine extends AutoEvent {
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		//{0,2,90},
-		//{0,4,180},
-		//{0,6,270},
-		//{0,8,360},
-		{0,10,0}
+		{0,2,0},
+		{0,5,90},
+		{0,8,180},
+		{0,10,180}
 	};
-	private static final double time = 8.0;
+	private static final double time = 5.0;
 	public AutoEventSwagCrossBaseLine() {
 		driveForward = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 

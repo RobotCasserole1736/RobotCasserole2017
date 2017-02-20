@@ -10,10 +10,16 @@ public class AutoEventBackAwayFromLift extends AutoEvent{
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{-4,0,0}
+		{-5,0,0},
+		{-5,2,0},
+		{-5,8,0},
+		{-5,10,0},
+		{0,10,0},
+		{8,10,0}
+		
 	}	;
 	
-	private static final double time = 1.0;
+	private static final double time = 6.5;
 	public AutoEventBackAwayFromLift() {
 		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 

@@ -550,6 +550,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("FR_Desired_Wheel_Velocity","rpm","getFrontRightDesiredWheelSpeedRPM", driveTrain);
 		CsvLogger.addLoggingFieldDouble("RL_Desired_Wheel_Velocity","rpm","getRearLeftDesiredWheelSpeedRPM", driveTrain);
 		CsvLogger.addLoggingFieldDouble("RR_Desired_Wheel_Velocity","rpm","getRearRightDesiredWheelSpeedRPM", driveTrain);
+		CsvLogger.addLoggingFieldDouble("RR_Desired_Wheel_Velocity","rpm","getHeadingSetpoint", driveTrain);
+		
 		CsvLogger.addLoggingFieldBoolean("Vision_System_Online","bit","isOnline", visionProc);
 		CsvLogger.addLoggingFieldBoolean("Valid_Vision_Target_Found","bit","isTargetFound", visionProc.getTarget());
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getTargetOffsetDegrees", visionProc.getTarget());

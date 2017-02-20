@@ -89,6 +89,11 @@ public class Autonomous {
 		
 		AutoSequencer.clearAllEvents();
 		
+		DriveTrain.getInstance().getFrontLeftCTRL().resetIntegrators();
+		DriveTrain.getInstance().getFrontRightCTRL().resetIntegrators();
+		DriveTrain.getInstance().getRearLeftCTRL().resetIntegrators();
+		DriveTrain.getInstance().getRearRightCTRL().resetIntegrators();
+		
 		switch(mode){
 			case 1: //drive forward across base line
 				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine();

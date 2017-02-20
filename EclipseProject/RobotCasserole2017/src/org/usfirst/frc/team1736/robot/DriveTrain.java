@@ -83,7 +83,7 @@ public class DriveTrain{
 		
 		//Set up calibratable values
 		fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
-		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.003);
+		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.004);
 		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.00125);
 		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0003);
 		
@@ -113,6 +113,10 @@ public class DriveTrain{
 		rearLeftAutonCtrl.setOutputInverted(true);
 		//rearLeftAutonCtrl.setSensorInverted(true);
 		
+		//Invert gyro comp where correct (experimentally determined)
+		frontLeftAutonCtrl.setGyroCompInverted(true);
+		frontRightAutonCtrl.setGyroCompInverted(true);
+				
 		runningClosedLoop = false;
 	}
 	
@@ -280,6 +284,10 @@ public class DriveTrain{
 	public double getRearRightWheelSpeedRPM()
 	{
 		return rearRightEncoder.getRate()*60.0;
+	}
+	
+	public double getHeadingSetpoint(){
+		return frontLeftAutonCtrl.getDesiredHeading();
 	}
 	
 	public double getFrontLeftDesiredWheelSpeedRPM()

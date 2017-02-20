@@ -10,7 +10,7 @@ public class AutoEventDriveToCenterLift extends AutoEvent{
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{10.5,0,0}
+		{7.5,-0.5,0}
 	};
 	
 	private static final double time = 2.25;
