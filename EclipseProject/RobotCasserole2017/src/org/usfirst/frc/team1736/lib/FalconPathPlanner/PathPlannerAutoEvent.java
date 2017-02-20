@@ -38,7 +38,7 @@ public class PathPlannerAutoEvent extends AutoEvent {
     private double time_duration_s; 
     boolean pathCalculated;
     
-    private static final double SIDEWAYS_FUDGE_FACTOR = 9.87/6.0; //cuz mechnum and it's nearly midnight
+    private static final double SIDEWAYS_FUDGE_FACTOR = 2.0; //cuz mechnum and it's nearly midnight
 
     private int timestep;
     private double taskRate = 0.02;

@@ -15,7 +15,6 @@ public class AutoEventShootWithVision extends AutoEvent {
 	
 	@Override
 	public void userUpdate() {
-		// TODO Auto-generated method stub
 		visionAlignCTRL = VisionAlignment.getInstance();
 		visionAlignCTRL.setVisionAlignmentDesired(false); 
 		shotCTRL = ShotControl.getInstance();
@@ -24,7 +23,6 @@ public class AutoEventShootWithVision extends AutoEvent {
 
 	@Override
 	public void userForceStop() {
-		// TODO Auto-generated method stub
 		visionAlignCTRL = VisionAlignment.getInstance();
 		visionAlignCTRL.setVisionAlignmentDesired(false); 
 		shotCTRL = ShotControl.getInstance();
@@ -33,19 +31,16 @@ public class AutoEventShootWithVision extends AutoEvent {
 
 	@Override
 	public boolean isTriggered() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isDone() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
 		
 	}
 }
