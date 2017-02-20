@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1736.robot;
 
+import org.usfirst.frc.team1736.lib.Util.MapLookup2D;
+
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -29,9 +31,16 @@ public class VisionTarget {
 	private boolean distanceValid = false;
 	
 	private final double TANGENT_CAMERA_FOV_X = Math.tan(Math.toRadians(RobotConstants.CAMERA_FOV_X_DEG/2.0));
+	private MapLookup2D yPxToDist;
+	
 	
 	public VisionTarget()
-	{ }
+	{ 
+		yPxToDist = new MapLookup2D();
+		//Populate LUT for vision distance with whatever we find
+		//First number is pixel ratio, second number is feed
+		yPxToDist.insertNewPoint(0.0/720.0, 3.0);
+	}
 	
 	/**
 	 * Given the width/x/y of the best candidate for top target, update relevant physical parameters
@@ -85,6 +94,12 @@ public class VisionTarget {
 			distanceValid = false;
 			return -1;
 		}
+	
+	}
+	
+	public double getLookupTargetDistanceFt()
+	{
+		return yPxToDist.lookupVal(((double)bestY)/((double)RobotConstants.VISION_Y_PIXELS));
 	}
 	
 	public double getTargetOffsetDegrees()

@@ -14,7 +14,7 @@ public class AutoEventSwagCrossBaseLine extends AutoEvent {
 		//{0,4,180},
 		//{0,6,270},
 		//{0,8,360},
-		{0,10,180}
+		{0,10,0}
 	};
 	private static final double time = 8.0;
 	public AutoEventSwagCrossBaseLine() {
