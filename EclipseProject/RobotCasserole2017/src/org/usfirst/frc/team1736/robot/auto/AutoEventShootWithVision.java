@@ -16,7 +16,7 @@ public class AutoEventShootWithVision extends AutoEvent {
 	@Override
 	public void userUpdate() {
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(false); 
+		visionAlignCTRL.setVisionAlignmentDesired(true); 
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.SHOOT);
 	}

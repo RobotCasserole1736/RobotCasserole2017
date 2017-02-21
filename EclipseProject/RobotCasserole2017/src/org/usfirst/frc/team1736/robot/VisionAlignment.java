@@ -37,7 +37,7 @@ public class VisionAlignment {
 	InterpValueHistoryBuffer gyroHistory;
 	
 	//Tolerances
-	private double angleTol = 1.0;
+	private double angleTol = 2.0;
 	private double angleTolHyst = 0.025;//get within half a degree lined up
 	private double gyroAngleDesiredLastFrame = 0;
 	private double gyroAngleLastFrame = 0;
@@ -57,8 +57,8 @@ public class VisionAlignment {
 	}
 	
 	//PID Gains 
-	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 0.05, 0.0, 1.0);
-	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.03, 0.0, 1.0);
+	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 0.09, 0.0, 1.0);
+	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.06, 0.0, 1.0);
 	Calibration angle_Kd = new Calibration("Alignment Angle Control Kd", 0.0, 0.0, 1.0);
 
 	

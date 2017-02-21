@@ -27,8 +27,8 @@ import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayLeftFromLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayRightFromLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventCrossBaseLine;
 import org.usfirst.frc.team1736.robot.auto.AutoEventDriveToCenterLift;
-import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromBlue;
-import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
+import org.usfirst.frc.team1736.robot.auto.AutoEventMoveRightOffWall;
+import org.usfirst.frc.team1736.robot.auto.AutoEventMoveLeftOffWall;
 import org.usfirst.frc.team1736.robot.auto.AutoEventOpenGearMechanism;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShootNoVision;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShootWithVision;
@@ -69,10 +69,10 @@ public class Autonomous {
 				autoModeName = "No Move Shoot";
 				break;
 			case 6: //Move off the blue wall, vision align and shoot
-				autoModeName = "Vision Shoot Blue";
+				autoModeName = "Move Right Vision Shoot";
 				break;
 			case 7: //move off the red wall, vision align and shoot
-				autoModeName = "Vision Shoot Red";
+				autoModeName = "Move Left Vision Shoot";
 				break;
 			case 8: //Shoot without vision alignment or motion
 				autoModeName = "Test - DO NOT USE!";
@@ -134,14 +134,14 @@ public class Autonomous {
 				break;
 				
 			case 6:
-				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue();
-				AutoSequencer.addEvent(driveBlue);
+				AutoEventMoveRightOffWall driveRightOffWall = new AutoEventMoveRightOffWall();
+				AutoSequencer.addEvent(driveRightOffWall);
 				AutoEventShootWithVision shootNow = new AutoEventShootWithVision();
 				AutoSequencer.addEvent(shootNow);
 				break;
 			case 7:
-				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed();
-				AutoSequencer.addEvent(driveRed);
+				AutoEventMoveLeftOffWall driveLeftOffWall = new AutoEventMoveLeftOffWall();
+				AutoSequencer.addEvent(driveLeftOffWall);
 				AutoEventShootWithVision shootNow2 = new AutoEventShootWithVision();
 				AutoSequencer.addEvent(shootNow2);
 				break;
