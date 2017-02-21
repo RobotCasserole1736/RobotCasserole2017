@@ -5,48 +5,41 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
-public class AutoEventSwagCrossBaseLine extends AutoEvent {
-	PathPlannerAutoEvent driveForward;
+public class AutoEventBackAwayFromLiftNoCross extends AutoEvent{
+	PathPlannerAutoEvent driveSideways;
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{0,2,0},
-		{0,5,90},
-		{0,8,180},
-		{0,10,180}
-	};
-	private static final double time = 5.0;
-	public AutoEventSwagCrossBaseLine() {
-		driveForward = new PathPlannerAutoEvent(waypoints,time,
+		{-5,0,0},
+		
+	}	;
+	
+	private static final double time = 2.5;
+	public AutoEventBackAwayFromLiftNoCross() {
+		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
+	}
+	
+	public void userForceStop() {
+		driveSideways.userForceStop();
+	}
+	public boolean isTriggered() {
+		return driveSideways.isTriggered();
+	}
+	public boolean isDone() {
+		return driveSideways.isDone();
 	}
 
 	@Override
 	public void userUpdate() {
-		driveForward.userUpdate();
-
-	}
-
-	@Override
-	public void userForceStop() {
-		driveForward.userForceStop();
-
-	}
-
-	@Override
-	public boolean isTriggered() {
-		return driveForward.isTriggered();
-	}
-
-	@Override
-	public boolean isDone() {
-		return driveForward.isDone();
+		driveSideways.userUpdate();
+		
 	}
 
 	@Override
 	public void userStart() {
-		driveForward.userStart();
+		driveSideways.userStart();		
 	}
 	
 }

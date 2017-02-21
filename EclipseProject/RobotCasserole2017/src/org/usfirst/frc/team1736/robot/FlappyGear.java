@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.Servo;
 
 public class FlappyGear {
 
-	int FLAP_UP_DEG = 190;
-	int FLAP_DOWN_DEG = 65;
+	int FLAP_DOWN_DEG = 190;
+	int FLAP_UP_DEG = 65;
 	Servo servo;
 	public FlappyGear(){
 	 servo = new Servo(RobotConstants.GEAR_FLAP_SERVO_PWM_PORT);	
@@ -13,7 +13,7 @@ public class FlappyGear {
 	
 	public void update(){
 	
-		servo.setAngle( (FLAP_UP_DEG - FLAP_DOWN_DEG)* OperatorController.getInstance().getGearFlapCommand() + FLAP_DOWN_DEG);
+		servo.setAngle( (FLAP_DOWN_DEG - FLAP_UP_DEG)* OperatorController.getInstance().getGearFlapCommand() + FLAP_UP_DEG);
 	}
 	
 	
