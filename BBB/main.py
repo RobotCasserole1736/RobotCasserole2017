@@ -6,12 +6,10 @@ from datetime import datetime
 from datetime import timedelta
 import time
 import psutil
-import pythonled
 import Pipeline
 import TargetObservation
 import UDPServer
 import subprocess
-import pyMjpgStreamer
 import httplib  
 
 #ensure socket timeout set to what we want.
@@ -57,10 +55,6 @@ mem_load_pct = 0
 
 
 #Status LED
-statusLED0 = pythonled.pythonled(0)
-statusLED1 = pythonled.pythonled(1)
-statusLED2 = pythonled.pythonled(2)
-statusLED3 = pythonled.pythonled(3)
 ledStatus = False
 
 # image processing pipeline (codegenerated from GRIP)
@@ -74,7 +68,6 @@ outputDataServer = UDPServer.UDPServer(send_to_address = "roborio-1736-frc.local
 ################################################################################
 
 def indicateLEDsNotRunning():
-    statusLED1.off()
     ledStatus = False
 
     
@@ -82,7 +75,6 @@ def indicateLEDsProcessingActive():
     global ledStatus
     
     if(ledStatus == False):
-        statusLED1.on()
         ledStatus = True
 
 
@@ -342,5 +334,3 @@ indicateLEDsNotRunning()
 # Close out any debugging windows
 if(displayDebugImg):
     cv2.destroyAllWindows()
-
-outputVideoStreamer.stop()
