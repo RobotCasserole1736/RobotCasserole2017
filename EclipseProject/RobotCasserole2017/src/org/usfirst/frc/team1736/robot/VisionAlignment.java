@@ -230,7 +230,7 @@ public class VisionAlignment {
 		}else if(visionAlignState == VisionAlignStates.sDelay){
 			
 			
-			if ((Timer.getFPGATimestamp() - delayTimeStart)*1000 >= 550){
+			if ((Timer.getFPGATimestamp() - delayTimeStart)*1000 >= (RobotConstants.TOTAL_VISION_DELAY_S*1000.0+10.0)){
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sConfirmTarget;

@@ -26,7 +26,7 @@ public class CameraControl {
 		driverCameras.put(RobotConstants.LOGITECH_USB_DEVICE_ID_SERIAL_2, logitech2);
 		
 		
-		visionProcCam.setFPS(5); //this seems to not work for some reason???
+		visionProcCam.setFPS(15); //this seems to not work for some reason???
 		visionProcCam.setResolution(RobotConstants.VISION_X_PIXELS, RobotConstants.VISION_Y_PIXELS);
 		visionProcCam.setExposureManual(5);
 		visionProcCam.setWhiteBalanceManual(9000);

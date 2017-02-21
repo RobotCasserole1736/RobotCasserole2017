@@ -225,7 +225,7 @@ public class VisionProcessing {
 	public double getEstCaptureTime()
 	{
 		//return listener.getPacketRxSystemTime() - listener.getProcTimeMs()/1000.0 - RobotConstants.EXPECTED_NETWORK_LATENCY_SEC;
-		return Timer.getFPGATimestamp() - 0.5192;
+		return Timer.getFPGATimestamp() - RobotConstants.TOTAL_VISION_DELAY_S;
 	}
 	
 	public double getFrameCount()
