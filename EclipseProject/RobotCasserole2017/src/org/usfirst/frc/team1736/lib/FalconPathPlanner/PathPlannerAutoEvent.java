@@ -92,10 +92,15 @@ public class PathPlannerAutoEvent extends AutoEvent {
             pathCalculated = true;
         }
         
-        leftFrontMotor.setDesiredHeading(path.heading[timestep][1]-90); //-90 to match gyro orientation
-        rightFrontMotor.setDesiredHeading(path.heading[timestep][1]-90);
-        leftRearMotor.setDesiredHeading(path.heading[timestep][1]-90);
-        rightRearMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        //leftFrontMotor.setDesiredHeading(path.heading[timestep][1]-90); //-90 to match gyro orientation
+        //rightFrontMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        //leftRearMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        //rightRearMotor.setDesiredHeading(path.heading[timestep][1]-90);
+        
+        leftFrontMotor.setDesiredHeading(0); //Hack. All path planning is done with translation.
+        rightFrontMotor.setDesiredHeading(0);
+        leftRearMotor.setDesiredHeading(0);
+        rightRearMotor.setDesiredHeading(0);
         
         leftFrontMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothLeftFrontVelocity[timestep][1]));
         rightFrontMotor.setSetpoint(DriveTrain.FtPerSec_to_RPM(path.smoothRightFrontVelocity[timestep][1]));
