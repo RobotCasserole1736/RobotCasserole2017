@@ -153,7 +153,7 @@ public class Robot extends IterativeRobot {
 		visionProc = VisionProcessing.getInstance();
 		visionAlignCTRL = VisionAlignment.getInstance();
 		visionDelayCal = VisionDelayCalibration.getInstance();
-		FG = new FlappyGear();
+		FG = FlappyGear.getInstance();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
