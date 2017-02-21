@@ -25,8 +25,11 @@ import org.usfirst.frc.team1736.lib.Calibration.Calibration;
 import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayFromLiftNoCross;
 import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayLeftFromLift;
 import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayRightFromLift;
+import org.usfirst.frc.team1736.robot.auto.AutoEventCatchHopper;
 import org.usfirst.frc.team1736.robot.auto.AutoEventCrossBaseLine;
 import org.usfirst.frc.team1736.robot.auto.AutoEventDriveToCenterLift;
+import org.usfirst.frc.team1736.robot.auto.AutoEventGetToDaHoppaLeft;
+import org.usfirst.frc.team1736.robot.auto.AutoEventGetToDaHoppaRight;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveRightOffWall;
 import org.usfirst.frc.team1736.robot.auto.AutoEventMoveLeftOffWall;
 import org.usfirst.frc.team1736.robot.auto.AutoEventOpenGearMechanism;
@@ -42,7 +45,7 @@ public class Autonomous {
 	int mode;
 	
 	public Autonomous(){
-		autoMode = new Calibration("Auto Mode",0,0,10);
+		autoMode = new Calibration("Auto Mode",0,0,20);
 		mode = 100; //A number I think we will never use
 	}
 	
@@ -74,7 +77,13 @@ public class Autonomous {
 			case 7: //move off the red wall, vision align and shoot
 				autoModeName = "Move Left Vision Shoot";
 				break;
-			case 8: //Shoot without vision alignment or motion
+			case 8: //GET TO DA HOPPA (and shoot) (robot placed backwards, moves right from drivers perspective)
+				autoModeName = "TO DA HOPPA Right";
+				break;
+			case 9: //GET TO DA HOPPA (and shoot) (robot placed backwards, moves left from drivers perspective)
+				autoModeName = "TO DA HOPPA Left";
+				break;
+			case 10: //Shoot without vision alignment or motion
 				autoModeName = "Test - DO NOT USE!";
 				break;
 			default: //Do nothing
@@ -146,10 +155,25 @@ public class Autonomous {
 				AutoSequencer.addEvent(shootNow2);
 				break;
 			case 8:
+				AutoEventGetToDaHoppaRight getToHoppaR = new AutoEventGetToDaHoppaRight();
+				AutoEventCatchHopper catchR = new AutoEventCatchHopper();
+				AutoEventShootNoVision shootR = new AutoEventShootNoVision();
+				AutoSequencer.addEvent(getToHoppaR);
+				AutoSequencer.addEvent(catchR);
+				AutoSequencer.addEvent(shootR);
+				break;
+			case 9:
+				AutoEventGetToDaHoppaLeft getToHoppaL = new AutoEventGetToDaHoppaLeft();
+				AutoEventCatchHopper catchL = new AutoEventCatchHopper();
+				AutoEventShootNoVision shootL = new AutoEventShootNoVision();
+				AutoSequencer.addEvent(getToHoppaL);
+				AutoSequencer.addEvent(catchL);
+				AutoSequencer.addEvent(shootL);
+				break;
+			case 10:
 				AutoEventTest swagCross = new AutoEventTest();
 				AutoSequencer.addEvent(swagCross);
 				break;
-
 			default: //Do nothing
 				break;
 		}

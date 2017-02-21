@@ -200,4 +200,7 @@ public class RobotConstants {
 	public static final double INTAKE_PAN_ANGLE = 0;
 	public static final double INTAKE_TILT_ANGLE = 100;
 	
+	public static final int FLAP_UP_DEG = 65;
+	public static final int FLAP_DOWN_DEG = 190;
+	
 }
