@@ -162,7 +162,7 @@ def readMjpgStream():
         # Clear processed bytes from the input data buffer
         readMjpgStream.bytes = ''
         # Convert the raw image bytes into an image structure openCV can use
-        readMjpgStream.img_local = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.CV_LOAD_IMAGE_COLOR)
+        readMjpgStream.img_local = cv2.imdecode(np.fromstring(jpg, dtype = np.uint8), cv2.IMREAD_COLOR)
         return readMjpgStream.img_local, readMjpgStream.cap_time
     else:
         return None, None
@@ -202,7 +202,7 @@ def img_process(img):
     hsv_mask = cv2.inRange(hsv, hsv_thres_lower, hsv_thres_upper)
     
 
-    contours, hierarchy = cv2.findContours(hsv_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_TC89_KCOS)
+    _, contours, hierarchy = cv2.findContours(hsv_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
         #Calcualte unrotated bounding rectangle (top left corner x/y, plus width and height)
         br_x, br_y, w, h = cv2.boundingRect(c)
@@ -302,7 +302,6 @@ while True:
 
 
             # Debug printing
-            """
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             print("Frame # "+ str(frame_counter))
             print(("Proc Time: %.2f ms" % proc_time_ms) +
@@ -313,7 +312,6 @@ while True:
             print("X   : " + " | ".join(map(str,curObservation.Xs)))
             print("Y   : " + " | ".join(map(str,curObservation.Ys)))
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n")
-            """
             
             # Show debugging image
             if(displayDebugImg):
