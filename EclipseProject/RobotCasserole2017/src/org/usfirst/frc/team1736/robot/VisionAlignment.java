@@ -230,11 +230,13 @@ public class VisionAlignment {
 		}else if(visionAlignState == VisionAlignStates.sDelay){
 			
 			
-			if ((Timer.getFPGATimestamp() - delayTimeStart)*1000 >= (RobotConstants.TOTAL_VISION_DELAY_S*1000.0+10.0)){
+			if ((Timer.getFPGATimestamp() - delayTimeStart)*1000 >= (RobotConstants.TOTAL_VISION_DELAY_S*1000.0*1.25)){
 				
 				//Change State
 				visionAlignState = VisionAlignStates.sConfirmTarget;
 				
+			}else if(Math.abs(angleOffset) > angleTol){
+				visionAlignState = VisionAlignStates.sAligning;
 			}else{
 				
 				//Maintain State
