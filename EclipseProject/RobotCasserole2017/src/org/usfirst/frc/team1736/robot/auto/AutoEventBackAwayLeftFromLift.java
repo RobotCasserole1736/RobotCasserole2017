@@ -11,11 +11,11 @@ public class AutoEventBackAwayLeftFromLift extends AutoEvent{
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
 		{-5,0,0},
-		{-5,-2,0},
-		{-5,-8,0},
-		{-5,-10,0},
-		{0,-10,0},
-		{8,-10,0}
+		{-5,2,0},
+		{-5,8,0},
+		{-5,10,0},
+		{0,10,0},
+		{8,10,0}
 		
 	}	;
 	

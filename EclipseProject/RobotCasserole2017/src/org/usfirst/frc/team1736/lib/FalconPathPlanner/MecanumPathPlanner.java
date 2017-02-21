@@ -809,13 +809,13 @@ public class MecanumPathPlanner
 			{0,0,0},
 			{-5,0,0},
 			{-5,2,0},
+			{-5,8,0},
 			{-5,10,0},
-			{-5,12,0},
-			{0,12,0},
-			{10,12,0}
+			{0,10,0},
+			{8,10,0}
 		};
 
-		double totalTime = 10; //seconds
+		double totalTime = 6.5; //seconds
 		double timeStep = 0.02; //period of control loop on Rio, seconds
 		double robotTrackWidth = 2; //distance between left and right wheels, feet
 		double robotTrackLength = 2.5; //distance between front and rear wheels, feet
@@ -867,7 +867,7 @@ public class MecanumPathPlanner
 
 
 			//generate figure 8 path
-			//path.figure8Example();
+			path.figure8Example();
 
 		}
 		//example on printing useful path information
@@ -882,15 +882,16 @@ public class MecanumPathPlanner
 
 		double[][] waypoints = new double[][]{
 			{0,0,0},
-			//{0,2,90},
-			//{0,4,180},
-			//{0,6,270},
-			//{0,8,360},
-			{0,10,180}
+			{-5,0,0},
+			{-5,-2,0},
+			{-5,-8,0},
+			{-5,-10,0},
+			{0,-10,0},
+			{8,-10,0}
 		};
 
-		double totalTime = 8; //seconds
-		double timeStep = 0.05; //period of control loop on Rio, seconds
+		double totalTime = 6.5; //seconds
+		double timeStep = 0.02; //period of control loop on Rio, seconds
 		double robotTrackWidth = 2; //distance between left and right wheels, feet
 		double robotTrackLength = 2.5; //distance between front and rear wheels, feet
 
