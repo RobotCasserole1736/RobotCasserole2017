@@ -57,8 +57,8 @@ public class VisionAlignment {
 	}
 	
 	//PID Gains 
-	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 0.09, 0.0, 1.0);
-	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.06, 0.0, 1.0);
+	Calibration angle_Kp = new Calibration("Alignment Angle Control Kp", 0.07, 0.0, 1.0);
+	Calibration angle_Ki = new Calibration("Alignment Angle Control Ki", 0.04, 0.0, 1.0);
 	Calibration angle_Kd = new Calibration("Alignment Angle Control Kd", 0.0, 0.0, 1.0);
 
 	
