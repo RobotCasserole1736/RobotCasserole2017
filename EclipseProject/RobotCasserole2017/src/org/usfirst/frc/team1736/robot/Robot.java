@@ -514,9 +514,6 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getFwdRevVelFtPerS", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getStrafeVelFtPerS", poseCalc);
 		
-		CsvLogger.addLoggingFieldDouble("Robot_Est_FwdRev_Vel","ft/sec","getFwdRevVelEstFtPerS", poseCalc);
-		CsvLogger.addLoggingFieldDouble("Robot_Est_Strafe_Vel","ft/sec","getStrafeVelEstFtPerS", poseCalc);
-		
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Dist","ft","getFwdRevDistFt", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Dist","ft","getStrafeDistFt", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getAngle", gyro);
@@ -656,8 +653,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)",   poseCalc.getStrafeVelFtPerS());
 		CassesroleWebStates.putDouble("Robot FwdRev Distance (ft)",   poseCalc.getFwdRevDistFt());
 		CassesroleWebStates.putDouble("Robot Strafe Distance (ft)",   poseCalc.getStrafeDistFt());
-		CassesroleWebStates.putDouble("Robot AccelEst FwdRev Velocity (ft per sec)",   poseCalc.getFwdRevVelEstFtPerS());
-		CassesroleWebStates.putDouble("Robot AccelEst Strafe Velocity (ft per sec)",   poseCalc.getStrafeVelEstFtPerS());
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   gyro.getAngle());
 		CassesroleWebStates.putDouble("Front Left Motor Output",   driveTrain.getFLDriveMotorCmd());
 		CassesroleWebStates.putDouble("Front Right Motor Output",   driveTrain.getFRDriveMotorCmd());
