@@ -584,7 +584,6 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("AutoAlign Not Possible!", "red");
 		CasseroleDriverView.newBoolean("Climber Current Too High", "red");
 		
-		CasseroleDriverView.newStringBox("Shot_Count");
 		CasseroleDriverView.newStringBox("Orientation Deg");
 		CasseroleDriverView.newStringBox("Vision Range Ft");
 		CasseroleDriverView.newStringBox("Vision Angle Deg");
@@ -612,7 +611,6 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
 		CasseroleDriverView.setBoolean("Climber Current Too High", climbControl.isCurrentTooHigh());
 		
-		CasseroleDriverView.setStringBox("Shot_Count", leftJustifyDouble(shotCount.getCurrCountLog()));
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
 		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
