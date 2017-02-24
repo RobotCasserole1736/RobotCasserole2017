@@ -591,6 +591,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newStringBox("Orientation Deg");
 		CasseroleDriverView.newStringBox("Vision Range Ft");
 		CasseroleDriverView.newStringBox("Vision Angle Deg");
+		CasseroleDriverView.newStringBox("Shot Count");
 		CasseroleDriverView.newStringBox("Auton. Routine");
 		if(DISPLAY_VISION_PROC_CAM_IN_DS){
 			CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
@@ -618,6 +619,7 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
 		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
+		CasseroleDriverView.setStringBox("Shot Count", Integer.toString(ShotCounter.getInstance().getCurrCount()));
 		CasseroleDriverView.setStringBox("Auton. Routine", auto.autoModeName);
 		if(DISPLAY_VISION_PROC_CAM_IN_DS){
 			CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
