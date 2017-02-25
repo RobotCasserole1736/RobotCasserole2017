@@ -32,7 +32,7 @@ public class RobotConstants {
 	public static final int	COPROCESSOR_LISTEN_PORT = 5800;
 	public static final String DRIVER_CAMERA_URL = "http://roborio-1736-frc.local:1182/stream.mjpg";
 	public static final double EXPECTED_NETWORK_LATENCY_SEC = ((0.345+0.275)*0.5)/1000.0; //An educated guess, based off of measurements with "ping"
-	
+	public static final double TOTAL_VISION_DELAY_S = 0.2588;
 	
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -123,8 +123,8 @@ public class RobotConstants {
 	
 	
 	//Microsoft Lifecam (attached to RIO) Appears to be the best solution? Maybe?
-	public static final int VISION_X_PIXELS = 1280;
-	public static final int VISION_Y_PIXELS = 720;
+	public static final int VISION_X_PIXELS = 640;
+	public static final int VISION_Y_PIXELS = 480;
 	public static final double CAMERA_FOV_X_DEG = 61; 
 	public static final String VISION_PROC_CAMERA_URL = "http://roborio-1736-frc.local:1181/stream.mjpg";
 	public static final String LIFECAM_USB_DEVICE_ID_SERIAL = "_LifeCam_HD-3000";
@@ -199,5 +199,8 @@ public class RobotConstants {
 	public static final double SHOOT_TILT_ANGLE = 50;
 	public static final double INTAKE_PAN_ANGLE = 0;
 	public static final double INTAKE_TILT_ANGLE = 100;
+	
+	public static final int FLAP_UP_DEG = 65;
+	public static final int FLAP_DOWN_DEG = 190;
 	
 }

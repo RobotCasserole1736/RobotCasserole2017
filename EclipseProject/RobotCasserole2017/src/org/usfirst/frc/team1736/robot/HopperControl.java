@@ -36,7 +36,7 @@ public class HopperControl {
 	private Spark hopMotor = new Spark(RobotConstants.HOPPER_MOTOR_PWM_PORT);
 	
 	//Declaring Hopper Calibration
-	Calibration hopperMotorCmd = new Calibration("Hopper Feed Motor Command", 0.5, 0.0, 1.0);
+	Calibration hopperMotorCmd = new Calibration("Hopper Feed Motor Command", 0.7, 0.0, 1.0);
 	
 	private double motorCmd = 0;
 	

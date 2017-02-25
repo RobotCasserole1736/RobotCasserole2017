@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1736.robot;
 
 
-import org.opencv.core.Mat;
 
 /*
  *******************************************************************************************
@@ -31,11 +30,7 @@ import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -158,7 +153,7 @@ public class Robot extends IterativeRobot {
 		visionProc = VisionProcessing.getInstance();
 		visionAlignCTRL = VisionAlignment.getInstance();
 		visionDelayCal = VisionDelayCalibration.getInstance();
-		FG = new FlappyGear();
+		FG = FlappyGear.getInstance();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
@@ -519,9 +514,6 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getFwdRevVelFtPerS", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getStrafeVelFtPerS", poseCalc);
 		
-		CsvLogger.addLoggingFieldDouble("Robot_Est_FwdRev_Vel","ft/sec","getFwdRevVelEstFtPerS", poseCalc);
-		CsvLogger.addLoggingFieldDouble("Robot_Est_Strafe_Vel","ft/sec","getStrafeVelEstFtPerS", poseCalc);
-		
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Dist","ft","getFwdRevDistFt", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Dist","ft","getStrafeDistFt", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Pose_Angle","deg","getAngle", gyro);
@@ -557,15 +549,12 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Angle_From_Camera","deg","getTargetOffsetDegrees", visionProc.getTarget());
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Actual_Angle_At_Frame","deg","getGyroAngleAtLastFrame", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Gyro_Desired_Angle_At_Frame","deg","getGyroAngleDesiredAtLastFrame", visionAlignCTRL);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Encoder_Actual_Distance_At_Frame","ft","getDistanceAtLastFrame", visionAlignCTRL);
-		CsvLogger.addLoggingFieldDouble("Vision_Target_Encoder_Desired_Distance_At_Frame","ft","getDistanceDesiredAtLastFrame", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Target_Range","ft","getEstTargetDistanceFt", visionProc.getTarget());
 		CsvLogger.addLoggingFieldDouble("Vision_Process_Time","msec","getVisionProcessTimeMs",visionProc);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_FPS","frames/sec","getCoProcessorFPS", visionProc);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_CPU_load","%","getCoProcessorCPULoadPct", visionProc);
 		CsvLogger.addLoggingFieldDouble("Vision_CoProc_Mem_load","%","getCoProcessorMemLoadPct", visionProc);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_Possible","bit","getVisionAlignmentPossible", visionAlignCTRL);
-		CsvLogger.addLoggingFieldDouble("Vision_DT_FwdRev_Cmd","cmd","getFwdRevCmd", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_DT_Rotate_Cmd","cmd","getRotateCmd", visionAlignCTRL);
 		CsvLogger.addLoggingFieldBoolean("Vision_Align_On_Target","bit","getVisionAlignmentOnTarget", visionAlignCTRL);
 		CsvLogger.addLoggingFieldDouble("Vision_Align_State", "states", "getVisionAlignState", visionAlignCTRL);
@@ -595,15 +584,15 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.newBoolean("AutoAlign Not Possible!", "red");
 		CasseroleDriverView.newBoolean("Climber Current Too High", "red");
 		
-		CasseroleDriverView.newStringBox("Shot_Count");
 		CasseroleDriverView.newStringBox("Orientation Deg");
 		CasseroleDriverView.newStringBox("Vision Range Ft");
 		CasseroleDriverView.newStringBox("Vision Angle Deg");
+		CasseroleDriverView.newStringBox("Shot Count");
 		CasseroleDriverView.newStringBox("Auton. Routine");
 		if(DISPLAY_VISION_PROC_CAM_IN_DS){
 			CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
 		}
-		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 50, 50, 180);
+		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 50, 50, 270);
 
 	}
 	
@@ -622,10 +611,10 @@ public class Robot extends IterativeRobot {
 		CasseroleDriverView.setBoolean("AutoAlign Not Possible!", autoAlignNotPossibleDVIndState);
 		CasseroleDriverView.setBoolean("Climber Current Too High", climbControl.isCurrentTooHigh());
 		
-		CasseroleDriverView.setStringBox("Shot_Count", leftJustifyDouble(shotCount.getCurrCountLog()));
 		CasseroleDriverView.setStringBox("Orientation Deg", leftJustifyDouble(gyro.getAngle() % 360.0));
 		CasseroleDriverView.setStringBox("Vision Range Ft", leftJustifyDouble(visionProc.getTarget().getEstTargetDistanceFt()));
 		CasseroleDriverView.setStringBox("Vision Angle Deg", leftJustifyDouble(visionProc.getTarget().getTargetOffsetDegrees()));
+		CasseroleDriverView.setStringBox("Shot Count", Integer.toString(ShotCounter.getInstance().getCurrCount()));
 		CasseroleDriverView.setStringBox("Auton. Routine", auto.autoModeName);
 		if(DISPLAY_VISION_PROC_CAM_IN_DS){
 			CasseroleDriverView.setWebcamCrosshairs("VisionProc_cam", 
@@ -664,8 +653,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)",   poseCalc.getStrafeVelFtPerS());
 		CassesroleWebStates.putDouble("Robot FwdRev Distance (ft)",   poseCalc.getFwdRevDistFt());
 		CassesroleWebStates.putDouble("Robot Strafe Distance (ft)",   poseCalc.getStrafeDistFt());
-		CassesroleWebStates.putDouble("Robot AccelEst FwdRev Velocity (ft per sec)",   poseCalc.getFwdRevVelEstFtPerS());
-		CassesroleWebStates.putDouble("Robot AccelEst Strafe Velocity (ft per sec)",   poseCalc.getStrafeVelEstFtPerS());
 		CassesroleWebStates.putDouble("Robot Yaw (deg)",   gyro.getAngle());
 		CassesroleWebStates.putDouble("Front Left Motor Output",   driveTrain.getFLDriveMotorCmd());
 		CassesroleWebStates.putDouble("Front Right Motor Output",   driveTrain.getFRDriveMotorCmd());
@@ -691,7 +678,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Vision Target Offset (deg)", visionProc.getTarget().getTargetOffsetDegrees());
 		CassesroleWebStates.putDouble("Vision Heuristic Val", visionProc.getCurHeuristic());
 		CassesroleWebStates.putDouble("Vision Proc Delay (ms)", (Timer.getFPGATimestamp() - visionProc.getEstCaptureTime())*1000);
-		CassesroleWebStates.putDouble("Vision Fwd/Rev Cmd", visionAlignCTRL.getFwdRevCmd());
 		CassesroleWebStates.putDouble("Vision Rotate Cmd", visionAlignCTRL.getRotateCmd());
 		CassesroleWebStates.putString("Vision_Align_State", visionAlignCTRL.getVisionAlignStateName());
 		CassesroleWebStates.putDouble("Vision Actual Yaw at last Frame (deg)", visionAlignCTRL.getGyroAngleAtLastFrame());

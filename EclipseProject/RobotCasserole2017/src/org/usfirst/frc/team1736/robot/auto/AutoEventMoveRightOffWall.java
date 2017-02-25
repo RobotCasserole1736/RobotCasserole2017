@@ -7,16 +7,16 @@ import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
-public class AutoEventMoveFromRed extends AutoEvent {
+public class AutoEventMoveRightOffWall extends AutoEvent {
 	PathPlannerAutoEvent driveForward;
 	ShotControl shotCTRL;
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{0,9,0}
+		{2,0,0}
 	};
-	private static final double time = 10;
-	public AutoEventMoveFromRed() {
+	private static final double time = 1;
+	public AutoEventMoveRightOffWall() {
 		driveForward = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());

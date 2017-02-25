@@ -59,8 +59,8 @@ public class ShooterWheelCtrl {
 	private ShooterWheelCtrl(){
 		shooterTalon = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
 		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0.0269);
-		Shooter_P_Gain = new Calibration("Shooter P Gain",0.25);
-		Shooter_I_Gain = new Calibration("Shooter I Gain",0);
+		Shooter_P_Gain = new Calibration("Shooter P Gain",0.6);
+		Shooter_I_Gain = new Calibration("Shooter I Gain",0.01);
 		Shooter_D_Gain = new Calibration("Shooter D Gain",0.2);
 		ErrorRange = new Calibration("Shooter Error Limit RPM",100,10,1000);
 

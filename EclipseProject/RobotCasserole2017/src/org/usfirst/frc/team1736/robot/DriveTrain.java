@@ -161,7 +161,7 @@ public class DriveTrain{
 		if(VisionAlignment.getInstance().getVisionAlignmentDesired()){
 			if(VisionAlignment.getInstance().getVisionAlignmentPossible()){
 				//If we're in autonomous and vision alignment is desired (and possible), use the vision commands with no strafe
-				runOpenLoop(VisionAlignment.getInstance().getFwdRevCmd(), 0, VisionAlignment.getInstance().getRotateCmd(), 0);
+				runOpenLoop(0, 0, VisionAlignment.getInstance().getRotateCmd(), 0);
 			} else {
 				//If the auto routine wanted vision but we can't find a target, give up and stay still.
 				runOpenLoop(0, 0, 0, 0);
@@ -177,7 +177,7 @@ public class DriveTrain{
 		DriverController driverControl = DriverController.getInstance();
 		if(VisionAlignment.getInstance().getVisionAlignmentDesired()){
 			//For operator control, vision assist, get commands from the vision subsystem (although the driver may still strafe)
-			runOpenLoop(VisionAlignment.getInstance().getFwdRevCmd(), driverControl.getStrafeCmd(), VisionAlignment.getInstance().getRotateCmd(), 0);
+			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), VisionAlignment.getInstance().getRotateCmd(), 0);
 		} else if(fieldOrientedCtrl.get() == 0.0){
 			//For operator control, non-field oriented, and no vision assist, get all commands from driver 
 			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), 0);

@@ -4,19 +4,19 @@ import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
+import org.usfirst.frc.team1736.robot.ShotControl;
+import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
-public class AutoEventSwagCrossBaseLine extends AutoEvent {
+public class AutoEventMoveLeftOffWall extends AutoEvent {
 	PathPlannerAutoEvent driveForward;
+	ShotControl shotCTRL;
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{0,2,0},
-		{0,5,90},
-		{0,8,180},
-		{0,10,180}
+		{-2,0,0}
 	};
-	private static final double time = 5.0;
-	public AutoEventSwagCrossBaseLine() {
+	private static final double time = 1;
+	public AutoEventMoveLeftOffWall() {
 		driveForward = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
@@ -25,12 +25,16 @@ public class AutoEventSwagCrossBaseLine extends AutoEvent {
 	@Override
 	public void userUpdate() {
 		driveForward.userUpdate();
+		shotCTRL = ShotControl.getInstance();
+		shotCTRL.setDesiredShooterState(ShooterStates.PREP_TO_SHOOT);
 
 	}
 
 	@Override
 	public void userForceStop() {
 		driveForward.userForceStop();
+		shotCTRL = ShotControl.getInstance();
+		shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
 
 	}
 

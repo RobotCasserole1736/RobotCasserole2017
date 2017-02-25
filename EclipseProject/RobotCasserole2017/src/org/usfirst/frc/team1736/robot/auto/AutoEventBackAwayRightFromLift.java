@@ -5,16 +5,22 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
-public class AutoEventDriveToCenterLift extends AutoEvent{
+public class AutoEventBackAwayRightFromLift extends AutoEvent{
 	PathPlannerAutoEvent driveSideways;
 	
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{8.5,-0.3,0}
-	};
+		{-5,0,0},
+		{-5,-2,0},
+		{-5,-8,0},
+		{-5,-10,0},
+		{0,-10,0},
+		{8,-10,0}
+		
+	}	;
 	
-	private static final double time = 2.25;
-	public AutoEventDriveToCenterLift() {
+	private static final double time = 6.5;
+	public AutoEventBackAwayRightFromLift() {
 		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
@@ -38,7 +44,7 @@ public class AutoEventDriveToCenterLift extends AutoEvent{
 
 	@Override
 	public void userStart() {
-		driveSideways.userStart();
+		driveSideways.userStart();		
 	}
 	
 }

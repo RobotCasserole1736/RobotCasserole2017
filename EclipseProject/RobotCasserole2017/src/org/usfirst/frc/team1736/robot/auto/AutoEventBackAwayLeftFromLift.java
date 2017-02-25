@@ -5,7 +5,7 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
-public class AutoEventBackAwayFromLift extends AutoEvent{
+public class AutoEventBackAwayLeftFromLift extends AutoEvent{
 	PathPlannerAutoEvent driveSideways;
 	
 	private static final double[][] waypoints = new double[][]{
@@ -20,7 +20,7 @@ public class AutoEventBackAwayFromLift extends AutoEvent{
 	}	;
 	
 	private static final double time = 6.5;
-	public AutoEventBackAwayFromLift() {
+	public AutoEventBackAwayLeftFromLift() {
 		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());

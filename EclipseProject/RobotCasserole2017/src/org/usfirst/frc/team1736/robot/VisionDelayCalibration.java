@@ -190,9 +190,9 @@ public class VisionDelayCalibration {
 	private double calcStdDev(ArrayList<Double> in, double avg){
 		double sum = 0;
 		for(double element : in){
-			sum += Math.abs(element - avg);
+			sum += Math.pow((element - avg),2);
 		}
-		return sum/((double)in.size());
+		return Math.sqrt(sum/((double)in.size()));
 	}
 
 	/**

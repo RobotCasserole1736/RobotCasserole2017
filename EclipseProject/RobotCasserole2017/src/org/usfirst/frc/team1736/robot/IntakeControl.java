@@ -83,6 +83,11 @@ public class IntakeControl {
 		intakeLPExtend.set(false);
 	}
 	
+	public void runIntakeFwd(){
+		intakeSpeedCommand = intakeMotorFwdCmd.get();
+		intakeMotor.set(intakeSpeedCommand);
+	}
+	
 	public double getCommandedIntakeSpeed()
 	{
 		return intakeSpeedCommand;

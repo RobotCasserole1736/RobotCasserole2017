@@ -809,13 +809,13 @@ public class MecanumPathPlanner
 			{0,0,0},
 			{-5,0,0},
 			{-5,2,0},
+			{-5,8,0},
 			{-5,10,0},
-			{-5,12,0},
-			{0,12,0},
-			{10,12,0}
+			{0,10,0},
+			{8,10,0}
 		};
 
-		double totalTime = 10; //seconds
+		double totalTime = 6.5; //seconds
 		double timeStep = 0.02; //period of control loop on Rio, seconds
 		double robotTrackWidth = 2; //distance between left and right wheels, feet
 		double robotTrackLength = 2.5; //distance between front and rear wheels, feet
@@ -847,8 +847,8 @@ public class MecanumPathPlanner
 			fig1.setTitle("Top Down View of FRC Field (24ft x 27ft) \n shows global position of robot path, along with leftFront, leftRear, rightFront, and rightRear wheel trajectories");
 
 			//force graph to show 1/2 field dimensions of 24ft x 27 feet
-			fig1.setXTic(0, 27, 1);
-			fig1.setYTic(0, 24, 1);
+			fig1.setXTic(0, 30, 1);
+			fig1.setYTic(0, 30, 1);
 			fig1.addData(path.smoothPath, Color.red, Color.blue);
 
 
@@ -867,7 +867,7 @@ public class MecanumPathPlanner
 
 
 			//generate figure 8 path
-			//path.figure8Example();
+			path.figure8Example();
 
 		}
 		//example on printing useful path information
@@ -882,15 +882,16 @@ public class MecanumPathPlanner
 
 		double[][] waypoints = new double[][]{
 			{0,0,0},
-			//{0,2,90},
-			//{0,4,180},
-			//{0,6,270},
-			//{0,8,360},
-			{0,10,180}
+			{-5,0,0},
+			{-5,-2,0},
+			{-5,-8,0},
+			{-5,-10,0},
+			{0,-10,0},
+			{8,-10,0}
 		};
 
-		double totalTime = 8; //seconds
-		double timeStep = 0.05; //period of control loop on Rio, seconds
+		double totalTime = 6.5; //seconds
+		double timeStep = 0.02; //period of control loop on Rio, seconds
 		double robotTrackWidth = 2; //distance between left and right wheels, feet
 		double robotTrackLength = 2.5; //distance between front and rear wheels, feet
 
@@ -902,34 +903,41 @@ public class MecanumPathPlanner
 		if(!GraphicsEnvironment.isHeadless())
 		{
 
-			FalconLinePlot fig3 = new FalconLinePlot(path.smoothCenterVelocity,null,Color.blue);
-			fig3.yGridOn();
-			fig3.xGridOn();
-			fig3.setYLabel("Velocity (ft/sec)");
-			fig3.setXLabel("time (seconds)");
-			fig3.setTitle("Velocity Profile for Left and Right Wheels \n LF = Cyan, RF = Magenta, LR = Green, RR = Orange");
-			fig3.addData(path.smoothRightFrontVelocity, Color.magenta);
-			fig3.addData(path.smoothLeftFrontVelocity, Color.cyan);
-			fig3.addData(path.smoothRightRearVelocity, Color.orange);
-			fig3.addData(path.smoothLeftRearVelocity, Color.green);
-
-			FalconLinePlot fig4 = new FalconLinePlot(path.nodeOnlyPath,Color.blue,Color.green);
+			FalconLinePlot fig4 = new FalconLinePlot(path.smoothCenterVelocity,null,Color.blue);
 			fig4.yGridOn();
 			fig4.xGridOn();
-			fig4.setYLabel("Y (feet)");
-			fig4.setXLabel("X (feet)");
-			fig4.setTitle("Top Down View of FRC Field (24ft x 27ft) \n shows global position of robot path, along with leftFront, leftRear, rightFront, and rightRear wheel trajectories");
+			fig4.setYLabel("Velocity (ft/sec)");
+			fig4.setXLabel("time (seconds)");
+			fig4.setTitle("Velocity Profile for Left and Right Wheels \n LF = Cyan, RF = Magenta, LR = Green, RR = Orange");
+			fig4.addData(path.smoothRightFrontVelocity, Color.magenta);
+			fig4.addData(path.smoothLeftFrontVelocity, Color.cyan);
+			fig4.addData(path.smoothRightRearVelocity, Color.orange);
+			fig4.addData(path.smoothLeftRearVelocity, Color.green);
+
+			FalconLinePlot fig5 = new FalconLinePlot(path.nodeOnlyPath,Color.blue,Color.green);
+			fig5.yGridOn();
+			fig5.xGridOn();
+			fig5.setYLabel("Y (feet)");
+			fig5.setXLabel("X (feet)");
+			fig5.setTitle("Top Down View of FRC Field (24ft x 27ft) \n shows global position of robot path, along with leftFront, leftRear, rightFront, and rightRear wheel trajectories");
 
 			//force graph to show 1/2 field dimensions of 24ft x 27 feet
-			fig4.setXTic(0, 27, 1);
-			fig4.setYTic(0, 24, 1);
-			fig4.addData(path.smoothPath, Color.red, Color.blue);
+			fig5.setXTic(0, 30, 1);
+			fig5.setYTic(0, 30, 1);
+			fig5.addData(path.smoothPath, Color.red, Color.blue);
 
 
-			fig4.addData(path.leftFrontPath, Color.cyan);
-			fig4.addData(path.leftRearPath, Color.green);
-			fig4.addData(path.rightFrontPath, Color.magenta);
-			fig4.addData(path.rightRearPath, Color.orange);
+			fig5.addData(path.leftFrontPath, Color.cyan);
+			fig5.addData(path.leftRearPath, Color.green);
+			fig5.addData(path.rightFrontPath, Color.magenta);
+			fig5.addData(path.rightRearPath, Color.orange);
+			
+			FalconLinePlot fig6 = new FalconLinePlot(path.transformHeadingToGyroFrameOfRef(path.heading),null,Color.blue);
+			
+			fig6.yGridOn();
+			fig6.xGridOn();
+			fig6.setYLabel("des heading (deg)");
+			fig6.setXLabel("time (seconds)");
 		}
 	}
 }

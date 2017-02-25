@@ -22,16 +22,20 @@ package org.usfirst.frc.team1736.robot;
 
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoSequencer;
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
-import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayFromLift;
+import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayFromLiftNoCross;
+import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayLeftFromLift;
+import org.usfirst.frc.team1736.robot.auto.AutoEventBackAwayRightFromLift;
+import org.usfirst.frc.team1736.robot.auto.AutoEventCatchHopper;
 import org.usfirst.frc.team1736.robot.auto.AutoEventCrossBaseLine;
-import org.usfirst.frc.team1736.robot.auto.AutoEventDriveSidewaysAcrossBaseline;
 import org.usfirst.frc.team1736.robot.auto.AutoEventDriveToCenterLift;
-import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromBlue;
-import org.usfirst.frc.team1736.robot.auto.AutoEventMoveFromRed;
+import org.usfirst.frc.team1736.robot.auto.AutoEventGetToDaHoppaLeft;
+import org.usfirst.frc.team1736.robot.auto.AutoEventGetToDaHoppaRight;
+import org.usfirst.frc.team1736.robot.auto.AutoEventMoveRightOffWall;
+import org.usfirst.frc.team1736.robot.auto.AutoEventMoveLeftOffWall;
 import org.usfirst.frc.team1736.robot.auto.AutoEventOpenGearMechanism;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShootNoVision;
 import org.usfirst.frc.team1736.robot.auto.AutoEventShootWithVision;
-import org.usfirst.frc.team1736.robot.auto.AutoEventSwagCrossBaseLine;
+import org.usfirst.frc.team1736.robot.auto.AutoEventTest;
 
 public class Autonomous {
 	Calibration autoMode;
@@ -41,7 +45,7 @@ public class Autonomous {
 	int mode;
 	
 	public Autonomous(){
-		autoMode = new Calibration("Auto Mode",0,0,10);
+		autoMode = new Calibration("Auto Mode",0,0,20);
 		mode = 100; //A number I think we will never use
 	}
 	
@@ -55,23 +59,32 @@ public class Autonomous {
 			case 1: //drive forward across base line
 				autoModeName = "Cross Baseline";
 				break;
-			case 2: //Move off the blue wall, vision align and shoot
-				autoModeName = "Vision Shoot Blue";
+			case 2: //put a gear on the center lift
+				autoModeName = "Gear No X";
 				break;
-			case 3: //move off the red wall, vision align and shoot
-				autoModeName = "Vision Shoot Red";
+			case 3: //put a gear on the center lift
+				autoModeName = "Gear X Left";
 				break;
 			case 4: //put a gear on the center lift
-				autoModeName = "Gear";
+				autoModeName = "Gear X Right";
 				break;
 			case 5: //Shoot without vision alignment or motion
 				autoModeName = "No Move Shoot";
 				break;
-			case 6: //Shoot without vision alignment or motion
-				autoModeName = "Sideways X Baseline";
+			case 6: //Move off the blue wall, vision align and shoot
+				autoModeName = "Move Right Vision Shoot";
 				break;
-			case 7: //Shoot without vision alignment or motion
-				autoModeName = "DO NOT USE!";
+			case 7: //move off the red wall, vision align and shoot
+				autoModeName = "Move Left Vision Shoot";
+				break;
+			case 8: //GET TO DA HOPPA (and shoot) (robot placed backwards, moves right from drivers perspective)
+				autoModeName = "TO DA HOPPA Right";
+				break;
+			case 9: //GET TO DA HOPPA (and shoot) (robot placed backwards, moves left from drivers perspective)
+				autoModeName = "TO DA HOPPA Left";
+				break;
+			case 10: //Shoot without vision alignment or motion
+				autoModeName = "Test - DO NOT USE!";
 				break;
 			default: //Do nothing
 				autoModeName = "Do Nothing";
@@ -99,41 +112,68 @@ public class Autonomous {
 				AutoEventCrossBaseLine driveForward = new AutoEventCrossBaseLine();
 				AutoSequencer.addEvent(driveForward);
 				break;
-			case 2:
-				AutoEventMoveFromBlue driveBlue = new AutoEventMoveFromBlue();
-				AutoSequencer.addEvent(driveBlue);
-				AutoEventShootWithVision shootNow = new AutoEventShootWithVision();
-				AutoSequencer.addEvent(shootNow);
+			case 2: //put a gear on the center lift, straight Back
+				AutoEventDriveToCenterLift gearDeliverC = new AutoEventDriveToCenterLift();
+				AutoSequencer.addEvent(gearDeliverC);
+				AutoEventOpenGearMechanism openGearC = new AutoEventOpenGearMechanism();
+				AutoSequencer.addEvent(openGearC);
+				AutoEventBackAwayFromLiftNoCross backAwayC = new AutoEventBackAwayFromLiftNoCross();
+				AutoSequencer.addEvent(backAwayC);
 				break;
-			case 3:
-				AutoEventMoveFromRed driveRed = new AutoEventMoveFromRed();
-				AutoSequencer.addEvent(driveRed);
-				AutoEventShootWithVision shootNow2 = new AutoEventShootWithVision();
-				AutoSequencer.addEvent(shootNow2);
+			case 3: //put a gear on the center lift, go to the left
+				AutoEventDriveToCenterLift gearDeliverL = new AutoEventDriveToCenterLift();
+				AutoSequencer.addEvent(gearDeliverL);
+				AutoEventOpenGearMechanism openGearL = new AutoEventOpenGearMechanism();
+				AutoSequencer.addEvent(openGearL);
+				AutoEventBackAwayLeftFromLift backAwayL = new AutoEventBackAwayLeftFromLift();
+				AutoSequencer.addEvent(backAwayL);
 				break;
-			case 4: //put a gear on the center lift
-				AutoEventDriveToCenterLift gearDeliver = new AutoEventDriveToCenterLift();
-				AutoSequencer.addEvent(gearDeliver);
-				AutoEventOpenGearMechanism openGear = new AutoEventOpenGearMechanism();
-				AutoSequencer.addEvent(openGear);
-				AutoEventBackAwayFromLift backAway = new AutoEventBackAwayFromLift();
-				AutoSequencer.addEvent(backAway);
+			case 4: //put a gear on the center lift, go to the right
+				AutoEventDriveToCenterLift gearDeliverR = new AutoEventDriveToCenterLift();
+				AutoSequencer.addEvent(gearDeliverR);
+				AutoEventOpenGearMechanism openGearR = new AutoEventOpenGearMechanism();
+				AutoSequencer.addEvent(openGearR);
+				AutoEventBackAwayRightFromLift backAwayR = new AutoEventBackAwayRightFromLift();
+				AutoSequencer.addEvent(backAwayR);
 				break;
+
 			case 5: //drive forward across base line
 				AutoEventShootNoVision olShoot = new AutoEventShootNoVision();
 				AutoSequencer.addEvent(olShoot);
 				break;
 				
 			case 6:
-				AutoEventDriveSidewaysAcrossBaseline sidewaysCross = new AutoEventDriveSidewaysAcrossBaseline();
-				AutoSequencer.addEvent(sidewaysCross);
+				AutoEventMoveRightOffWall driveRightOffWall = new AutoEventMoveRightOffWall();
+				AutoSequencer.addEvent(driveRightOffWall);
+				AutoEventShootWithVision shootNow = new AutoEventShootWithVision();
+				AutoSequencer.addEvent(shootNow);
 				break;
-				
 			case 7:
-				AutoEventSwagCrossBaseLine swagCross = new AutoEventSwagCrossBaseLine();
+				AutoEventMoveLeftOffWall driveLeftOffWall = new AutoEventMoveLeftOffWall();
+				AutoSequencer.addEvent(driveLeftOffWall);
+				AutoEventShootWithVision shootNow2 = new AutoEventShootWithVision();
+				AutoSequencer.addEvent(shootNow2);
+				break;
+			case 8:
+				AutoEventGetToDaHoppaRight getToHoppaR = new AutoEventGetToDaHoppaRight();
+				AutoEventCatchHopper catchR = new AutoEventCatchHopper();
+				AutoEventShootNoVision shootR = new AutoEventShootNoVision();
+				AutoSequencer.addEvent(getToHoppaR);
+				AutoSequencer.addEvent(catchR);
+				AutoSequencer.addEvent(shootR);
+				break;
+			case 9:
+				AutoEventGetToDaHoppaLeft getToHoppaL = new AutoEventGetToDaHoppaLeft();
+				AutoEventCatchHopper catchL = new AutoEventCatchHopper();
+				AutoEventShootNoVision shootL = new AutoEventShootNoVision();
+				AutoSequencer.addEvent(getToHoppaL);
+				AutoSequencer.addEvent(catchL);
+				AutoSequencer.addEvent(shootL);
+				break;
+			case 10:
+				AutoEventTest swagCross = new AutoEventTest();
 				AutoSequencer.addEvent(swagCross);
 				break;
-
 			default: //Do nothing
 				break;
 		}
