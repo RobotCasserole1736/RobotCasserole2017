@@ -173,7 +173,7 @@ public class RobotConstants {
 	///////////////////////////////////////////////////////////////////////////
 	// LED Strips
 	///////////////////////////////////////////////////////////////////////////
-	public static final int NUM_LEDS_TOTAL = 52;
+	public static final int NUM_LEDS_TOTAL = 51;
 	public static final Color CASSEROLE_RED    = new Color(255,0  ,0  ); //TBD from Zach
 	public static final Color CASSEROLE_WHITE  = new Color(255,255,255); //TBD from Zach
 	public static final Color CASSEROLE_YELLOW = new Color(255,200,50 ); //TBD from Zach
