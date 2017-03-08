@@ -44,7 +44,7 @@ TARGET_IP_ADDRESS = "10.17.36.9"
 #Path to root directory where we put the files on the remote
 TARGET_SCRIPT_DIR = "~/CasseroleVision/"
 TARGET_SERVICE_DIR = "/lib/systemd/system/"
-TARGET_SERVICE_DIR_TOM = "/home/root/CasseroleVision/"
+TARGET_SERVICE_DIR_TOM = "~/CasseroleVision/"
 
 
 #Utility to determine if path is an executable   
