@@ -42,7 +42,7 @@ public class ShotControl {
 	}
 
 	 private ShotControl(){ 
-		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint RPM", 3200, 0, 5000);
+		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint RPM", 3650, 0, 5000);
 		 hopperFeedCmd = HopperControl.HopperStates.HOPPER_OFF;
 		 wheelCtrl = ShooterWheelCtrl.getInstance();
 		 wheelCtrl.setShooterDesiredRPM(0);
