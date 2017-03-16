@@ -488,12 +488,13 @@ public class LEDSequencer {
 	}
 	
 	public void setDisabledPattern(){
-		cur_pattern = LEDSwitchCase.BLUE_GREEN_SWEEP;
+		cur_pattern = LEDSwitchCase.SMOOTH_SWEEP;
 		return;
 	}
 	
 	public void pickRandomPattern(){
-		cur_pattern = LEDSwitchCase.values()[(int)(Math.random()*((double)(LEDSwitchCase.values().length)))];
+		//cur_pattern = LEDSwitchCase.values()[(int)(Math.random()*((double)(LEDSwitchCase.values().length)))];
+		cur_pattern = LEDSwitchCase.SMOOTH_SWEEP;
 	}
 
 
