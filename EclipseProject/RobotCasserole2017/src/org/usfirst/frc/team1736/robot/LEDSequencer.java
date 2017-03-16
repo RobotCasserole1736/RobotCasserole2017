@@ -35,7 +35,7 @@ public class LEDSequencer {
 	
 	private volatile LEDSwitchCase cur_pattern;
 	
-	private static final boolean desktop_sim = true;
+	private static final boolean desktop_sim = false;
 
 
 	public enum LEDSwitchCase {
