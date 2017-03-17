@@ -37,7 +37,7 @@ public class VisionAlignment {
 	InterpValueHistoryBuffer gyroHistory;
 	
 	//Tolerances
-	private double angleTol = 2.0;
+	private double angleTol = 1.0;
 	private double angleTolHyst = 0.025;//get within half a degree lined up
 	private double gyroAngleDesiredLastFrame = 0;
 	private double gyroAngleLastFrame = 0;

@@ -32,7 +32,7 @@ public class RobotConstants {
 	public static final int	COPROCESSOR_LISTEN_PORT = 5800;
 	public static final String DRIVER_CAMERA_URL = "http://roborio-1736-frc.local:1182/stream.mjpg";
 	public static final double EXPECTED_NETWORK_LATENCY_SEC = ((0.345+0.275)*0.5)/1000.0; //An educated guess, based off of measurements with "ping"
-	public static final double TOTAL_VISION_DELAY_S = 0.2588;
+	public static final double TOTAL_VISION_DELAY_S = 0.261;
 	
 	
 	///////////////////////////////////////////////////////////////////////////
