@@ -84,8 +84,8 @@ public class DriveTrain{
 		//Set up calibratable values
 		fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
 		dtPGainCal = new Calibration ("DT Auton Velocity P Gain", 0.004);
-		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.00125);
-		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0003);
+		dtFGainCal = new Calibration ("DT Auton Velocity F Gain", 0.00200);
+		dtIGainCal = new Calibration ("DT Auton Velocity I Gain", 0.0004);
 		
 		//set up encoders
 		frontLeftEncoder  = new Encoder(RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_A,  RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_B,  false);
