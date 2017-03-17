@@ -157,7 +157,7 @@ public class Autonomous {
 			case 8:
 				AutoEventGetToDaHoppaRight getToHoppaR = new AutoEventGetToDaHoppaRight();
 				AutoEventCatchHopper catchR = new AutoEventCatchHopper();
-				AutoEventShootNoVision shootR = new AutoEventShootNoVision();
+				AutoEventShootWithVision shootR = new AutoEventShootWithVision();
 				AutoSequencer.addEvent(getToHoppaR);
 				AutoSequencer.addEvent(catchR);
 				AutoSequencer.addEvent(shootR);
@@ -165,7 +165,7 @@ public class Autonomous {
 			case 9:
 				AutoEventGetToDaHoppaLeft getToHoppaL = new AutoEventGetToDaHoppaLeft();
 				AutoEventCatchHopper catchL = new AutoEventCatchHopper();
-				AutoEventShootNoVision shootL = new AutoEventShootNoVision();
+				AutoEventShootWithVision shootL = new AutoEventShootWithVision();
 				AutoSequencer.addEvent(getToHoppaL);
 				AutoSequencer.addEvent(catchL);
 				AutoSequencer.addEvent(shootL);
