@@ -28,7 +28,7 @@ public class FlappyGear {
 	private static FlappyGear flappyGear = null;
 
 	int FLAP_DOWN_DEG = 190;
-	int FLAP_UP_DEG = 65;
+	int FLAP_UP_DEG = 80;
 	Servo servo;
 	
 	public static synchronized FlappyGear getInstance(){

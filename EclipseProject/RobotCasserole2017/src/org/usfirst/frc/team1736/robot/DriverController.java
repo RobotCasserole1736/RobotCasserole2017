@@ -141,6 +141,12 @@ public class DriverController extends Xbox360Controller {
 		updateAirCompEnabled();
 		PneumaticsSupply.getInstance().setCompressorEnabled(getAirCompEnableCmd());
 		
+		if(getDriveGearPlaceDriveMode()){
+			VisionDelayCalibration.getInstance().setLEDRingActive(false);
+		} else {
+			VisionDelayCalibration.getInstance().setLEDRingActive(true);
+		}
+		
 		//Update Gyro angle
 		int angle = Gyro.getInstance().getAngleOffset();
 		if(getGyroReset())
