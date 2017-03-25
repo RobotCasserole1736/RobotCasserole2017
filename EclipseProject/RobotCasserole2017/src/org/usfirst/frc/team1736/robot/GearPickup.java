@@ -34,8 +34,8 @@ public class GearPickup {
 	Spark gearPickupMotor = new Spark(RobotConstants.INTAKE_MOTOR_PWM_PORT);
 	
 	//Declare Extender Control
-	Solenoid pickupHPExtend = new Solenoid(RobotConstants.INTAKE_HP_EXTEND_SOLENOID_PORT);
-	Solenoid pickupLPExtend = new Solenoid(RobotConstants.INTAKE_LP_EXTEND_SOLENOID_PORT);
+	Solenoid intakeHPExtend = new Solenoid(RobotConstants.INTAKE_HP_EXTEND_SOLENOID_PORT);
+	Solenoid intakeLPExtend = new Solenoid(RobotConstants.INTAKE_LP_EXTEND_SOLENOID_PORT);
 	
 	//Declaring Intake Calibration
 	Calibration gearPickupSpeedCmd = new Calibration("Ground Pickup Gear Intake Motor Command", 1.0, 0.0, 1.0);
@@ -70,19 +70,19 @@ public class GearPickup {
 		if(operatorControl.getPickupPosCmd() && operatorControl.getPickupSpeedCmd()){
 			//pickup gear - down and motors run fwd
 			gearPickupMotor.set(gearPickupSpeedCmd.get());
-			//Make pickup go down
+			IntakeExtend();
 		}else if(operatorControl.getPickupPosCmd() && !(operatorControl.getPickupSpeedCmd())){
 			//Gear placement - down and motor off
 			gearPickupMotor.set(0.0);
-			//Make pickup go down
+			IntakeExtend();
 		}else if(!(operatorControl.getPickupPosCmd()) && operatorControl.getPickupSpeedCmd()){
 			//eject gear - down and motor runs rev
 			gearPickupMotor.set(-gearPickupSpeedCmd.get());
-			//Make pickup go down
+			IntakeExtend();
 		}else{//!(operatorControl.getPickupPosCmd()) && !(operatorControl.getPickupSpeedCmd())
 			//Not using - up and motor off
 			gearPickupMotor.set(0.0);
-			//Make pickup stay up
+			IntakeRetract();
 		}
 	
 	}
@@ -95,11 +95,6 @@ public class GearPickup {
 	public void IntakeRetract(){
 		intakeHPExtend.set(false);
 		intakeLPExtend.set(false);
-	}
-	
-	public void runIntakeFwd(){
-		intakeSpeedCommand = intakeMotorFwdCmd.get();
-		intakeMotor.set(intakeSpeedCommand);
 	}
 	
 	public boolean getPosCmd(){
