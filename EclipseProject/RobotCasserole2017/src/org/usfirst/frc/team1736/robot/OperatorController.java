@@ -62,6 +62,16 @@ public class OperatorController extends Xbox360Controller {
 		return LB();
 	}
 	
+	public boolean getPickupPosCmd()
+	{
+		return RB();
+	}
+	
+	public boolean getPickupSpeedCmd()
+	{
+		return LB();
+	}
+	
 	public boolean getHopperFwdOverride()
 	{
 		return StartButton();
