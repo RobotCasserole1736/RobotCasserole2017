@@ -110,6 +110,9 @@ public class Robot extends IterativeRobot {
 	//Vision Alignment Control
 	VisionAlignment visionAlignCTRL;
 	
+	//Auxiliary Flap Control
+	AuxFlapControl auxFlapControl;
+		
 	boolean autoAlignNotPossibleDVIndState;
 	
 	//Gear control subsystem
@@ -154,6 +157,7 @@ public class Robot extends IterativeRobot {
 		visionAlignCTRL = VisionAlignment.getInstance();
 		visionDelayCal = VisionDelayCalibration.getInstance();
 		FG = FlappyGear.getInstance();
+		auxFlapControl = AuxFlapControl.getInstance();
 
 		ecuStats = new CasseroleRIOLoadMonitor();
 		poseCalc = RobotPoseCalculator.getInstance();
@@ -220,6 +224,9 @@ public class Robot extends IterativeRobot {
 		setZeroState();
 		
 		visionDelayCal.setLEDRingActive(false);
+		
+		//Auxiliary Flap Control
+		auxFlapControl.endCycle();
 	}
 	
 	/**
@@ -252,6 +259,9 @@ public class Robot extends IterativeRobot {
 		shooterWheelControl.updateGains();
 		driveTrain.updateAllCals();
 		visionAlignCTRL.updateGains();
+		
+		//Auxiliary Flap Control
+		auxFlapControl.update();;
 		
 		updateDriverView();
 		updateWebStates();
@@ -294,6 +304,9 @@ public class Robot extends IterativeRobot {
 		//Update autonomous selection and start
 		auto.updateAutoSelection();
 		auto.executeAutonomus();
+		
+		//Auxiliary Flap Control
+		auxFlapControl.startCycle();
 		
 		visionDelayCal.setLEDRingActive(true);
 
@@ -346,6 +359,9 @@ public class Robot extends IterativeRobot {
 		//Update Climber Control 
 		climbControl.update();
 		
+		//Auxiliary Flap Control
+		auxFlapControl.update();
+		
 		//Update the low battery parameter checker
 		lowBatt.update();
 		
@@ -385,6 +401,9 @@ public class Robot extends IterativeRobot {
 		driveTrain.resetAllIntegrators();
 		
 		LEDseq.setNoneDesiredPattern();
+		
+		//Auxiliary Flap Control
+		auxFlapControl.startCycle();
 		
 		//Open a new log
 		CsvLogger.init();
@@ -452,7 +471,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update user camera gimbal position
 		camGimbal.update();
-		
+				
+		//Auxiliary Flap Control
+		auxFlapControl.update();
 		
 		//Alert the driver if vision alignment is being requested, but is not available
 		checkAlignAllowed();
@@ -511,6 +532,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldDouble("Driver_Rotate_cmd","cmd","getRotateCmd", driverCTRL);
 		CsvLogger.addLoggingFieldBoolean("Driver_Vision_Align_Desired","bit","getVisionAlignmentDesired", visionAlignCTRL);
 		CsvLogger.addLoggingFieldBoolean("DT_Running_Closed_Loop","bit","isRunningClosedLoop",driveTrain);
+		CsvLogger.addLoggingFieldBoolean("Aux_Flap_cmd","cmd","getAuxFlapCmd",auxFlapControl);
 		CsvLogger.addLoggingFieldDouble("Robot_FwdRev_Vel","ft/sec","getFwdRevVelFtPerS", poseCalc);
 		CsvLogger.addLoggingFieldDouble("Robot_Strafe_Vel","ft/sec","getStrafeVelFtPerS", poseCalc);
 		
