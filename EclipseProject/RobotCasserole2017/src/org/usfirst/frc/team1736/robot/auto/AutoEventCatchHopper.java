@@ -5,6 +5,8 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.FlappyGear;
 import org.usfirst.frc.team1736.robot.RobotConstants;
+import org.usfirst.frc.team1736.robot.ShotControl;
+import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
 public class AutoEventCatchHopper extends AutoEvent{
 	PathPlannerAutoEvent driveEvent;
@@ -36,7 +38,7 @@ public class AutoEventCatchHopper extends AutoEvent{
 	@Override
 	public void userUpdate() {
 		driveEvent.userUpdate();
-		
+		ShotControl.getInstance().setDesiredShooterState(ShooterStates.PREP_TO_SHOOT);
 	}
 
 	@Override
