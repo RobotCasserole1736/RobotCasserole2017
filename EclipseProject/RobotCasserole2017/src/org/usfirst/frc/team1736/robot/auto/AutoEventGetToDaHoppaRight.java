@@ -13,8 +13,8 @@ public class AutoEventGetToDaHoppaRight extends AutoEvent{
 	//These waypoints will probably need to be changed a lot if the PIDs are retuned
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
-		{0,-7,0},
-		{-9,-7,0}
+		{0,-6.5,0},
+		{-9,-6.5,0}
 	};
 	
 	private static final double time = 3;
