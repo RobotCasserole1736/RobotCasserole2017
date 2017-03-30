@@ -89,8 +89,8 @@ public class Robot extends IterativeRobot {
 	//Hopper Feed Control
 	HopperControl hopControl; 
 	
-	//Intake Control
-	IntakeControl intakeControl;
+	//Gear Pickup Control
+	GearPickup gearPickupCTRL;
 	
 	//Shooter wheel control
 	ShooterWheelCtrl shooterWheelControl;
@@ -167,7 +167,7 @@ public class Robot extends IterativeRobot {
 		shooterWheelControl = ShooterWheelCtrl.getInstance();
 		climbControl = ClimberControl.getInstance();
 		climbControl.setPDPReference(pdp);
-		intakeControl = IntakeControl.getInstance();
+		gearPickupCTRL = GearPickup.getInstance();
 		airSupplySystem = PneumaticsSupply.getInstance();
 
 		camGimbal = new CameraServoMount();
@@ -254,6 +254,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update autonomous selection
 		auto.updateAutoSelection();
+		
+		//Update Gear Pickup Control
+		gearPickupCTRL.update();
 		
 		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
 		shooterWheelControl.updateGains();
@@ -346,9 +349,9 @@ public class Robot extends IterativeRobot {
 		
 		//Update Hopper Control
 		hopControl.update();
-		
-		//Update Intake Control
-		intakeControl.update();
+
+		//Update Gear Pickup Control
+		gearPickupCTRL.update();
 		
 		//Update shooter wheel control
 		shooterWheelControl.update();
@@ -454,8 +457,8 @@ public class Robot extends IterativeRobot {
 		//Update Hopper Control
 		hopControl.update();
 		
-		//Update Intake Control
-		intakeControl.update();
+		//Update Gear Pickup Control
+		gearPickupCTRL.update();
 		
 		//Update shooter wheel control
 		shooterWheelControl.update();
@@ -542,7 +545,8 @@ public class Robot extends IterativeRobot {
 		CsvLogger.addLoggingFieldBoolean("Op_Gear_Release_Desired","bit","getGearSolenoidCmd", operatorCTRL);
 		CsvLogger.addLoggingFieldDouble("Shot_State_Command","bits","getDesiredShooterStateOrdinal", shotCTRL);
 		CsvLogger.addLoggingFieldDouble("Hopper_Feed_Cmd","cmd","getHopperMotorCmd", hopControl);
-		CsvLogger.addLoggingFieldDouble("Intake_Speed_Cmd","cmd","getCommandedIntakeSpeed", intakeControl);
+		CsvLogger.addLoggingFieldBoolean("Gear_Pickup_Pos_Cmd", "cmd", "getPosCmd", gearPickupCTRL);
+		CsvLogger.addLoggingFieldBoolean("Gear_Pickup_Speed_Cmd", "cmd", "getSpeedCmd", gearPickupCTRL);
 		CsvLogger.addLoggingFieldBoolean("Op_Intake_Desired","bit","getIntakeDesiredCmd", operatorCTRL);
 		CsvLogger.addLoggingFieldBoolean("Op_Eject_Desired","bit","getEjectDesiredCmd",operatorCTRL);
 		CsvLogger.addLoggingFieldDouble("Op_Climb_Speed_Cmd","cmd","getClimbSpeedCmd", operatorCTRL);
@@ -669,7 +673,6 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Shot_Count", shotCount.getCurrCountLog());
 		CassesroleWebStates.putDouble("Hopper Feed Cmd",   hopControl.getHopperMotorCmd());
 		CassesroleWebStates.putBoolean("Gear Release Solenoid Cmd", gearControl.isSolenoidOpen());
-		CassesroleWebStates.putDouble("Intake Speed Cmd",   intakeControl.getCommandedIntakeSpeed());
 		CassesroleWebStates.putDouble("Climb Speed Cmd",   operatorCTRL.getClimbSpeedCmd());
 		CassesroleWebStates.putDouble("Robot FwdRev Velocity (ft per sec)",   poseCalc.getFwdRevVelFtPerS());
 		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)",   poseCalc.getStrafeVelFtPerS());
