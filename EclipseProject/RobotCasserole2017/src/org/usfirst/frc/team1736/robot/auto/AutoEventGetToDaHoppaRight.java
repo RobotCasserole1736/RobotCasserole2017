@@ -1,10 +1,10 @@
 package org.usfirst.frc.team1736.robot.auto;
 
+
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.FlappyGear;
-import org.usfirst.frc.team1736.robot.IntakeControl;
 import org.usfirst.frc.team1736.robot.RobotConstants;
 
 public class AutoEventGetToDaHoppaRight extends AutoEvent{

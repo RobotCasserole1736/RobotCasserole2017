@@ -4,7 +4,6 @@ import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.FlappyGear;
-import org.usfirst.frc.team1736.robot.IntakeControl;
 import org.usfirst.frc.team1736.robot.RobotConstants;
 
 public class AutoEventGetToDaHoppaLeft extends AutoEvent{
@@ -45,7 +44,6 @@ public class AutoEventGetToDaHoppaLeft extends AutoEvent{
 	@Override
 	public void userStart() {
 		FlappyGear.getInstance().setAngle(RobotConstants.FLAP_DOWN_DEG);
-		IntakeControl.getInstance().runIntakeFwd();
 		driveEvent.userStart();		
 	}
 	
