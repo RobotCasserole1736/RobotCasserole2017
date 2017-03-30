@@ -88,12 +88,10 @@ public class GearPickup {
 	}
 	
 	public void IntakeExtend(){
-		intakeHPExtend.set(true);
 		intakeLPExtend.set(true);
 	}
 	
 	public void IntakeRetract(){
-		intakeHPExtend.set(false);
 		intakeLPExtend.set(false);
 	}
 	
