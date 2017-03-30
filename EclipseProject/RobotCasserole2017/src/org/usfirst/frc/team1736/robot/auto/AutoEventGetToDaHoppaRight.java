@@ -45,7 +45,6 @@ public class AutoEventGetToDaHoppaRight extends AutoEvent{
 	@Override
 	public void userStart() {
 		FlappyGear.getInstance().setAngle(RobotConstants.FLAP_DOWN_DEG);
-		IntakeControl.getInstance().runIntakeFwd();
 		driveEvent.userStart();		
 	}
 	
