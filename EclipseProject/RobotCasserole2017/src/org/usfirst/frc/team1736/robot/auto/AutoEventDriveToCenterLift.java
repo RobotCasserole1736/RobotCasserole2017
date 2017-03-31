@@ -13,7 +13,7 @@ public class AutoEventDriveToCenterLift extends AutoEvent{
 		{8.5,-0.3,0}
 	};
 	
-	private static final double time = 2.25;
+	private static final double time = 3.5;
 	public AutoEventDriveToCenterLift() {
 		driveSideways = new PathPlannerAutoEvent(waypoints,time,
 				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
