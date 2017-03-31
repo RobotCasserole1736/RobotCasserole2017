@@ -618,7 +618,7 @@ public class Robot extends IterativeRobot {
 		if(DISPLAY_VISION_PROC_CAM_IN_DS){
 			CasseroleDriverView.newWebcam("VisionProc_cam", RobotConstants.VISION_PROC_CAMERA_URL, 50, 50, 0);
 		}
-		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 75, 25, 180);
+		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 75, 35, 180);
 
 	}
 	
