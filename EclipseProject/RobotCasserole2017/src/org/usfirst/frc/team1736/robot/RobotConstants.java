@@ -59,8 +59,8 @@ public class RobotConstants {
 	public static final int DRIVETRAIN_REAR_RIGHT_PDP_CH  = 2;
 	public static final int DRIVETRAIN_REAR_LEFT_PDP_CH   = 3;
 	public static final int HOPPER_MOTOR_PDP_CH   = 8;
-	public static final int CLIMBER_MOTOR1_PDP_CH  = 5;
-	public static final int CLIMBER_MOTOR2_PDP_CH  = 6;
+	public static final int CLIMBER_MOTOR1_PDP_CH  = 12;
+	public static final int CLIMBER_MOTOR2_PDP_CH  = 13;
 	public static final int INTAKE_MOTOR_PDP_CH   = 14;
 
 	//CAN Device ID's
