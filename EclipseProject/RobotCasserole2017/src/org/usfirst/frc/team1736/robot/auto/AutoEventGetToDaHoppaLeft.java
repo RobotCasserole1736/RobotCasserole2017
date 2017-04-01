@@ -13,7 +13,7 @@ public class AutoEventGetToDaHoppaLeft extends AutoEvent{
 	private static final double[][] waypoints = new double[][]{
 		{0,0,0},
 		{0,-5.5,0},
-		{9,-5.5,0}
+		{8.5,-5.5,0}
 	};
 	
 	private static final double time = 3;
