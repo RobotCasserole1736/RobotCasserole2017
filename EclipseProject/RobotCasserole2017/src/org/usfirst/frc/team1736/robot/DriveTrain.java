@@ -57,6 +57,11 @@ public class DriveTrain{
 	
 	private boolean runningClosedLoop;
 	
+	private boolean autonRequestsOpenLoop = false;
+	private double autonOpenLoopFwdRevCmd = 0;
+	private double autonOpenLoopLeftRightCmd = 0;
+
+	
 
 	public static synchronized DriveTrain getInstance()
 	{
@@ -168,8 +173,12 @@ public class DriveTrain{
 			}
 
 		} else {
-			//If we're in autonomous but don't need vision alignment, use the PID commands
-			 runClosedLoop();
+			if(autonRequestsOpenLoop){
+				runOpenLoop(autonOpenLoopFwdRevCmd, autonOpenLoopLeftRightCmd,0,0);
+			} else {
+				//If we're in autonomous but don't need vision alignment, use the PID commands
+				runClosedLoop();
+			}
 		}
 	}
 
@@ -338,4 +347,17 @@ public class DriveTrain{
 	public static double FtPerSec_to_RPM(double ft_per_sec_in){
 		return ft_per_sec_in * 60.0 / (2*Math.PI*RobotConstants.DRIVETRAIN_WHEELS_RADIUS_FT);
 	}
+
+	public void setAutonRequestsOpenLoop(boolean autonRequestsOpenLoop) {
+		this.autonRequestsOpenLoop = autonRequestsOpenLoop;
+	}
+
+	public void setAutonOpenLoopFwdRevCmd(double input) {
+		this.autonOpenLoopFwdRevCmd = input;
+	}
+
+	public void setAutonOpenLoopLeftRightCmd(double input) {
+		this.autonOpenLoopLeftRightCmd = input;
+	}
+	
 }

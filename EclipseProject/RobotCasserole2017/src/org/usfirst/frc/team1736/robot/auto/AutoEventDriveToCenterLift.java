@@ -5,40 +5,55 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class AutoEventDriveToCenterLift extends AutoEvent{
-	PathPlannerAutoEvent driveSideways;
 	
-	private static final double[][] waypoints = new double[][]{
-		{0,0,0},
-		{8.5,-0.3,0}
-	};
+	private static final double TRAVEL_TIME_SEC = 4.5;
+	private static final double MOTOR_SPEED_CMD_RPM = 500;
 	
-	private static final double time = 2.25;
+	private double startTime;
+	private double endTime;
+	
 	public AutoEventDriveToCenterLift() {
-		driveSideways = new PathPlannerAutoEvent(waypoints,time,
-				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
-				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
+		
 	}
 	
 	public void userForceStop() {
-		driveSideways.userForceStop();
+		DriveTrain.getInstance().getFrontLeftCTRL().setSetpoint(0);
+		DriveTrain.getInstance().getFrontRightCTRL().setSetpoint(0);
+		DriveTrain.getInstance().getRearLeftCTRL().setSetpoint(0);
+		DriveTrain.getInstance().getRearRightCTRL().setSetpoint(0);
+		DriveTrain.getInstance().setAutonRequestsOpenLoop(false);
 	}
 	public boolean isTriggered() {
-		return driveSideways.isTriggered();
+		//always run this event
+		return true;
 	}
 	public boolean isDone() {
-		return driveSideways.isDone();
+		if(Timer.getFPGATimestamp() > endTime){
+			userForceStop();
+			return true;
+		} else{
+			return false;
+		}
+		
 	}
 
 	@Override
 	public void userUpdate() {
-		driveSideways.userUpdate();
+		DriveTrain.getInstance().getFrontLeftCTRL().setSetpoint(MOTOR_SPEED_CMD_RPM);
+		DriveTrain.getInstance().getFrontRightCTRL().setSetpoint(MOTOR_SPEED_CMD_RPM);
+		DriveTrain.getInstance().getRearLeftCTRL().setSetpoint(MOTOR_SPEED_CMD_RPM);
+		DriveTrain.getInstance().getRearRightCTRL().setSetpoint(MOTOR_SPEED_CMD_RPM);
 		
 	}
 
 	@Override
 	public void userStart() {
-		driveSideways.userStart();
+		startTime = Timer.getFPGATimestamp();
+		endTime = startTime + TRAVEL_TIME_SEC;
+		DriveTrain.getInstance().setAutonRequestsOpenLoop(true);
 	}
 	
 }
