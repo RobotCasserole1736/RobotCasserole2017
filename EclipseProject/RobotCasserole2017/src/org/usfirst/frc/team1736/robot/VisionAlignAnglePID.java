@@ -26,6 +26,9 @@ public class VisionAlignAnglePID extends CasserolePID {
 	
 	private double outputCmd = 0;
 
+	/**
+	 * Wrapper for PID algorithm to align the robot's drivetrain angle toward the high goal target
+	 */
 	VisionAlignAnglePID(double Kp_in, double Ki_in, double Kd_in) {
 		super(Kp_in, Ki_in, Kd_in);
 		this.threadName = "Vision Angle Alignment PID";

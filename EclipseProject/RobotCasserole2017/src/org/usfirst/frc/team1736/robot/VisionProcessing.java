@@ -56,6 +56,10 @@ public class VisionProcessing {
 		return visionProcessing;
 	}
 	
+	/**
+	 * Class to interpret the blobs of green returned from the vision target identification subsystem 
+	 * (currently Beaglebone + webcam)
+	 */
 	private VisionProcessing(){
 		prevFrameCount = 0;
 		
@@ -65,7 +69,9 @@ public class VisionProcessing {
 	}
 
 	/**
-	 * Should be called during the periodic update method to evaluate the new info from the coprocessor
+	 * Should be called during the periodic update method to evaluate the new info from the coprocessor.
+	 * Grabs the latest info from the coprocessor setup, and calls the heuristic update algorithm if
+	 * we found a new frame
 	 */
 	public void update(){
 
@@ -131,6 +137,8 @@ public class VisionProcessing {
 	/**
 	 * More-advanced heuristic calculation, which does not try to sort by upper/lower target first
 	 * Note this is O(n^2) complexity (actually n*n-1 calculation cycles for n targets), so use caution if many targets are visible.
+	 * 
+	 * This algorithm evaluates many different relationships between the two candidate target blobs, and returns the best pair.
 	 */
 	private void alg1(){
 
@@ -196,6 +204,13 @@ public class VisionProcessing {
 			target.updateTarget(false,0,0,0);
 		}
 	}
+	
+	
+	
+	/**
+	 * Getter and setter things
+	 * @return all the things
+	 */
 	
 	public VisionTarget getTarget()
 	{

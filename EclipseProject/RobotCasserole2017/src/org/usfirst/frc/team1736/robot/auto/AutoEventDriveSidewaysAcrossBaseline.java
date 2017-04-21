@@ -5,6 +5,9 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
+/**
+ * Drive straight for a while. Get some points.
+ */
 public class AutoEventDriveSidewaysAcrossBaseline extends AutoEvent{
 	PathPlannerAutoEvent driveSideways;
 	

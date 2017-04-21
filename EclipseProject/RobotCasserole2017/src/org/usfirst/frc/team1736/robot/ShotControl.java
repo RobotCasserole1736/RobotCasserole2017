@@ -41,6 +41,11 @@ public class ShotControl {
 		return shotControl;
 	}
 
+	/**
+	 * Class to coordinate the shooter flywheel and hopper feeder actions
+	 * We need to respond to driver commands, but never dump balls into the
+	 * shooter if the RPM isn't high enough.
+	 */
 	 private ShotControl(){ 
 		 wheel_Set_Point_rpm = new Calibration("Shooter Wheel Setpoint RPM", 3650, 0, 5000);
 		 hopperFeedCmd = HopperControl.HopperStates.HOPPER_OFF;

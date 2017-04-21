@@ -5,6 +5,14 @@ import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 import org.usfirst.frc.team1736.robot.VisionAlignment;
 
+/**
+ * Auto event to run both vision alignment and shooter.
+ * It would be expected that the target is already in view. If that is the case,
+ * This will spool up the shooter and move the drivetrain to align. Once the drivetrain is aligned,
+ * it will begin to feed the fuel into the shooter and will continue to do so until the robot is 
+ * disabled.
+ *
+ */
 public class AutoEventShootWithVision extends AutoEvent {
 	
 	//Vision Alignment Control

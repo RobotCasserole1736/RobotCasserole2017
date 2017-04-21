@@ -5,6 +5,9 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
+/**
+ * drive straight and stuff.
+ */
 public class AutoEventCrossBaseLine extends AutoEvent {
 	PathPlannerAutoEvent driveForward;
 	

@@ -118,7 +118,6 @@ public class Robot extends IterativeRobot {
 	//Gear control subsystem
 	GearControl gearControl;
 	
-	
 	//LED's 
 	LEDSequencer LEDseq;
 	
@@ -204,8 +203,6 @@ public class Robot extends IterativeRobot {
 
 		lastLoopExTime = Timer.getFPGATimestamp();
 
-
-		
 	}
 	
 	/**

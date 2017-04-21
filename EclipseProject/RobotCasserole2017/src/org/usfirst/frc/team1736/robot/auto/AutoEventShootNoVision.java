@@ -5,6 +5,11 @@ import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 import org.usfirst.frc.team1736.robot.VisionAlignment;
 
+/**
+ * Auto event to spool up the shooter and feed balls
+ * no attempt to align with vision or anything
+ *
+ */
 public class AutoEventShootNoVision extends AutoEvent {
 	
 	//Vision Alignment Control

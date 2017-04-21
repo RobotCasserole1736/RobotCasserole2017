@@ -78,6 +78,11 @@ public class VisionAlignment {
 		return visionAlignment;
 	}
 	
+	/**
+	 * Class to convert observed vision targets into drivetrain commands 
+	 * Said drivetrain commands will align the robot to the high goal.
+	 */
+	
 	private VisionAlignment(){
 		// Instantiate angle and distance PIDs
 		anglePID = new VisionAlignAnglePID(angle_Kp.get(), angle_Ki.get(), angle_Kd.get());
@@ -100,6 +105,10 @@ public class VisionAlignment {
 		delayTimer = new Timer();
 	}
 
+	
+	/**
+	 * Periodic update function. call this during *_periodic() methods.
+	 */
 	public void GetAligned(){
 		
 		
@@ -284,6 +293,10 @@ public class VisionAlignment {
 		}
 		
 	}
+	
+	/**
+	 * Getter setter stuff
+	 */
 	
 	public double getVisionAlignState() {
 		if(visionAlignState == VisionAlignStates.sOnTarget){

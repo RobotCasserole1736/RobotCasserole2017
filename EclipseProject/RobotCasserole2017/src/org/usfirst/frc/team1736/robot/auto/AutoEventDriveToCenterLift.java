@@ -5,6 +5,11 @@ import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
 import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 
+
+/**
+ * Path from starting point to center lift. We go sideways because that's how the robot is.
+ *
+ */
 public class AutoEventDriveToCenterLift extends AutoEvent{
 	PathPlannerAutoEvent driveSideways;
 	

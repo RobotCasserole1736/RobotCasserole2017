@@ -22,6 +22,17 @@ package org.usfirst.frc.team1736.robot;
 
 import edu.wpi.first.wpilibj.VictorSP;
 
+/**
+ * Wrapper for a victorSP to make it very simple to rate-limit the output.
+ * We thought this would be easier than our current limiting algorithm.
+ * It was easier, but we still drained our battery like bonkers.
+ * 
+ * 200degF CIM motors are not happy CIM motors.
+ * 
+ * Do as we say, not as we do.
+ *
+ */
+
 public class RateLimitedVictorSP extends VictorSP {
 
 	double prevSetpoint = 0;

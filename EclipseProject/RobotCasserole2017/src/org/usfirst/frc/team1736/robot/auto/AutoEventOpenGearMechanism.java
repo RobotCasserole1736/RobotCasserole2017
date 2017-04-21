@@ -5,6 +5,11 @@ import org.usfirst.frc.team1736.robot.GearControl;
 
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * Releases gear. That is all.
+ * GEEEEAAARRRRR!
+ *
+ */
 public class AutoEventOpenGearMechanism extends AutoEvent {
 	Timer timer;
 	public AutoEventOpenGearMechanism(){

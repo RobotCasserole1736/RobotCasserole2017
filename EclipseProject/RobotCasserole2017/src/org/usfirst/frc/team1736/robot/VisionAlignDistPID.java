@@ -26,6 +26,9 @@ public class VisionAlignDistPID extends CasserolePID {
 	
 	private double outputCmd = 0;
 
+	/**
+	 * Wrapper for PID algorithm which aligns the robot's drivetrain to the right distance to score in the high goal.
+	 */
 	protected VisionAlignDistPID(double Kp_in, double Ki_in, double Kd_in) {
 		super(Kp_in, Ki_in, Kd_in);
 		this.threadName = "Vision Distance Alignment PID";

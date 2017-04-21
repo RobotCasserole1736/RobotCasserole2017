@@ -39,6 +39,9 @@ public class RobotPoseCalculator {
 		return poseCalculator;
 	}
 	
+	/**
+	 * Some fun math which converts the wheel speeds into robot center-of-mass motion and position
+	 */
 	private RobotPoseCalculator(){
 		
 		return;

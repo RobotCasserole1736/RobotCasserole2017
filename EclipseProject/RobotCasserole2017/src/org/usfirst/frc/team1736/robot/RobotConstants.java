@@ -22,6 +22,9 @@ import java.awt.Color;
  *   if you would consider donating to our club to help further STEM education.
  */
 
+/**
+ * Numbers and values which will not change. All in one handy spot.
+ */
 public class RobotConstants {
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -106,7 +109,7 @@ public class RobotConstants {
 	*/
 	
 	/*
-	//Axis M1011. Best COTS IP camera
+	//Axis M1011. Best COTS IP camera. Also no longer in production. Sad potato. 
 	public static final int VISION_X_PIXELS = 640;
 	public static final int VISION_Y_PIXELS = 480;
 	public static final double CAMERA_FOV_X_DEG = 48; 
@@ -174,7 +177,7 @@ public class RobotConstants {
 	///////////////////////////////////////////////////////////////////////////
 	// LED Strips
 	///////////////////////////////////////////////////////////////////////////
-	public static final int NUM_LEDS_TOTAL = 51;
+	public static final int NUM_LEDS_TOTAL = 51; //We used to have 52, then Joseph broke one of them.
 	public static final Color CASSEROLE_RED    = new Color(255,0  ,0  ); //TBD from Zach
 	public static final Color CASSEROLE_WHITE  = new Color(255,255,255); //TBD from Zach
 	public static final Color CASSEROLE_YELLOW = new Color(255,200,50 ); //TBD from Zach
@@ -184,7 +187,7 @@ public class RobotConstants {
 	// Driver Camera gimbal mount position constants
 	///////////////////////////////////////////////////////////////////////////
 	
-	//Large Metal Mount 
+	//Large Metal Mount. Unused.
 	/*
 	private static final double GEAR_PAN_ANGLE = 180;
 	private static final double GEAR_TILT_ANGLE = 30; //Bigger tilt makes the camera look up
@@ -193,7 +196,7 @@ public class RobotConstants {
 	private static final double INTAKE_PAN_ANGLE = 0;
 	private static final double INTAKE_TILT_ANGLE = 0;
 	*/
-	//Small 3d printed red mount
+	//Small 3d printed red mount. Also unused.
 	public static final double GEAR_PAN_ANGLE = 180;
 	public static final double GEAR_TILT_ANGLE = 90; //Bigger tilt makes the camera look up
 	public static final double SHOOT_PAN_ANGLE = 90;

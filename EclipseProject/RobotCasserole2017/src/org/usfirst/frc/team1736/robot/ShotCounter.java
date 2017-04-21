@@ -40,6 +40,11 @@ public class ShotCounter {
 		return shotCounter;
 	}
 	
+	/**
+	 * Simple class to attempt to count the number of balls we've shot.
+	 * Mostly just for driver feedback now. Looks for spikes in the shooter motor current draw while 
+	 * we are attempting to shoot.
+	 */
 	private ShotCounter() {
 		IDotCalc = new DerivativeCalculator();
 		IDoubleDotCalc = new DerivativeCalculator();

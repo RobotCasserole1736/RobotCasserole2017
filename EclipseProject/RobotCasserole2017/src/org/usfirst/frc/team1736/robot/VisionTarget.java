@@ -22,6 +22,10 @@ import org.usfirst.frc.team1736.lib.Util.MapLookup2D;
  *   if you would consider donating to our club to help further STEM education.
  */
 
+/**
+ * Class to convert a vision target pixel location to a distance/angle.
+ *
+ */
 public class VisionTarget {
 	
 	private boolean targetFound = false;

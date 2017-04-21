@@ -96,6 +96,11 @@ public class Autonomous {
 
 	}
 	
+	/**
+	 * Main setup method for autonomous. Should be called before actually updating autonomous.
+	 *  Determines which mode to use, sets up the auto events in the timeline, runs path generation,
+	 *  Resets integrators, and starts the scheduler.
+	 */
 	public void executeAutonomus(){
 		
 		System.out.println("[Auto] Initalizing " + autoModeName + " auton routine.");
@@ -181,10 +186,16 @@ public class Autonomous {
 		AutoSequencer.start();
 	}
 	
+	/**
+	 * Wrapper for the auto sequence update. Should be called during autonomous periodic
+	 */
 	public void update(){
 		AutoSequencer.update();
 	}
 	
+	/**
+	 * Wrapper for the auto routine ender. Should be called during disabled init just in case we stop auto partway through.
+	 */
 	public void stop(){
 		AutoSequencer.stop();
 	}

@@ -56,6 +56,9 @@ public class ShooterWheelCtrl {
 		return wheelCtrl;
 	}
 	
+	/**
+	 * Configuration and control for the Talon SRX controlling the high-goal fuel shooter flywheel
+	 */
 	private ShooterWheelCtrl(){
 		shooterTalon = new CANTalon(RobotConstants.SHOOTER_CAN_TALON_DEVICE_ID);
 		Shooter_ff_Gain = new Calibration("Shooter FeedFwd Gain",0.0269);
@@ -108,7 +111,13 @@ public class ShooterWheelCtrl {
 		
 	}
 	
-	
+	/**
+	 * Periodic update. Call during the *_update() methods.
+	 * Sends the shooter RPM commands to the talon SRX while shooting, or forces it to zero output while not shooting.
+	 * Leaving the PID running all the time caused it to dance back and forth and look like it was broken. Aside from being 
+	 * bad for the motors, everyone kept asking why the software was broken. So we fixed it.
+	 * 
+	 */
 	public void update(){
 		
 		if(prevVel <= 0 && desiredVelocity > 0){
