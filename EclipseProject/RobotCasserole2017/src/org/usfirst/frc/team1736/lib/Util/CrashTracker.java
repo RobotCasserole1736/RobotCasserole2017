@@ -33,6 +33,14 @@ public class CrashTracker {
 	public static void logAutoPeriodic() {
 		logMarker("auto periodic");
 	}
+	
+	public static void logTeleopInit() {
+		logMarker("teleop init");
+	}
+	
+	public static void logTeleopPeriodic() {
+		
+	}
 		
 	 public static void logThrowableCrash(Throwable throwable) {
 	        logMarker("Exception", throwable);

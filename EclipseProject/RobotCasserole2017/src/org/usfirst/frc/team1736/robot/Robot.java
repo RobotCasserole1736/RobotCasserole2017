@@ -359,65 +359,74 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		
-		//Calculate loop execution period
-		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
-		lastLoopExTime = Timer.getFPGATimestamp();
-		
-		//Mark start of loop, Initialize Timer
-		//Must be as close to the start of the loop as possible
-		prevLoopStartTimestamp = Timer.getFPGATimestamp();
-		
-		//Get all inputs from outside the robot
-		poseCalc.update();
-		
-		//Update vision processing algorithm to find any targets on in view
-		visionProc.update();
-		
-		//Run vision alignment algorithm
-		visionAlignCTRL.GetAligned();
-		
-		//Update any calibration which is running
-		visionDelayCal.update();
-		
-		//Update shot control management subsystem
-		shotCTRL.update();
-		
-		//Update Shot Counter
-		shotCount.update();
-		
-		//Update Hopper Control
-		hopControl.update();
-		
-		//Update Intake Control
-		intakeControl.update();
-		
-		//Update shooter wheel control
-		shooterWheelControl.update();
-		
-		//Run drivetrain in autonomous
-		driveTrain.autonomousControl();
-		
-		//Update Climber Control 
-		climbControl.update();
-		
-		//Auxiliary Flap Control
-		auxFlapControl.update();
-		
-		//Update the low battery parameter checker
-		lowBatt.update();
-		
-		auto.update();
-		
-		LEDseq.setAutonPattern();
-		
-		//Log & display present state data
-		updateDriverView();
-		CsvLogger.logData(false);
-		updateWebStates();
+		try{
+			CrashTracker.logAutoPeriodic();
+			
+			//Calculate loop execution period
+			loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+			lastLoopExTime = Timer.getFPGATimestamp();
+			
+			//Mark start of loop, Initialize Timer
+			//Must be as close to the start of the loop as possible
+			prevLoopStartTimestamp = Timer.getFPGATimestamp();
+			
+			//Get all inputs from outside the robot
+			poseCalc.update();
+			
+			//Update vision processing algorithm to find any targets on in view
+			visionProc.update();
+			
+			//Run vision alignment algorithm
+			visionAlignCTRL.GetAligned();
+			
+			//Update any calibration which is running
+			visionDelayCal.update();
+			
+			//Update shot control management subsystem
+			shotCTRL.update();
+			
+			//Update Shot Counter
+			shotCount.update();
+			
+			//Update Hopper Control
+			hopControl.update();
+			
+			//Update Intake Control
+			intakeControl.update();
+			
+			//Update shooter wheel control
+			shooterWheelControl.update();
+			
+			//Run drivetrain in autonomous
+			driveTrain.autonomousControl();
+			
+			//Update Climber Control 
+			climbControl.update();
+			
+			//Auxiliary Flap Control
+			auxFlapControl.update();
+			
+			//Update the low battery parameter checker
+			lowBatt.update();
+			
+			auto.update();
+			
+			LEDseq.setAutonPattern();
+			
+			//Log & display present state data
+			updateDriverView();
+			CsvLogger.logData(false);
+			updateWebStates();
 
-		//Mark end of loop and Calculate Loop Time
-		//Must be as close to the end of the loop as possible.
-		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			//Mark end of loop and Calculate Loop Time
+			//Must be as close to the end of the loop as possible.
+			loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
+		
 	}
 	
 	
@@ -434,22 +443,31 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		driveTrain.disableSafety();
+		
+		try{
+			CrashTracker.logTeleopInit();
+			
+			driveTrain.disableSafety();
 
-		auto.stop();
-		loopTimeElapsed = 0;
+			auto.stop();
+			loopTimeElapsed = 0;
+			
+			driveTrain.resetAllIntegrators();
+			
+			LEDseq.setNoneDesiredPattern();
+			
+			//Auxiliary Flap Control
+			auxFlapControl.startCycle();
+			
+			//Open a new log
+			CsvLogger.init();
+			
+			visionDelayCal.setLEDRingActive(true);
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
 		
-		driveTrain.resetAllIntegrators();
-		
-		LEDseq.setNoneDesiredPattern();
-		
-		//Auxiliary Flap Control
-		auxFlapControl.startCycle();
-		
-		//Open a new log
-		CsvLogger.init();
-		
-		visionDelayCal.setLEDRingActive(true);
 	}	
 	
 	
