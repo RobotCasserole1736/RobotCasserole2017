@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.UUID;
 
 public class CrashTracker {
+	
+	static boolean disabledRunOnce = false;
+	static boolean autoRunOnce = false;
+	static boolean teleopRunOnce = false;
 
 	private static final UUID RUN_INSTANCE_UUID = UUID.randomUUID();
 
@@ -20,10 +24,14 @@ public class CrashTracker {
 	
 	public static void logDisabledInit() {
 		logMarker("disabled init");
+		disabledRunOnce = false;
 	}
 	
 	public static void logDisabledPeriodic() {
-		logMarker("disabled periodic");
+		if(!disabledRunOnce){
+			logMarker("disabled periodic");
+			disabledRunOnce = true;
+		}
 	}
 	
 	public static void logAutoInit() {
@@ -31,7 +39,10 @@ public class CrashTracker {
 	}
 	
 	public static void logAutoPeriodic() {
-		logMarker("auto periodic");
+		if(!autoRunOnce){
+			logMarker("auto periodic");
+			autoRunOnce = true;
+		}
 	}
 	
 	public static void logTeleopInit() {
@@ -39,7 +50,10 @@ public class CrashTracker {
 	}
 	
 	public static void logTeleopPeriodic() {
-		
+		if(!teleopRunOnce){
+			logMarker("teleop periodic");
+			teleopRunOnce = true;
+		}
 	}
 		
 	 public static void logThrowableCrash(Throwable throwable) {

@@ -2,6 +2,8 @@ package org.usfirst.frc.team1736.robot;
 
 
 
+import java.util.EmptyStackException;
+
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -23,6 +25,7 @@ package org.usfirst.frc.team1736.robot;
  */
 
 import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
+import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Util.CrashTracker;
@@ -296,6 +299,10 @@ public class Robot extends IterativeRobot {
 			//Must be as close to the end of the loop as possible.
 			loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
 			
+			if (operatorCTRL.B()) {
+				throw new EmptyStackException();
+			}
+			
 		} catch (Throwable t) {
 			CrashTracker.logThrowableCrash(t);
 			throw t;
@@ -476,76 +483,84 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
+		try{ 
+			CrashTracker.logTeleopPeriodic();
+			
+			//Calculate loop execution period
+			loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+			lastLoopExTime = Timer.getFPGATimestamp();
+			
+			//Initialize Timer
+			prevLoopStartTimestamp = Timer.getFPGATimestamp();
+			
+			//Get all inputs from outside the robot
+			operatorCTRL.update();
+			driverCTRL.update();
+			
+			//Update whether the gear solenoid is open or closed
+			gearControl.update();
+			
+			//Update our estimations of how the robot is moving right now
+			poseCalc.update();
+			
+			//Update vision processing algorithm to find any targets on in view
+			visionProc.update();
 
-		//Calculate loop execution period
-		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
-		lastLoopExTime = Timer.getFPGATimestamp();
+			//Run vision alignment algorithm
+			visionAlignCTRL.setVisionAlignmentDesired(DriverController.getInstance().getAlignDesired());
+			visionAlignCTRL.GetAligned();
+			
+			//Update any calibration which is running
+			visionDelayCal.update();
+			
+			//Update shot control management subsystem
+			shotCTRL.update();
+			
+			//Update shot counter
+			shotCount.update();
+			
+			//Update Hopper Control
+			hopControl.update();
+			
+			//Update Intake Control
+			intakeControl.update();
+			
+			//Update shooter wheel control
+			shooterWheelControl.update();
+			
+			//Run drivetrain in operator control
+			driveTrain.operatorControl();
+			
+			//Update Climber Control 
+			climbControl.update();
+			
+			//Update low battery parameter checker
+			lowBatt.update();
+			
+			//Update user camera gimbal position
+			camGimbal.update();
+					
+			//Auxiliary Flap Control
+			auxFlapControl.update();
+			
+			//Alert the driver if vision alignment is being requested, but is not available
+			checkAlignAllowed();
+			
+			//Log & display present state data
+			updateDriverView();
+			CsvLogger.logData(false);
+			updateWebStates();
+			//Mark end of loop and Calculate Loop Time
+			//Must be as close to the end of the loop as possible.
+			loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			
+			FG.update();
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
 		
-		//Initialize Timer
-		prevLoopStartTimestamp = Timer.getFPGATimestamp();
-		
-		//Get all inputs from outside the robot
-		operatorCTRL.update();
-		driverCTRL.update();
-		
-		//Update whether the gear solenoid is open or closed
-		gearControl.update();
-		
-		//Update our estimations of how the robot is moving right now
-		poseCalc.update();
-		
-		//Update vision processing algorithm to find any targets on in view
-		visionProc.update();
-
-		//Run vision alignment algorithm
-		visionAlignCTRL.setVisionAlignmentDesired(DriverController.getInstance().getAlignDesired());
-		visionAlignCTRL.GetAligned();
-		
-		//Update any calibration which is running
-		visionDelayCal.update();
-		
-		//Update shot control management subsystem
-		shotCTRL.update();
-		
-		//Update shot counter
-		shotCount.update();
-		
-		//Update Hopper Control
-		hopControl.update();
-		
-		//Update Intake Control
-		intakeControl.update();
-		
-		//Update shooter wheel control
-		shooterWheelControl.update();
-		
-		//Run drivetrain in operator control
-		driveTrain.operatorControl();
-		
-		//Update Climber Control 
-		climbControl.update();
-		
-		//Update low battery parameter checker
-		lowBatt.update();
-		
-		//Update user camera gimbal position
-		camGimbal.update();
-				
-		//Auxiliary Flap Control
-		auxFlapControl.update();
-		
-		//Alert the driver if vision alignment is being requested, but is not available
-		checkAlignAllowed();
-		
-		//Log & display present state data
-		updateDriverView();
-		CsvLogger.logData(false);
-		updateWebStates();
-		//Mark end of loop and Calculate Loop Time
-		//Must be as close to the end of the loop as possible.
-		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
-		
-		FG.update();
 	}
 	
 	

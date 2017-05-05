@@ -120,7 +120,7 @@ public class OperatorController extends Xbox360Controller {
 		//end of shooter update code
 		
 		
-		/*LED color Selections*/
+		//LED color Selections
 		if(DPadDown()){
 			LEDSequencer.getInstance().setNoneDesiredPattern();
 		} else if(DPadUp()){
