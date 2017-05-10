@@ -25,6 +25,7 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
+import org.usfirst.frc.team1736.lib.Util.CrashTracker;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
@@ -134,6 +135,11 @@ public class Robot extends IterativeRobot {
 	
 	FlappyGear FG;
 	
+	//Crash Tracker Construction
+	public Robot() {
+        CrashTracker.logRobotConstruction();
+    }
+	
 	double lastLoopExTime;
 	double loopExTime;
 	
@@ -146,63 +152,71 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit(){
-		//Set up physical devices
-		driveTrain = DriveTrain.getInstance();
-		pdp = new PowerDistributionPanel(RobotConstants.PDP_CAN_DEVICE_ID);
-		lowBatt = LowBatteryIndicator.getInstance();
-		lowBatt.setPDPReference(pdp);
-		gyro = Gyro.getInstance();
-		visionProc = VisionProcessing.getInstance();
-		visionAlignCTRL = VisionAlignment.getInstance();
-		visionDelayCal = VisionDelayCalibration.getInstance();
-		FG = FlappyGear.getInstance();
-		auxFlapControl = AuxFlapControl.getInstance();
+		
+		try {
+			CrashTracker.logRobotInit();
+			
+			//Set up physical devices
+			driveTrain = DriveTrain.getInstance();
+			pdp = new PowerDistributionPanel(RobotConstants.PDP_CAN_DEVICE_ID);
+			lowBatt = LowBatteryIndicator.getInstance();
+			lowBatt.setPDPReference(pdp);
+			gyro = Gyro.getInstance();
+			visionProc = VisionProcessing.getInstance();
+			visionAlignCTRL = VisionAlignment.getInstance();
+			visionDelayCal = VisionDelayCalibration.getInstance();
+			FG = FlappyGear.getInstance();
+			auxFlapControl = AuxFlapControl.getInstance();
 
-		ecuStats = new CasseroleRIOLoadMonitor();
-		poseCalc = RobotPoseCalculator.getInstance();
-		shotCTRL = ShotControl.getInstance();
-		shotCount = ShotCounter.getInstance();
-		hopControl = HopperControl.getInstance();
-		shooterWheelControl = ShooterWheelCtrl.getInstance();
-		climbControl = ClimberControl.getInstance();
-		climbControl.setPDPReference(pdp);
+			ecuStats = new CasseroleRIOLoadMonitor();
+			poseCalc = RobotPoseCalculator.getInstance();
+			shotCTRL = ShotControl.getInstance();
+			shotCount = ShotCounter.getInstance();
+			hopControl = HopperControl.getInstance();
+			shooterWheelControl = ShooterWheelCtrl.getInstance();
+			climbControl = ClimberControl.getInstance();
+			climbControl.setPDPReference(pdp);
 		gearPickupCTRL = GearPickup.getInstance();
-		airSupplySystem = PneumaticsSupply.getInstance();
+			airSupplySystem = PneumaticsSupply.getInstance();
 
-		camGimbal = new CameraServoMount();
-		
-		gearControl = GearControl.getInstance();
+			camGimbal = new CameraServoMount();
+			
+			gearControl = GearControl.getInstance();
 
-		auto = new Autonomous();
+			auto = new Autonomous();
 
-		
+			
 
-		driverCTRL = DriverController.getInstance();
-		operatorCTRL = OperatorController.getInstance();
-		driverCTRL.setDeadzone(0.175);
-		operatorCTRL.setDeadzone(0.175);
-		
-		LEDseq = LEDSequencer.getInstance();
-		
-		autoAlignNotPossibleDVIndState = false;
-		
-		ds = DriverStation.getInstance();
+			driverCTRL = DriverController.getInstance();
+			operatorCTRL = OperatorController.getInstance();
+			driverCTRL.setDeadzone(0.175);
+			operatorCTRL.setDeadzone(0.175);
+			
+			LEDseq = LEDSequencer.getInstance();
+			
+			autoAlignNotPossibleDVIndState = false;
+			
+			ds = DriverStation.getInstance();
 
-		initLoggingChannels();
-		
-		initDriverView();
-		
-		//Set up and start web server (must be after all other website init functions)
-		webServer = new CasseroleWebServer();
-		webServer.startServer();
-		
-		//Load any saved calibration values (must be last to ensure all calibrations have been initialized first)
-		CalWrangler.loadCalValues();
-		
-		camCTRL = new CameraControl();
+			initLoggingChannels();
+			
+			initDriverView();
+			
+			//Set up and start web server (must be after all other website init functions)
+			webServer = new CasseroleWebServer();
+			webServer.startServer();
+			
+			//Load any saved calibration values (must be last to ensure all calibrations have been initialized first)
+			CalWrangler.loadCalValues();
+			
+			camCTRL = new CameraControl();
 
-		lastLoopExTime = Timer.getFPGATimestamp();
-
+			lastLoopExTime = Timer.getFPGATimestamp();
+		
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
 	}
 	
 	/**
@@ -210,20 +224,31 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		//Make disabled LEDs a random pattern
-		LEDseq.pickRandomPattern();
 		
-		//Close out any log which is running
-		CsvLogger.close();
-		autoAlignNotPossibleDVIndState = false;
+		try{
+			CrashTracker.logDisabledInit();
+			
+			//Make disabled LEDs a random pattern
+			LEDseq.pickRandomPattern();
+			
+			//Close out any log which is running
+			CsvLogger.close();
+			autoAlignNotPossibleDVIndState = false;
+			
+			//Ensure we turn everything off
+			setZeroState();
+			
+			visionDelayCal.setLEDRingActive(false);
+			
+			//Auxiliary Flap Control
+			auxFlapControl.endCycle();
+			
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
 		
-		//Ensure we turn everything off
-		setZeroState();
 		
-		visionDelayCal.setLEDRingActive(false);
-		
-		//Auxiliary Flap Control
-		auxFlapControl.endCycle();
 	}
 	
 	/**
@@ -231,44 +256,53 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledPeriodic() {
-
-		//Calculate loop execution period
-		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
-		lastLoopExTime = Timer.getFPGATimestamp();
 		
-		//Mark start of loop, Initialize Timer
-		//Must be as close to the start of the loop as possible
-		prevLoopStartTimestamp = Timer.getFPGATimestamp();
-		
-		//Get all inputs from outside the robot
-		poseCalc.update();
-		
-		//Update vision processing algorithm to find any targets on in view
-		visionProc.update();
-		
-		//Update any calibration which is running
-		visionDelayCal.update();
-		
-		//Update autonomous selection
-		auto.updateAutoSelection();
-		
+		try{
+			CrashTracker.logDisabledPeriodic();
+			
+			//Calculate loop execution period
+			loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+			lastLoopExTime = Timer.getFPGATimestamp();
+			
+			//Mark start of loop, Initialize Timer
+			//Must be as close to the start of the loop as possible
+			prevLoopStartTimestamp = Timer.getFPGATimestamp();
+			
+			//Get all inputs from outside the robot
+			poseCalc.update();
+			
+			//Update vision processing algorithm to find any targets on in view
+			visionProc.update();
+			
+			//Update any calibration which is running
+			visionDelayCal.update();
+			
+			//Update autonomous selection
+			auto.updateAutoSelection();
+			
 		//Update Gear Pickup Control
 		gearPickupCTRL.update();
 		
-		//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
-		shooterWheelControl.updateGains();
-		driveTrain.updateAllCals();
-		visionAlignCTRL.updateGains();
-		
-		//Auxiliary Flap Control
-		auxFlapControl.update();;
-		
-		updateDriverView();
-		updateWebStates();
+			//Update select PID gains from calibrations (only do during disabled to prevent potential gain-switching instability)
+			shooterWheelControl.updateGains();
+			driveTrain.updateAllCals();
+			visionAlignCTRL.updateGains();
+			
+			//Auxiliary Flap Control
+			auxFlapControl.update();;
+			
+			updateDriverView();
+			updateWebStates();
 
-		//Mark end of loop and Calculate Loop Time
-		//Must be as close to the end of the loop as possible.
-		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			//Mark end of loop and Calculate Loop Time
+			//Must be as close to the end of the loop as possible.
+			loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
+		
 		
 	}
 		
@@ -286,29 +320,38 @@ public class Robot extends IterativeRobot {
 	 * This method gets run right before the robot starts running autonomous mode.
 	 */
 	@Override
-	public void autonomousInit() {	
-		driveTrain.disableSafety();
+	public void autonomousInit() {
 		
-		loopTimeElapsed = 0;
+		try{
+			CrashTracker.logAutoInit();
+			
+			driveTrain.disableSafety();
+			
+			loopTimeElapsed = 0;
 
-		//Assume starting at 0 degrees
-		gyro.reset();
-		
-		//Presume autonomous starts at zero distance (robot initial orientation is origin)
-		driveTrain.resetAllEncoders();
-		driveTrain.resetAllIntegrators();
-		
-		//Open a new log
-		CsvLogger.init();
-		
-		//Update autonomous selection and start
-		auto.updateAutoSelection();
-		auto.executeAutonomus();
-		
-		//Auxiliary Flap Control
-		auxFlapControl.startCycle();
-		
-		visionDelayCal.setLEDRingActive(true);
+			//Assume starting at 0 degrees
+			gyro.reset();
+			
+			//Presume autonomous starts at zero distance (robot initial orientation is origin)
+			driveTrain.resetAllEncoders();
+			driveTrain.resetAllIntegrators();
+			
+			//Open a new log
+			CsvLogger.init();
+			
+			//Update autonomous selection and start
+			auto.updateAutoSelection();
+			auto.executeAutonomus();
+			
+			//Auxiliary Flap Control
+			auxFlapControl.startCycle();
+			
+			visionDelayCal.setLEDRingActive(true);
+			
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
 
 	}
 
@@ -318,65 +361,74 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		
-		//Calculate loop execution period
-		loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
-		lastLoopExTime = Timer.getFPGATimestamp();
-		
-		//Mark start of loop, Initialize Timer
-		//Must be as close to the start of the loop as possible
-		prevLoopStartTimestamp = Timer.getFPGATimestamp();
-		
-		//Get all inputs from outside the robot
-		poseCalc.update();
-		
-		//Update vision processing algorithm to find any targets on in view
-		visionProc.update();
-		
-		//Run vision alignment algorithm
-		visionAlignCTRL.GetAligned();
-		
-		//Update any calibration which is running
-		visionDelayCal.update();
-		
-		//Update shot control management subsystem
-		shotCTRL.update();
-		
-		//Update Shot Counter
-		shotCount.update();
-		
-		//Update Hopper Control
-		hopControl.update();
+		try{
+			CrashTracker.logAutoPeriodic();
+			
+			//Calculate loop execution period
+			loopExTime = Timer.getFPGATimestamp() - lastLoopExTime;
+			lastLoopExTime = Timer.getFPGATimestamp();
+			
+			//Mark start of loop, Initialize Timer
+			//Must be as close to the start of the loop as possible
+			prevLoopStartTimestamp = Timer.getFPGATimestamp();
+			
+			//Get all inputs from outside the robot
+			poseCalc.update();
+			
+			//Update vision processing algorithm to find any targets on in view
+			visionProc.update();
+			
+			//Run vision alignment algorithm
+			visionAlignCTRL.GetAligned();
+			
+			//Update any calibration which is running
+			visionDelayCal.update();
+			
+			//Update shot control management subsystem
+			shotCTRL.update();
+			
+			//Update Shot Counter
+			shotCount.update();
+			
+			//Update Hopper Control
+			hopControl.update();
 
 		//Update Gear Pickup Control
 		gearPickupCTRL.update();
-		
-		//Update shooter wheel control
-		shooterWheelControl.update();
-		
-		//Run drivetrain in autonomous
-		driveTrain.autonomousControl();
-		
-		//Update Climber Control 
-		climbControl.update();
-		
-		//Auxiliary Flap Control
-		auxFlapControl.update();
-		
-		//Update the low battery parameter checker
-		lowBatt.update();
-		
-		auto.update();
-		
-		LEDseq.setAutonPattern();
-		
-		//Log & display present state data
-		updateDriverView();
-		CsvLogger.logData(false);
-		updateWebStates();
+			
+			//Update shooter wheel control
+			shooterWheelControl.update();
+			
+			//Run drivetrain in autonomous
+			driveTrain.autonomousControl();
+			
+			//Update Climber Control 
+			climbControl.update();
+			
+			//Auxiliary Flap Control
+			auxFlapControl.update();
+			
+			//Update the low battery parameter checker
+			lowBatt.update();
+			
+			auto.update();
+			
+			LEDseq.setAutonPattern();
+			
+			//Log & display present state data
+			updateDriverView();
+			CsvLogger.logData(false);
+			updateWebStates();
 
-		//Mark end of loop and Calculate Loop Time
-		//Must be as close to the end of the loop as possible.
-		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			//Mark end of loop and Calculate Loop Time
+			//Must be as close to the end of the loop as possible.
+			loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
+			
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
+		
 	}
 	
 	
@@ -393,22 +445,31 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		driveTrain.disableSafety();
+		
+		try{
+			CrashTracker.logTeleopInit();
+			
+			driveTrain.disableSafety();
 
-		auto.stop();
-		loopTimeElapsed = 0;
+			auto.stop();
+			loopTimeElapsed = 0;
+			
+			driveTrain.resetAllIntegrators();
+			
+			LEDseq.setNoneDesiredPattern();
+			
+			//Auxiliary Flap Control
+			auxFlapControl.startCycle();
+			
+			//Open a new log
+			CsvLogger.init();
+			
+			visionDelayCal.setLEDRingActive(true);
+		} catch (Throwable t) {
+			CrashTracker.logThrowableCrash(t);
+			throw t;
+		}
 		
-		driveTrain.resetAllIntegrators();
-		
-		LEDseq.setNoneDesiredPattern();
-		
-		//Auxiliary Flap Control
-		auxFlapControl.startCycle();
-		
-		//Open a new log
-		CsvLogger.init();
-		
-		visionDelayCal.setLEDRingActive(true);
 	}	
 	
 	
