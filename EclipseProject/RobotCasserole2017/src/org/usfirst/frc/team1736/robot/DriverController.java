@@ -23,12 +23,10 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 
 public class DriverController extends Xbox360Controller {
-	
 	private static DriverController controller = null;
 	private boolean airCompState = true;
-	
-	public static synchronized DriverController getInstance()
-	{
+
+	public static synchronized DriverController getInstance() {
 		if(controller == null)
 			controller = new DriverController(0);
 		return controller;
@@ -37,216 +35,182 @@ public class DriverController extends Xbox360Controller {
 	private DriverController(int joystick_id) {
 		super(joystick_id);
 	}
-	
-	
-	public double getFwdRevCmd()
-	{
-		if (getDriveGearPlaceDriveMode())
-		{
-			return expScaleCommand(-getXYRoundedToCaridinalPoints('X'))*0.5;
-		}		
-		else
-		{
+
+	public double getFwdRevCmd() {
+		if(getDriveGearPlaceDriveMode()) {
+			return expScaleCommand(-getXYRoundedToCaridinalPoints('X')) * 0.5;
+		}
+		else {
 			return expScaleCommand(LStick_Y());
 		}
-
 	}
-	
-	public double getStrafeCmd()
-	{
 
-		if (getDriveGearPlaceDriveMode())
-		{
+	public double getStrafeCmd() {
+		if(getDriveGearPlaceDriveMode()) {
 			return expScaleCommand(getXYRoundedToCaridinalPoints('Y'));
-		}		
-		else
-		{
-			
+		}
+		else {
 			return expScaleCommand(LStick_X());
 		}
-
 	}
-	
-	public double getRotateCmd()
-	{
-		if (getDriveGearPlaceDriveMode())
-		{
-			return expScaleCommand(RStick_X())*0.5;
-		} 
-		else{
+
+	public double getRotateCmd() {
+		if(getDriveGearPlaceDriveMode()) {
+			return expScaleCommand(RStick_X()) * 0.5;
+		}
+		else {
 			return expScaleCommand(RStick_X());
 		}
 	}
-	
-	public boolean getGearCamAlign()
-	{
+
+	public boolean getGearCamAlign() {
 		return B();
 	}
-	
-	public boolean getIntakeCamAlign()
-	{
+
+	public boolean getIntakeCamAlign() {
 		return X();
 	}
-	
-	public boolean getShooterCamAlign()
-	{
+
+	public boolean getShooterCamAlign() {
 		return Y();
 	}
-	
-	public boolean getGyroReset()
-	{
+
+	public boolean getGyroReset() {
 		return DPadUp();
 	}
-	
-	public boolean getGyroReset90()
-	{
+
+	public boolean getGyroReset90() {
 		return DPadRight();
 	}
-	
-	public boolean getGyroReset180()
-	{
+
+	public boolean getGyroReset180() {
 		return DPadDown();
 	}
-	
-	public boolean getGyroReset270()
-	{
+
+	public boolean getGyroReset270() {
 		return DPadLeft();
 	}
-	
-	public void updateAirCompEnabled()
-	{
+
+	public void updateAirCompEnabled() {
 		if(StartButton())
 			airCompState = true;
 		if(BackButton())
 			airCompState = false;
 	}
-	
-	public boolean getAirCompEnableCmd()
-	{
+
+	public boolean getAirCompEnableCmd() {
 		return airCompState;
 	}
-	
-	public boolean getAlignDesired()
-	{
+
+	public boolean getAlignDesired() {
 		return RB();
 	}
-	
-	public boolean getDriveGearPlaceDriveMode()
-	{
-		return LB();	
-	}
-	
-	public void update(){
 
+	public boolean getDriveGearPlaceDriveMode() {
+		return LB();
+	}
+
+	public void update() {
 		updateAirCompEnabled();
 		PneumaticsSupply.getInstance().setCompressorEnabled(getAirCompEnableCmd());
-		
-		if(getDriveGearPlaceDriveMode()){
+
+		if(getDriveGearPlaceDriveMode()) {
 			VisionDelayCalibration.getInstance().setLEDRingActive(false);
-		} else {
+		}
+		else {
 			VisionDelayCalibration.getInstance().setLEDRingActive(true);
 		}
-		
-		//Update Gyro angle
+
+		// Update Gyro angle
 		int angle = Gyro.getInstance().getAngleOffset();
-		if(getGyroReset())
-		{
+		if(getGyroReset()) {
 			angle = 0;
 		}
-		else if(getGyroReset90())
-		{
+		else if(getGyroReset90()) {
 			angle = 90;
 		}
-		else if(getGyroReset180())
-		{
+		else if(getGyroReset180()) {
 			angle = 180;
 		}
-		else if(getGyroReset270())
-		{
+		else if(getGyroReset270()) {
 			angle = 270;
 		}
 
-		/* Alternate gyro angle update key idea
+		/*
+		 * Alternate gyro angle update key idea
 		 * If decide to try comment out if else above
 		 * And update DriverController
 		 * 
-		 if(DPadUp())
-		 {
-			 angle += 90;
-			 if (angle >= 360){
-				 angle = 0;
-			 }
-		 } else if(DPadDown())
-		 {
-			 angle -= 90;
-			 if (angle < 0){
-				 angle = 270;
-			 }
-		 }
-		  */
+		 * if(DPadUp())
+		 * {
+		 * angle += 90;
+		 * if (angle >= 360){
+		 * angle = 0;
+		 * }
+		 * } else if(DPadDown())
+		 * {
+		 * angle -= 90;
+		 * if (angle < 0){
+		 * angle = 270;
+		 * }
+		 * }
+		 */
 		Gyro.getInstance().setAngleOffset(angle);
-		
-		
 	}
-	
-	private double expScaleCommand(double input){
+
+	private double expScaleCommand(double input) {
 		boolean isPos;
-		
-		//remember sign
-		if(input>0){
+
+		// remember sign
+		if(input > 0) {
 			isPos = true;
-		} else{
+		}
+		else {
 			isPos = false;
 		}
-		
-		//Scale joystick by power
+
+		// Scale joystick by power
 		double doug = Math.pow(Math.abs(input), 3);
-		
-		//re-invert if needed
-		if(isPos == false){
+
+		// re-invert if needed
+		if(isPos == false) {
 			doug = -doug;
 		}
 
 		return doug;
 	}
-	
-	
-	
-	private double getXYRoundedToCaridinalPoints(char dir)
-	{
-		double theta = Math.atan2(LStick_Y(),  LStick_X());
-		
-		//Cardinal points in radians
+
+	private double getXYRoundedToCaridinalPoints(char dir) {
+		double theta = Math.atan2(LStick_Y(), LStick_X());
+
+		// Cardinal points in radians
 		double east = 0;
-		double north = Math.PI/2;
+		double north = Math.PI / 2;
 		double west = Math.PI;
 		double south = -north;
-		double ErrorMargin = Math.PI/8;
-		
-		if ((theta < ErrorMargin && theta > -ErrorMargin) || (theta > west - ErrorMargin && theta <= west) || (theta < -west + ErrorMargin && theta >= -west))
+		double ErrorMargin = Math.PI / 8;
+
+		if((theta < ErrorMargin && theta > -ErrorMargin) || (theta > west - ErrorMargin && theta <= west) || (theta < -west + ErrorMargin && theta >= -west))
 		{
-			//Go east or west
-			if (dir == 'X')
-			{
+			// Go east or west
+			if(dir == 'X') {
 				return LStick_X();
-			}else
-			{
+			} 
+			else {
 				return 0;
 			}
-		} else if((theta < north + ErrorMargin && theta > north - ErrorMargin) || (theta < south + ErrorMargin && theta > south - ErrorMargin))
-		{
-			//go north or south
-			if(dir == 'Y')
-			{
+		}
+		else if((theta < north + ErrorMargin && theta > north - ErrorMargin) || (theta < south + ErrorMargin && theta > south - ErrorMargin)) {
+			// go north or south
+			if(dir == 'Y') {
 				return LStick_Y();
-			}else
-			{
+			}
+			else {
 				return 0;
 			}
-		}else
-		{
+		}
+		else {
 			return 0;
 		}
 	}
-
 }

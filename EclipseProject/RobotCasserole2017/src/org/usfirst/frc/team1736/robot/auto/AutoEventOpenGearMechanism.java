@@ -12,23 +12,23 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class AutoEventOpenGearMechanism extends AutoEvent {
 	Timer timer;
-	public AutoEventOpenGearMechanism(){
+
+	public AutoEventOpenGearMechanism() {
 		timer = new Timer();
 	}
-	
+
 	@Override
 	public void userUpdate() {
-		
+
 	}
 
 	@Override
 	public void userForceStop() {
-		
+
 	}
 
 	@Override
 	public boolean isTriggered() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -44,6 +44,5 @@ public class AutoEventOpenGearMechanism extends AutoEvent {
 		timer.start();
 		GearControl.getInstance().openGearSolenoid();
 	}
-	
-	
+
 }

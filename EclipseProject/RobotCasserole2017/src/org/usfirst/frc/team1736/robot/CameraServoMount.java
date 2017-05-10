@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1736.robot;
 
-
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -21,7 +20,6 @@ package org.usfirst.frc.team1736.robot;
  *   if you would consider donating to our club to help further STEM education.
  */
 
-
 import edu.wpi.first.wpilibj.Servo;
 
 /**
@@ -29,86 +27,80 @@ import edu.wpi.first.wpilibj.Servo;
  *
  */
 public class CameraServoMount {
-	
-	public enum CamPos{
+	public enum CamPos {
 		SHOOT, GEAR, INTAKE
 	}
-	
-	//State variables
+
+	// State variables
 	public double cur_pan_angle;
 	public double cur_tilt_angle;
 	public CamPos curCamPos;
-	
-	//Startup conditions
-	private static final CamPos startupPos = CamPos.SHOOT;
-	
 
-	
-	//Servo objects for mount servos
+	// Startup conditions
+	private static final CamPos startupPos = CamPos.SHOOT;
+
+	// Servo objects for mount servos
 	private Servo pan_servo;
 	private Servo tilt_servo;
-	
-	/** 
+
+	/**
 	 * Constructor - initializes all the objects for a camera servo mount. Takes nothing, returns nothing.
 	 */
-	CameraServoMount(){
+	CameraServoMount() {
 		pan_servo = new Servo(RobotConstants.CAMERA_PAN_SERVO_PWM_PORT);
 		tilt_servo = new Servo(RobotConstants.CAMERA_TILT_SERVO_PWM_PORT);
 		setCameraPos(startupPos);
-		
 	}
-	
-	public void update(){
-		if(DriverController.getInstance().getGearCamAlign()){
+
+	public void update() {
+		if(DriverController.getInstance().getGearCamAlign()) {
 			setCameraPos(CamPos.GEAR);
-		} else if(DriverController.getInstance().getIntakeCamAlign()) {
+		}
+		else if(DriverController.getInstance().getIntakeCamAlign()) {
 			setCameraPos(CamPos.INTAKE);
-		} else if(DriverController.getInstance().getShooterCamAlign()){
+		}
+		else if(DriverController.getInstance().getShooterCamAlign()) {
 			setCameraPos(CamPos.SHOOT);
 		}
 	}
-	
+
 	/**
 	 * Commands the servos to the right spots based on the value of camera position in
+	 * 
 	 * @param in
 	 */
-	
-	public void setCameraPos(CamPos in){
+	public void setCameraPos(CamPos in) {
 		resolveCamPos(in);
 		pan_servo.setAngle(cur_pan_angle);
 		tilt_servo.setAngle(cur_tilt_angle);
-		
-		
 	}
-	
+
 	/**
 	 * Sets the pan and tilt internal variables per the
 	 * position specified in the input argument.
-	 * @param in - position to set the camera to.
+	 * 
+	 * @param in
+	 *            - position to set the camera to.
 	 */
-	private void resolveCamPos(CamPos in){
+	private void resolveCamPos(CamPos in) {
 		curCamPos = in;
-		
-		switch(in){
+
+		switch(in) {
 		case INTAKE:
-			cur_pan_angle =  RobotConstants.INTAKE_PAN_ANGLE;
+			cur_pan_angle = RobotConstants.INTAKE_PAN_ANGLE;
 			cur_tilt_angle = RobotConstants.INTAKE_TILT_ANGLE;
-			break;			
+			break;
 		case SHOOT:
-			cur_pan_angle =  RobotConstants.SHOOT_PAN_ANGLE;
+			cur_pan_angle = RobotConstants.SHOOT_PAN_ANGLE;
 			cur_tilt_angle = RobotConstants.SHOOT_TILT_ANGLE;
 			break;
 		case GEAR:
-			cur_pan_angle =  RobotConstants.GEAR_PAN_ANGLE;
+			cur_pan_angle = RobotConstants.GEAR_PAN_ANGLE;
 			cur_tilt_angle = RobotConstants.GEAR_TILT_ANGLE;
 			break;
 		default:
 			System.out.println("Warning - commanded camera position " + in.name() + " is not recognized!");
 			break;
 		}
-		
 	}
-
 }
-
-

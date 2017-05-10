@@ -23,16 +23,12 @@ package org.usfirst.frc.team1736.robot;
 import org.usfirst.frc.team1736.lib.HAL.Xbox360Controller;
 
 public class OperatorController extends Xbox360Controller {
-	
 	private static OperatorController controller = null;
 
-	
-	//Operator shooter command interpretation variables
+	// Operator shooter command interpretation variables
 	boolean pev_State;
-	
-	
-	public static synchronized OperatorController getInstance()
-	{
+
+	public static synchronized OperatorController getInstance() {
 		if(controller == null)
 			controller = new OperatorController(1);
 		return controller;
@@ -41,108 +37,99 @@ public class OperatorController extends Xbox360Controller {
 	private OperatorController(int joystick_id) {
 		super(joystick_id);
 	}
-	
-	public boolean getGearSolenoidCmd()
-	{
+
+	public boolean getGearSolenoidCmd() {
 		return RStickButton();
 	}
-	
-	public double getClimbSpeedCmd()
-	{
+
+	public double getClimbSpeedCmd() {
 		return LStick_Y();
 	}
-	
-	public boolean getIntakeDesiredCmd()
-	{
+
+	public boolean getIntakeDesiredCmd() {
 		return RB();
 	}
-	
-	public boolean getEjectDesiredCmd()
-	{
+
+	public boolean getEjectDesiredCmd() {
 		return LB();
 	}
-	
-	public boolean getPickupPosCmd()
-	{
+
+	public boolean getPickupPosCmd() {
 		return RB();
 	}
-	
-	public boolean getPickupSpeedCmd()
-	{
+
+	public boolean getPickupSpeedCmd() {
 		return LB();
 	}
-	
-	public boolean getHopperFwdOverride()
-	{
+
+	public boolean getHopperFwdOverride() {
 		return StartButton();
 	}
-	
-	public boolean getHopperRevOverride()
-	{
+
+	public boolean getHopperRevOverride() {
 		return BackButton();
 	}
-	
-	 public  double getGearFlapCommand()
-	{
-		return LTrigger();	
+
+	public double getGearFlapCommand() {
+		return LTrigger();
 	}
-	
+
 	/**
 	 * Do everything needed to update the operator control states.
 	 * Must be called every loop.
 	 */
-	public void update(){
+	public void update() {
 		boolean shootFlag;
 		boolean rising_edge;
 		boolean falling_edge;
-		
-		//Prep to Shoot or Disable shoot Commands
-		if(A()){
+
+		// Prep to Shoot or Disable shoot Commands
+		if(A()) {
 			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
-		
-		if(B()){
-			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.NO_SHOOT);	
+
+		if(B()) {
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.NO_SHOOT);
 		}
-		
-		//Shoot Command
+
+		// Shoot Command
 		shootFlag = (RTrigger() > 0.5 || Y() == true);
-		if(shootFlag & pev_State==false){
-			rising_edge=true;	
-		} else{
-			rising_edge=false;
+		if(shootFlag & pev_State == false) {
+			rising_edge = true;
 		}
-		
-		if(!shootFlag & pev_State==true){
-			falling_edge=true;	
+		else {
+			rising_edge = false;
 		}
-		else{
-			falling_edge=false;
-		}	
-		
-		if(rising_edge==true){
-			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.SHOOT);	
-		} else if(falling_edge==true){
+
+		if(!shootFlag & pev_State == true) {
+			falling_edge = true;
+		}
+		else {
+			falling_edge = false;
+		}
+
+		if(rising_edge == true) {
+			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.SHOOT);
+		}
+		else if(falling_edge == true) {
 			ShotControl.getInstance().setDesiredShooterState(ShotControl.ShooterStates.PREP_TO_SHOOT);
 		}
-		
+
 		pev_State = shootFlag;
-		//end of shooter update code
-		
-		
-		/*LED color Selections*/
-		if(DPadDown()){
+		// end of shooter update code
+
+		/* LED color Selections */
+		if(DPadDown()) {
 			LEDSequencer.getInstance().setNoneDesiredPattern();
-		} else if(DPadUp()){
+		}
+		else if(DPadUp()) {
 			LEDSequencer.getInstance().setBothDesiredPattern();
-		} else if(DPadLeft()){
+		}
+		else if(DPadLeft()) {
 			LEDSequencer.getInstance().setGearDesiredPattern();
-		} else if(DPadRight()){
+		}
+		else if(DPadRight()) {
 			LEDSequencer.getInstance().setFuelDesiredPattern();
 		}
-		
-		
 	}
-
-	
 }

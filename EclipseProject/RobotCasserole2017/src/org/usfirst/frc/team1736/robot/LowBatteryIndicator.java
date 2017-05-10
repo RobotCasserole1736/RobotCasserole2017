@@ -31,17 +31,17 @@ public class LowBatteryIndicator {
 	private AveragingFilter voltageFilter = null;
 	private final double MIN_AVG_VOLTAGE = 8.0;
 	private final double MIN_INSTANT_VOLTAGE = 6.0;
-	
+
 	public static LowBatteryIndicator getInstance() {
 		if(batteryIndicator == null)
 			batteryIndicator = new LowBatteryIndicator();
 		return batteryIndicator;
 	}
-	
+
 	private LowBatteryIndicator() {
 		voltageFilter = new AveragingFilter(7, 12);
 	}
-	
+
 	public void update() {
 		if(pdp == null)
 			return;
@@ -49,13 +49,12 @@ public class LowBatteryIndicator {
 		if(avgVoltage < MIN_AVG_VOLTAGE || pdp.getVoltage() < MIN_INSTANT_VOLTAGE)
 			lowVoltageTriggered = true;
 	}
-	
+
 	public void setPDPReference(PowerDistributionPanel pdp) {
 		this.pdp = pdp;
 	}
-	
-	public boolean isBatteryDead()
-	{
+
+	public boolean isBatteryDead() {
 		return lowVoltageTriggered;
 	}
 }

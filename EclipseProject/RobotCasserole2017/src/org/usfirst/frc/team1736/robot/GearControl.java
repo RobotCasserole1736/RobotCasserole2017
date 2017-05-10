@@ -20,40 +20,38 @@ package org.usfirst.frc.team1736.robot;
  *   if you would consider donating to our club to help further STEM education.
  */
 
-
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class GearControl {
 	private static GearControl gearControl = null;
 	private Solenoid gearSolenoid = null;
-	
-	public static GearControl getInstance(){
-		if (gearControl == null)
+
+	public static GearControl getInstance() {
+		if(gearControl == null)
 			gearControl = new GearControl();
 		return gearControl;
 	}
 
-	private GearControl(){
+	private GearControl() {
 		gearSolenoid = new Solenoid(RobotConstants.GEAR_SOLENOID_PORT);
 	}
-	
-	public void openGearSolenoid(){
+
+	public void openGearSolenoid() {
 		gearSolenoid.set(true);
 	}
-	
-	public void closeGearSolenoid(){
+
+	public void closeGearSolenoid() {
 		gearSolenoid.set(false);
 	}
-	
-	public boolean isSolenoidOpen(){
+
+	public boolean isSolenoidOpen() {
 		return gearSolenoid.get();
 	}
-	
-	public void update(){
+
+	public void update() {
 		if(OperatorController.getInstance().getGearSolenoidCmd())
 			openGearSolenoid();
 		else
 			closeGearSolenoid();
 	}
 }
-

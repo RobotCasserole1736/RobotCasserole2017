@@ -28,21 +28,19 @@ public class ShotCounter {
 	private DerivativeCalculator IDotCalc;
 	private DerivativeCalculator IDoubleDotCalc;
 	private AveragingFilter IDoubleDotFilter;
-	private final double IDoubleDotThresh = -4000; //Amps per sec per sec
+	private final double IDoubleDotThresh = -4000; // Amps per sec per sec
 	private int currCount;
 	private boolean aboveThresh;
-	
-	
-	public static synchronized ShotCounter getInstance()
-	{
+
+	public static synchronized ShotCounter getInstance() {
 		if(shotCounter == null)
 			shotCounter = new ShotCounter();
 		return shotCounter;
 	}
-	
+
 	/**
 	 * Simple class to attempt to count the number of balls we've shot.
-	 * Mostly just for driver feedback now. Looks for spikes in the shooter motor current draw while 
+	 * Mostly just for driver feedback now. Looks for spikes in the shooter motor current draw while
 	 * we are attempting to shoot.
 	 */
 	private ShotCounter() {
@@ -52,36 +50,36 @@ public class ShotCounter {
 		currCount = 0;
 		aboveThresh = false;
 	}
-	
-	public void update(){
-		//See the offboard calculator matlab scripts for more info on this algorithm.
+
+	public void update() {
+		// See the offboard calculator matlab scripts for more info on this algorithm.
 		// Through experimentation with data we recorded on the robot, we determined a good algorithm
 		// for counting shots was:
-		//  --Calc the second derivative of current draw (I double dot)
-		//  --Filter with a 5-pt sliding average window 
-		//  --Look for negative peaks of I double-dot, below -4000 amps/sec/sec
-		//  --Every time I double dot crosses that threshold, increment the shot count.
+		// --Calc the second derivative of current draw (I double dot)
+		// --Filter with a 5-pt sliding average window
+		// --Look for negative peaks of I double-dot, below -4000 amps/sec/sec
+		// --Every time I double dot crosses that threshold, increment the shot count.
 		double rpm = ShooterWheelCtrl.getInstance().getShooterActualVelocityRPM();
 		double shooterCurrent = ShooterWheelCtrl.getInstance().getOutputCurrent();
-		if(rpm > ShooterWheelCtrl.getInstance().getShooterDesiredRPM()*0.5){ //Only run logic if shooter wheel is above half speed
+		if(rpm > ShooterWheelCtrl.getInstance().getShooterDesiredRPM() * 0.5) { // Only run logic if shooter wheel is above half speed
 			double IDot = IDotCalc.calcDeriv(shooterCurrent);
-			double IDoubleDot = IDoubleDotCalc.calcDeriv(IDot); 
+			double IDoubleDot = IDoubleDotCalc.calcDeriv(IDot);
 			double IDoubleDotFiltered = IDoubleDotFilter.filter(IDoubleDot);
-			if(IDoubleDotFiltered < IDoubleDotThresh && aboveThresh == false){
+			if(IDoubleDotFiltered < IDoubleDotThresh && aboveThresh == false) {
 				aboveThresh = true;
 			}
-			if(IDoubleDotFiltered >= IDoubleDotThresh && aboveThresh == true){
+			if(IDoubleDotFiltered >= IDoubleDotThresh && aboveThresh == true) {
 				currCount = currCount + 1;
 				aboveThresh = false;
 			}
 		}
 	}
-	public int getCurrCount(){
-		return currCount;
-	}
-	
-	public double getCurrCountLog(){
+
+	public int getCurrCount() {
 		return currCount;
 	}
 
+	public double getCurrCountLog() {
+		return currCount;
+	}
 }

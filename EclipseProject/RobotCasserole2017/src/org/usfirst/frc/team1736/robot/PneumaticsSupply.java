@@ -26,62 +26,61 @@ import edu.wpi.first.wpilibj.Compressor;
 public class PneumaticsSupply {
 	private static PneumaticsSupply localPS = null;
 	Compressor comp;
-	
+
 	private boolean enabled;
-	
+
 	private static AnalogInput storagePressureSensor;
-	
 
 	public static PneumaticsSupply getInstance() {
-		if(localPS == null){
+		if(localPS == null) {
 			localPS = new PneumaticsSupply();
 		}
 		return localPS;
 	}
 
-	
-	private PneumaticsSupply(){
+	private PneumaticsSupply() {
 		comp = new Compressor(RobotConstants.PCM_CAN_DEVICE_ID);
-		comp.setClosedLoopControl(true); //ensure we are running by default
+		comp.setClosedLoopControl(true); // ensure we are running by default
 		enabled = true;
-		
+
 		storagePressureSensor = new AnalogInput(RobotConstants.AIR_PRESSURE_SENSOR_PORT);
 	}
-	
+
 	/**
 	 * 
 	 * @return System unregulated pressure in psi
 	 */
-	public double getStoragePress(){
-		return ((storagePressureSensor.getVoltage()/5.0)-0.1)*150.0/0.8;
+	public double getStoragePress() {
+		return ((storagePressureSensor.getVoltage() / 5.0) - 0.1) * 150.0 / 0.8;
 	}
-	
-	/**\
+
+	/**
+	 * \
 	 * 
 	 * @return Compressor current draw in amps
 	 */
-	public double getCompressorCurrent(){
+	public double getCompressorCurrent() {
 		return comp.getCompressorCurrent();
 	}
-	
+
 	/**
 	 * 
-	 * @param state pass True run the compressor up to top pressure, false to turn it off.
+	 * @param state
+	 *            pass True run the compressor up to top pressure, false to turn it off.
 	 */
-	public void setCompressorEnabled(boolean state){
+	public void setCompressorEnabled(boolean state) {
 		comp.setClosedLoopControl(state);
-		if(state == false){
+		if(state == false) {
 			comp.stop();
 		}
 		enabled = state;
 	}
-	
+
 	/**
 	 * 
 	 * @return true if compressor is enabled to run, false if disabled.
 	 */
-	public boolean compressorIsEnabled(){
+	public boolean compressorIsEnabled() {
 		return enabled;
 	}
-
 }
