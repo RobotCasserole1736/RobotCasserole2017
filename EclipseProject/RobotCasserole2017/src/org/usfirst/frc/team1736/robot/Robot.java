@@ -125,8 +125,10 @@ public class Robot extends IterativeRobot {
 	// Driver Station (info about the match)
 	DriverStation ds;
 
+	// Camera setup/switching class
 	CameraControl camCTRL;
 
+	// Gear flap control
 	FlappyGear FG;
 
 	// Crash Tracker Construction
@@ -149,7 +151,7 @@ public class Robot extends IterativeRobot {
 		try {
 			CrashTracker.logRobotInit();
 
-			// Set up physical devices
+			// Set up all the things!
 			driveTrain = DriveTrain.getInstance();
 			pdp = new PowerDistributionPanel(RobotConstants.PDP_CAN_DEVICE_ID);
 			lowBatt = LowBatteryIndicator.getInstance();
@@ -160,7 +162,6 @@ public class Robot extends IterativeRobot {
 			visionDelayCal = VisionDelayCalibration.getInstance();
 			FG = FlappyGear.getInstance();
 			auxFlapControl = AuxFlapControl.getInstance();
-
 			ecuStats = new CasseroleRIOLoadMonitor();
 			poseCalc = RobotPoseCalculator.getInstance();
 			shotCTRL = ShotControl.getInstance();
@@ -171,26 +172,21 @@ public class Robot extends IterativeRobot {
 			climbControl.setPDPReference(pdp);
 			gearPickupCTRL = GearPickup.getInstance();
 			airSupplySystem = PneumaticsSupply.getInstance();
-
 			camGimbal = new CameraServoMount();
-
 			gearControl = GearControl.getInstance();
-
 			auto = new Autonomous();
-
 			driverCTRL = DriverController.getInstance();
 			operatorCTRL = OperatorController.getInstance();
 			driverCTRL.setDeadzone(0.175);
 			operatorCTRL.setDeadzone(0.175);
-
 			LEDseq = LEDSequencer.getInstance();
 
 			autoAlignNotPossibleDVIndState = false;
 
 			ds = DriverStation.getInstance();
 
+			// Set up logging & broadcasting of internal signals
 			initLoggingChannels();
-
 			initDriverView();
 
 			// Set up and start web server (must be after all other website init functions)
@@ -200,8 +196,10 @@ public class Robot extends IterativeRobot {
 			// Load any saved calibration values (must be last to ensure all calibrations have been initialized first)
 			CalWrangler.loadCalValues();
 
+			// Set up cameras
 			camCTRL = new CameraControl();
 
+			// Init the execution time tracker
 			lastLoopExTime = Timer.getFPGATimestamp();
 
 		}
@@ -279,8 +277,8 @@ public class Robot extends IterativeRobot {
 
 			// Auxiliary Flap Control
 			auxFlapControl.update();
-			;
-
+			
+			// Website updates
 			updateDriverView();
 			updateWebStates();
 
@@ -702,6 +700,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putDouble("Robot Strafe Velocity (ft per sec)", poseCalc.getStrafeVelFtPerS());
 		CassesroleWebStates.putDouble("Robot FwdRev Distance (ft)", poseCalc.getFwdRevDistFt());
 		CassesroleWebStates.putDouble("Robot Strafe Distance (ft)", poseCalc.getStrafeDistFt());
+		
 		CassesroleWebStates.putDouble("Robot Yaw (deg)", gyro.getAngle());
 		CassesroleWebStates.putDouble("Front Left Motor Output", driveTrain.getFLDriveMotorCmd());
 		CassesroleWebStates.putDouble("Front Right Motor Output", driveTrain.getFRDriveMotorCmd());
@@ -718,6 +717,7 @@ public class Robot extends IterativeRobot {
 		CassesroleWebStates.putBoolean("Vision CoProcessor Online", visionProc.isOnline());
 		CassesroleWebStates.putDouble("Vision CoProcessor FPS", visionProc.getCoProcessorFPS());
 		CassesroleWebStates.putDouble("Vision CoProcessor CPU Load (%)", visionProc.getCoProcessorCPULoadPct());
+		
 		CassesroleWebStates.putDouble("Vision CoProcessor Mem Load (%)", visionProc.getCoProcessorMemLoadPct());
 		CassesroleWebStates.putDouble("Vision Num Contours Observed", visionProc.getNumberOfTargetsObserved());
 		CassesroleWebStates.putBoolean("Vision Target Seen", visionProc.getTarget().isTargetFound());
