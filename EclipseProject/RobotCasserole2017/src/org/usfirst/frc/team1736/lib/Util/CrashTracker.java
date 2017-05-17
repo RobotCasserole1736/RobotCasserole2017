@@ -8,51 +8,70 @@ import java.util.UUID;
 
 public class CrashTracker {
 	
-	static boolean disabledRunOnce = false;
-	static boolean autoRunOnce = false;
-	static boolean teleopRunOnce = false;
+	static boolean consRunOnce = false;
+	static boolean initRunOnce = false;
+	static boolean disabledInitRunOnce = false;
+	static boolean disabledPeriodicRunOnce = false;
+	static boolean autoInitRunOnce = false;
+	static boolean autoPeriodicRunOnce = false;
+	static boolean teleopInitRunOnce = false;
+	static boolean teleopPeriodicRunOnce = false;
 
 	private static final UUID RUN_INSTANCE_UUID = UUID.randomUUID();
 
 	public static void logRobotConstruction() {
-        logMarker("robot construction");
+        if(!consRunOnce){
+        	logMarker("robot construction");
+        	consRunOnce = true;
+        }
     }
 	
 	public static void logRobotInit() {
-		logMarker("robot init");
+		if(!initRunOnce){
+			logMarker("robot init");
+			initRunOnce = true;
+		}
 	}
 	
 	public static void logDisabledInit() {
-		logMarker("disabled init");
-		disabledRunOnce = false;
+		if(!disabledInitRunOnce){
+			logMarker("disabled init");
+			disabledInitRunOnce = true;
+		}
 	}
 	
 	public static void logDisabledPeriodic() {
-		if(!disabledRunOnce){
+		if(!disabledPeriodicRunOnce){
 			logMarker("disabled periodic");
-			disabledRunOnce = true;
+			disabledPeriodicRunOnce = true;
 		}
 	}
 	
 	public static void logAutoInit() {
-		logMarker("auto init");
+		if(!autoInitRunOnce){
+			logMarker("auto init");
+			autoInitRunOnce= true;
+		}
 	}
 	
 	public static void logAutoPeriodic() {
-		if(!autoRunOnce){
+		if(!autoPeriodicRunOnce){
 			logMarker("auto periodic");
-			autoRunOnce = true;
+			autoPeriodicRunOnce = true;
 		}
 	}
 	
 	public static void logTeleopInit() {
-		logMarker("teleop init");
+		if(teleopInitRunOnce){
+			logMarker("teleop init");
+			teleopInitRunOnce = true;
+		}
 	}
 	
 	public static void logTeleopPeriodic() {
-		if(!teleopRunOnce){
+		if(!teleopPeriodicRunOnce){
 			logMarker("teleop periodic");
-			teleopRunOnce = true;
+			teleopPeriodicRunOnce = true;
 		}
 	}
 		
