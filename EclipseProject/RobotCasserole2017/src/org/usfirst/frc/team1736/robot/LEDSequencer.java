@@ -35,11 +35,11 @@ public class LEDSequencer {
 	
 	private volatile LEDSwitchCase cur_pattern;
 	
-	private static final boolean desktop_sim = false;
+	private static final boolean desktop_sim = true;
 
 
 	public enum LEDSwitchCase {
-		OFF, SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN, TEST, SMOOTH_GREEN, SMOOTH_BLUE, BLUE_GREEN_SWEEP
+		OFF, SMOOTH_SWEEP, SMOOTH_RAINBOW, SMOOTH_RED_WHITE, SPARKLE_WHITE, SPARKLE_RED_WHITE, SPARKLE_RAIN, CYLON, COMET_RED, COMET_RAIN, BOUNCE, GEAR, FUEL, CAPN, TEST, SMOOTH_GREEN, SMOOTH_BLUE, BLUE_GREEN_SWEEP, FLAMES
 	}
 	
 	
@@ -145,6 +145,10 @@ public class LEDSequencer {
 			
 		case SMOOTH_BLUE:
 			smoothBlueCycle();
+			break;
+			
+		case FLAMES:
+			flames();
 			break;
 
 		}
@@ -351,6 +355,13 @@ public class LEDSequencer {
 			ledstrip.setLEDColor(led_idx, 0, 0, blueness);
 		}
 	}
+	
+private void flames(){
+		final double period = 50; //Might make this random later
+		
+		
+	}
+		
 	
 	//Globals needed for bouncing
 	double pos1 = 5;
