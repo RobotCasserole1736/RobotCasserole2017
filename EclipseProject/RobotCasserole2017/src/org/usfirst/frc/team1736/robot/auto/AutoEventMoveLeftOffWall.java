@@ -3,22 +3,23 @@ package org.usfirst.frc.team1736.robot.auto;
 import org.usfirst.frc.team1736.lib.AutoSequencer.AutoEvent;
 import org.usfirst.frc.team1736.lib.FalconPathPlanner.PathPlannerAutoEvent;
 import org.usfirst.frc.team1736.robot.DriveTrain;
-import org.usfirst.frc.team1736.robot.DriveTrainWheelSpeedPI;
 import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
 public class AutoEventMoveLeftOffWall extends AutoEvent {
 	PathPlannerAutoEvent driveForward;
 	ShotControl shotCTRL;
-	
-	private static final double[][] waypoints = new double[][]{
-		{0,0,0},
-		{-2,0,0}
+
+	private static final double[][] waypoints = new double[][] {
+		{0, 0, 0},
+		{-2, 0, 0}
 	};
+	
 	private static final double time = 1;
+
 	public AutoEventMoveLeftOffWall() {
-		driveForward = new PathPlannerAutoEvent(waypoints,time,
-				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
+		driveForward = new PathPlannerAutoEvent(waypoints, time,
+				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(),
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
 	}
 
@@ -27,7 +28,6 @@ public class AutoEventMoveLeftOffWall extends AutoEvent {
 		driveForward.userUpdate();
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.PREP_TO_SHOOT);
-
 	}
 
 	@Override
@@ -35,7 +35,6 @@ public class AutoEventMoveLeftOffWall extends AutoEvent {
 		driveForward.userForceStop();
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
-
 	}
 
 	@Override
@@ -52,5 +51,5 @@ public class AutoEventMoveLeftOffWall extends AutoEvent {
 	public void userStart() {
 		driveForward.userStart();
 	}
-	
+
 }

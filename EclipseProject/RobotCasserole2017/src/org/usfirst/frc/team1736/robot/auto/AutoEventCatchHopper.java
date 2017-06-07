@@ -8,29 +8,30 @@ import org.usfirst.frc.team1736.robot.RobotConstants;
 import org.usfirst.frc.team1736.robot.ShotControl;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
 
-public class AutoEventCatchHopper extends AutoEvent{
+public class AutoEventCatchHopper extends AutoEvent {
 	PathPlannerAutoEvent driveEvent;
-	
-	private static final double[][] waypoints = new double[][]{
-		{0,0,0},
-		{0,-3.25,0}
+
+	private static final double[][] waypoints = new double[][] {
+		{0, 0, 0},
+		{0, -3.25, 0}
 	};
-	
+
 	private static final double time = 1;
+
 	public AutoEventCatchHopper() {
-		driveEvent = new PathPlannerAutoEvent(waypoints,time,
-				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(), 
+		driveEvent = new PathPlannerAutoEvent(waypoints, time,
+				DriveTrain.getInstance().getFrontLeftCTRL(), DriveTrain.getInstance().getFrontRightCTRL(),
 				DriveTrain.getInstance().getRearLeftCTRL(), DriveTrain.getInstance().getRearRightCTRL());
 	}
-	
+
 	public void userForceStop() {
 		driveEvent.userForceStop();
 	}
-	
+
 	public boolean isTriggered() {
 		return driveEvent.isTriggered();
 	}
-	
+
 	public boolean isDone() {
 		return driveEvent.isDone();
 	}
@@ -44,7 +45,7 @@ public class AutoEventCatchHopper extends AutoEvent{
 	@Override
 	public void userStart() {
 		FlappyGear.getInstance().setAngle(RobotConstants.FLAP_DOWN_DEG);
-		driveEvent.userStart();	
+		driveEvent.userStart();
 	}
-	
+
 }

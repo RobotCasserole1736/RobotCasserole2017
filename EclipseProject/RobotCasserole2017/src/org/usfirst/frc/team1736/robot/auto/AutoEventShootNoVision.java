@@ -11,46 +11,41 @@ import org.usfirst.frc.team1736.robot.VisionAlignment;
  *
  */
 public class AutoEventShootNoVision extends AutoEvent {
-	
-	//Vision Alignment Control
+
+	// Vision Alignment Control
 	VisionAlignment visionAlignCTRL;
-	
-	//Shooter control
+
+	// Shooter control
 	ShotControl shotCTRL;
-	
+
 	@Override
 	public void userUpdate() {
-		// TODO Auto-generated method stub
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(false); 
+		visionAlignCTRL.setVisionAlignmentDesired(false);
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.SHOOT);
 	}
 
 	@Override
 	public void userForceStop() {
-		// TODO Auto-generated method stub
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(false); 
+		visionAlignCTRL.setVisionAlignmentDesired(false);
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
 	}
 
 	@Override
 	public boolean isTriggered() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isDone() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void userStart() {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

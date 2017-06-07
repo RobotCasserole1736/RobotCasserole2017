@@ -9,22 +9,22 @@ import org.usfirst.frc.team1736.robot.VisionAlignment;
  * Auto event to run both vision alignment and shooter.
  * It would be expected that the target is already in view. If that is the case,
  * This will spool up the shooter and move the drivetrain to align. Once the drivetrain is aligned,
- * it will begin to feed the fuel into the shooter and will continue to do so until the robot is 
+ * it will begin to feed the fuel into the shooter and will continue to do so until the robot is
  * disabled.
  *
  */
 public class AutoEventShootWithVision extends AutoEvent {
-	
-	//Vision Alignment Control
+
+	// Vision Alignment Control
 	VisionAlignment visionAlignCTRL;
-	
-	//Shooter control
+
+	// Shooter control
 	ShotControl shotCTRL;
-	
+
 	@Override
 	public void userUpdate() {
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(true); 
+		visionAlignCTRL.setVisionAlignmentDesired(true);
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.SHOOT);
 	}
@@ -32,7 +32,7 @@ public class AutoEventShootWithVision extends AutoEvent {
 	@Override
 	public void userForceStop() {
 		visionAlignCTRL = VisionAlignment.getInstance();
-		visionAlignCTRL.setVisionAlignmentDesired(false); 
+		visionAlignCTRL.setVisionAlignmentDesired(false);
 		shotCTRL = ShotControl.getInstance();
 		shotCTRL.setDesiredShooterState(ShooterStates.NO_SHOOT);
 	}
@@ -49,6 +49,6 @@ public class AutoEventShootWithVision extends AutoEvent {
 
 	@Override
 	public void userStart() {
-		
+
 	}
 }
