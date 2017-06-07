@@ -151,6 +151,11 @@ button:active {
    border-top-color: #5c1b1b;
    background: #5c1b1b;
 }
+button:disabled {
+   border-top-color: #582828;
+   background: #582828;
+   color: #555;
+}
 
 body {
     background: #222;
@@ -175,6 +180,10 @@ input[type="text"], input[type="tel"], input[type="number"], input[type="checkbo
     -webkit-box-shadow: 1px 1px 1px #333;
     -moz-box-shadow: 1px 1px 1px #333;
     box-shadow: 1px 1px 1px #333;
+}
+
+input[type="checkbox"]:disabled{
+    background: #777777
 }
 
 textarea {
@@ -202,6 +211,12 @@ input[type=checkbox]:checked {
     -o-background-size: 28px 28px;
     background-size: 28px 28px;
 }
+
+input[type=checkbox]:checked:disabled {
+        background: #227722
+}
+
+
 
 input[type="number"], button {
     margin-bottom: 12px;

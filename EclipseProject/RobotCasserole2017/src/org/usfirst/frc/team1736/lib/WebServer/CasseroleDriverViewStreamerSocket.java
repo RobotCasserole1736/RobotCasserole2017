@@ -69,12 +69,11 @@ public class CasseroleDriverViewStreamerSocket extends WebSocketAdapter {
                 JSONArray data_array = new JSONArray();
 
                 // Package all data array elements into a JSON array
-                for (String name : CasseroleDriverView.ordered_obj_name_list) {
-                    data_array.add(CasseroleDriverView.driverView_objects.get(name));
+                for (DriverViewObject obj : CasseroleDriverView.getAllObjects()) {
+                    data_array.add(obj.getInitJsonObj());
                 }
 
-                // package array into object
-                full_obj.put("step", "initConfig");
+                full_obj.put("step", "init");
                 full_obj.put("obj_array", data_array);
                 getRemote().sendString(full_obj.toJSONString());
 
@@ -106,33 +105,15 @@ public class CasseroleDriverViewStreamerSocket extends WebSocketAdapter {
             try {
                 JSONObject full_obj = new JSONObject();
                 JSONArray data_array = new JSONArray();
-                JSONArray webcam_data_array = new JSONArray();
 
-                // Package all single-value data array elements into a JSON array
-                int index = 0;
-                for (String val : CasseroleDriverView.obj_vals
-                        .toArray(new String[CasseroleDriverView.obj_vals.size()])) {
-                    JSONObject val_obj = new JSONObject();
-                    val_obj.put("index", index);
-                    val_obj.put("value", val);
-                    data_array.add(val_obj);
-                    index += 1;
-                }
-                
-                //Package all webcam x/y crosshair values into a JSON array
-                index = 0;
-                for (index = 0; index < CasseroleDriverView.num_webcams; index++) {
-                    JSONObject val_obj = new JSONObject();
-                    val_obj.put("index", index);
-                    val_obj.put("value_x", CasseroleDriverView.webcam_x_vals.get(index));
-                    val_obj.put("value_y", CasseroleDriverView.webcam_y_vals.get(index));
-                    webcam_data_array.add(val_obj);
+                // Package all data array elements into a JSON array
+                for (DriverViewObject obj : CasseroleDriverView.getAllObjects()) {
+                    data_array.add(obj.getUpdJsonObj());
                 }
 
                 // package array into object
                 full_obj.put("step", "valUpdate");
                 full_obj.put("obj_array", data_array);
-                full_obj.put("webcam_array", webcam_data_array);
                 getRemote().sendString(full_obj.toJSONString());
 
             } catch (IOException e) {

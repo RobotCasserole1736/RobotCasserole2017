@@ -14,6 +14,8 @@
 				<fileset dir="${src.dir}/../resources">
 					<include name="*.html" />
 					<include name="*.css" />
+					<include name="*.js" />
+					<include name="*.ico" />
 				</fileset>
 			</scp>
 			<echo>[casserole-web-deploy] Deploy web content files to roboRIO...</echo>

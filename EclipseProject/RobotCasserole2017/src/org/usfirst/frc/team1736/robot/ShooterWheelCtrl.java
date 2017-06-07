@@ -21,10 +21,13 @@ package org.usfirst.frc.team1736.robot;
  */
 	
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
-	
+import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebPlots;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
+
+import edu.wpi.first.wpilibj.Timer;
 
 public class ShooterWheelCtrl {
 	
@@ -81,6 +84,10 @@ public class ShooterWheelCtrl {
 		shooterTalon.reverseOutput(false);
 		shooterTalon.reverseSensor(true);
 		shooterTalon.setIZone(100);
+		
+		CasseroleWebPlots.addNewSignal("Desired Shooter Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("Actual Shooter Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("Actual Shooter Current", "A");
 	}
 	
 	/**
@@ -152,6 +159,12 @@ public class ShooterWheelCtrl {
 		
 		//Update desired velocity previous state
 		prevVel = desiredVelocity;
+		
+		//Update real-time plot window
+		double time = Timer.getFPGATimestamp();
+		CasseroleWebPlots.addSample("Desired Shooter Speed", time, getShooterDesiredRPM());
+		CasseroleWebPlots.addSample("Actual Shooter Speed", time, getShooterActualVelocityRPM());
+		CasseroleWebPlots.addSample("Actual Shooter Current", time, getOutputCurrent());
 	
 	}
 	
