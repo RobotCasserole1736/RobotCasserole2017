@@ -59,10 +59,10 @@ function addDataToPlot(data){
 function genSignalListTable(arr){
     var i;
     var col_counter = 0;
-    var SIGNALS_PER_ROW = 7; //meh. html is hard.
+    var SIGNALS_PER_ROW = 1; //meh. html is hard.
     signal_names = [];
     
-    var out = "<table><tr>";
+    var out = "<table><tbody><tr>";
     
     for(i = 0; i < arr.length; i++){
         signal_names.push(arr[i].name);
@@ -78,7 +78,7 @@ function genSignalListTable(arr){
             col_counter++;
         }
     }
-    out +="</tr></table>";
+    out +="</tr></tbody></table>";
     document.getElementById("id02").innerHTML = out;
 
 }

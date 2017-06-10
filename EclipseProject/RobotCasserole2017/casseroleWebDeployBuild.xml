@@ -16,6 +16,7 @@
 					<include name="*.css" />
 					<include name="*.js" />
 					<include name="*.ico" />
+					<include name="*.png" />
 				</fileset>
 			</scp>
 			<echo>[casserole-web-deploy] Deploy web content files to roboRIO...</echo>
