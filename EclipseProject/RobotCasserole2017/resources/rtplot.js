@@ -128,7 +128,21 @@ function handleStartBtnClick(){
                 var unit = signal_units[i];
                 if(!(unit in units_to_yaxis_index)){
                     units_to_yaxis_index[unit] = yaxis_index;
-                    options.yAxis.push({title:{text:unit}, showEmpty:false});
+                    options.yAxis.push({
+                                            title:{
+                                                text:unit,
+                                                style: {
+                                                    color: '#D43',
+                                                },
+                                            }, 
+                                            showEmpty:false,
+                                            labels: {
+                                                style: {
+                                                    color: '#D43',
+                                                    fontWeight: 'bold'
+                                                },
+                                            },
+                                       });
                     yaxis_index++;
                 }
                 
@@ -137,7 +151,7 @@ function handleStartBtnClick(){
                                   data:[],
                                   visible:true,
                                   visibility_counter:0,
-                                  yAxis:units_to_yaxis_index[unit]
+                                  yAxis:units_to_yaxis_index[unit],
                                  });
 
             }
@@ -202,12 +216,12 @@ function handleClearBtnClick(){
  ** HIGHCHARTS SUPPORT
  **************************************************************************************/
 
-
 var dflt_options =  {    
 
 		credits: {
 			enabled: false
 		},
+
 		chart: {
 			zoomType: 'x',
 			renderTo: 'container',
@@ -215,24 +229,56 @@ var dflt_options =  {
 			ignoreHiddenSeries: true,
 			panning: true,
 			panKey: 'shift',
-			showAxes: true
+			showAxes: true,
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, 'rgb(96, 96, 96)'],
+                    [1, 'rgb(16, 16, 16)']
+                ]
+            },
 		},
+        
 		title: {
-			text: ''
+			text: '',
+            style: {
+                color: '#D43',
+            },
 		},
+        
 		xAxis: {
 			type: 'linear',
-			title: 'Time (sec)'
+			title: 'Time (sec)',
+            lineColor: '#999',
+            tickColor: '#999',
+            labels: {
+                style: {
+                    color: '#D43',
+                    fontWeight: 'bold'
+                },
+            },
+            title: {
+                style: {
+                    color: '#D43',
+                },
+            },
 		},
 		
-		yAxis: [],
+    	yAxis: [],
 		
 		legend: {
 			layout: 'vertical',
             align: 'right',
             verticalAlign: 'top',
             borderWidth: 1,
-            floating: true
+            floating: true,
+            itemStyle: {
+                font: '9pt Trebuchet MS, Verdana, sans-serif',
+                color: '#D43'
+            },
+            itemHoverStyle:{
+                color: 'gray'
+            }  
 			
 		},
 		
@@ -240,12 +286,7 @@ var dflt_options =  {
 			enabled: false
 		},
 		
-		colors: ['#7cb5ec', '#43A348', '#90ed7d', '#f7a30c', '#8085e9', '#f15c80', '#e4d354', '#2b608f', '#a45b5b', '#91efe1',
-		         '#6cb5ec', '#43C348', '#90ed7d', '#f6a34c', '#8085e9', '#315c90', '#e4d354', '#2b908f', '#345bfb', '#61e8e1',
-				 '#5cb5ec', '#43F348', '#90ed7d', '#f7a38c', '#8085e9', '#f18c80', '#e4d354', '#2b208f', '#f45b5b', '#91e8e1',
-				 '#4cb5ec', '#43B348', '#90ed7d', '#f7a3Ac', '#8085e9', '#f12c80', '#e4d054', '#2bF08f', '#a45bfb', '#41e851',
-				 '#3cb5ec', '#430348', '#90ed7d', '#f7a3Fc', '#8099e9', '#f15c50', '#e4d354'
-                ],
+		colors: ['#FF0000', '#0000FF', '#00FF00','#FF00FF', '#00FFFF', '#FFFF00'],
    
 		plotOptions: {
 			line: {
@@ -268,7 +309,8 @@ var dflt_options =  {
 			animation: true,
 			useHTML: false,
 			style: {
-					padding: 0
+					padding: 0,
+                    color: '#D43',
 				}
             },  
 
