@@ -3,7 +3,7 @@ package org.usfirst.frc.team1736.lib.WebServer;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class PlotSignal {
+public class PlotSignal implements Comparable<PlotSignal> {
 
 	String name;
 	String display_name;
@@ -99,5 +99,13 @@ public class PlotSignal {
 	 */
 	public String getUnits(){
 		return units;
+	}
+
+	/**
+	 *  Implement a comparison function for sorting signals by name 
+	 */
+	@Override
+	public int compareTo(PlotSignal o) {
+		return name.compareTo(o.getName());
 	}
 }

@@ -25,6 +25,7 @@ import org.usfirst.frc.team1736.lib.LoadMon.CasseroleRIOLoadMonitor;
 import org.usfirst.frc.team1736.lib.Logging.CsvLogger;
 import org.usfirst.frc.team1736.lib.Util.CrashTracker;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleDriverView;
+import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebPlots;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import org.usfirst.frc.team1736.robot.ShotControl.ShooterStates;
@@ -201,6 +202,14 @@ public class Robot extends IterativeRobot {
 
 			// Init the execution time tracker
 			lastLoopExTime = Timer.getFPGATimestamp();
+			
+			CasseroleWebPlots.addNewSignal("RIO Processor Load", "Pct");
+			CasseroleWebPlots.addNewSignal("RIO RAM Usage", "Pct");
+			CasseroleWebPlots.addNewSignal("PDP Voltage", "V");
+			CasseroleWebPlots.addNewSignal("PDP Current", "A");
+			CasseroleWebPlots.addNewSignal("PDP Temperature", "C");
+			CasseroleWebPlots.addNewSignal("System Presure", "PSI");
+			CasseroleWebPlots.addNewSignal("Compressor Current", "A");
 
 		}
 		catch(Throwable t) {
@@ -669,6 +678,15 @@ public class Robot extends IterativeRobot {
 					(visionProc.getTarget().getTopTargetXPixelPos() / RobotConstants.VISION_X_PIXELS) * 100.0,
 					(visionProc.getTarget().getTopTargetYPixelPos() / RobotConstants.VISION_Y_PIXELS) * 100.0);
 		}
+		
+		double time = Timer.getFPGATimestamp();
+		CasseroleWebPlots.addSample("RIO Processor Load",time,this.getCpuLoad());
+		CasseroleWebPlots.addSample("RIO RAM Usage", time,this.getRAMUsage());
+		CasseroleWebPlots.addSample("PDP Voltage",time,pdp.getVoltage());
+		CasseroleWebPlots.addSample("PDP Current",time,pdp.getTotalCurrent());
+		CasseroleWebPlots.addSample("PDP Temperature", time,pdp.getTemperature());
+		CasseroleWebPlots.addSample("System Presure", time,PneumaticsSupply.getInstance().getStoragePress());
+		CasseroleWebPlots.addSample("Compressor Current", time,PneumaticsSupply.getInstance().getCompressorCurrent());
 	}
 
 	private String leftJustifyDouble(double input) {

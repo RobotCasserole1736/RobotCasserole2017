@@ -81,9 +81,9 @@ public class ShooterWheelCtrl {
 		shooterTalon.reverseSensor(true);
 		shooterTalon.setIZone(100);
 		
-		CasseroleWebPlots.addNewSignal("Desired Shooter Speed", "RPM");
-		CasseroleWebPlots.addNewSignal("Actual Shooter Speed", "RPM");
-		CasseroleWebPlots.addNewSignal("Actual Shooter Current", "A");
+		CasseroleWebPlots.addNewSignal("Shooter Desired Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("Shooter Actual Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("Shooter Actual Current", "A");
 	}
 
 	/**
@@ -159,9 +159,9 @@ public class ShooterWheelCtrl {
 		
 		//Update real-time plot window
 		double time = Timer.getFPGATimestamp();
-		CasseroleWebPlots.addSample("Desired Shooter Speed", time, getShooterDesiredRPM());
-		CasseroleWebPlots.addSample("Actual Shooter Speed", time, getShooterActualVelocityRPM());
-		CasseroleWebPlots.addSample("Actual Shooter Current", time, getOutputCurrent());
+		CasseroleWebPlots.addSample("Shooter Desired Speed", time, getShooterDesiredRPM());
+		CasseroleWebPlots.addSample("Shooter Actual Speed", time, getShooterActualVelocityRPM());
+		CasseroleWebPlots.addSample("Shooter Actual Current", time, getOutputCurrent());
 	}
 
 	public void setShooterDesiredRPM(double rpm) {

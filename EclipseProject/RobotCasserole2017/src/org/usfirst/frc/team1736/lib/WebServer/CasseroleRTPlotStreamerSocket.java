@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.TimerTask;
+import java.util.TreeSet;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -180,7 +183,8 @@ public class CasseroleRTPlotStreamerSocket extends WebSocketAdapter {
     	JSONArray signal_array = new JSONArray();
     	
         // Package all data array elements into a JSON array
-        for (PlotSignal sig : CasseroleWebPlots.RTPlotSignals.values()) {
+    	SortedSet<PlotSignal> sortedObjs = new TreeSet<PlotSignal>(CasseroleWebPlots.RTPlotSignals.values());
+        for (PlotSignal sig : sortedObjs) {
         	JSONObject signal_info = new JSONObject();
         	signal_info.put("name", sig.getName());
         	signal_info.put("display_name", sig.getDisplayName());
