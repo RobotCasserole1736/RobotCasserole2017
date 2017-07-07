@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1736.robot;
 
+import org.usfirst.frc.team1736.lib.Calibration.Calibration;
+
 /*
  *******************************************************************************************
  * Copyright (C) 2017 FRC Team 1736 Robot Casserole - www.robotcasserole.org
@@ -64,17 +66,35 @@ public class DriverController extends Xbox360Controller {
 	}
 
 	public boolean getGearCamAlign() {
-		return B();
+		//return B();
+		return false;//Unused
 	}
 
 	public boolean getIntakeCamAlign() {
-		return X();
+		//return X();
+		return false;//Unused
 	}
 
 	public boolean getShooterCamAlign() {
+		//return Y();
+		return false; //Unused
+	}
+	
+	public boolean getTestClosedLoopModeEnabled(){
+		return B();
+	}
+	
+	public boolean getTestClosedLoopFwdDesired(){
 		return Y();
 	}
+	
+	public boolean getTestClosedLoopRevDesired(){
+		return X();
+	}
 
+	public boolean getTestClosedLoopStrafeDesired(){
+		return A();
+	}
 	public boolean getGyroReset() {
 		return DPadUp();
 	}

@@ -21,6 +21,7 @@ package org.usfirst.frc.team1736.robot;
  */
 
 import org.usfirst.frc.team1736.lib.Calibration.Calibration;
+import org.usfirst.frc.team1736.lib.SignalMath.AveragingFilter;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -46,13 +47,25 @@ public class DriveTrain {
 	private DriveTrainWheelSpeedPI rearLeftAutonCtrl;
 	private DriveTrainWheelSpeedPI rearRightAutonCtrl;
 
+	private AveragingFilter FL_encoder_filt;
+	private AveragingFilter FR_encoder_filt;
+	private AveragingFilter RL_encoder_filt;
+	private AveragingFilter RR_encoder_filt;
+	
 	Calibration dtPGainCal;
 	Calibration dtFGainCal;
 	Calibration dtIGainCal;
 
 	Calibration fieldOrientedCtrl;
+	
+	Calibration testSpeedSetpoint;
 
 	private boolean runningClosedLoop;
+	
+	private double FLEncoderSpeed;
+	private double FREncoderSpeed;
+	private double RLEncoderSpeed;
+	private double RREncoderSpeed;
 
 	public static synchronized DriveTrain getInstance() {
 		if(driveTrain == null)
@@ -77,9 +90,9 @@ public class DriveTrain {
 
 		// Set up calibratable values
 		fieldOrientedCtrl = new Calibration("Enable Field-Oriented Control", 0.0, 0.0, 1.0);
-		dtPGainCal = new Calibration("DT Auton Velocity P Gain", 0.004);
-		dtFGainCal = new Calibration("DT Auton Velocity F Gain", 0.00125);
-		dtIGainCal = new Calibration("DT Auton Velocity I Gain", 0.0003);
+		dtPGainCal = new Calibration("DT Auton Velocity P Gain", 0.0035);
+		dtFGainCal = new Calibration("DT Auton Velocity F Gain", 0.0016);
+		dtIGainCal = new Calibration("DT Auton Velocity I Gain", 0.0000);
 
 		// set up encoders
 		frontLeftEncoder = new Encoder(RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_A, RobotConstants.DRIVETRAIN_FRONT_LEFT_ENCODER_B, false);
@@ -108,6 +121,15 @@ public class DriveTrain {
 		// Invert gyro comp where correct (experimentally determined)
 		frontLeftAutonCtrl.setGyroCompInverted(true);
 		frontRightAutonCtrl.setGyroCompInverted(true);
+		
+		//Set up encoder filters
+		FL_encoder_filt = new AveragingFilter(3,0.0);
+		FR_encoder_filt = new AveragingFilter(3,0.0);
+		RL_encoder_filt = new AveragingFilter(3,0.0);
+		RR_encoder_filt = new AveragingFilter(3,0.0);
+		
+		//Test setpoint for tuning drivetrain PID's
+		testSpeedSetpoint = new Calibration("Test Speed Setpoint", 0, -5000, 5000);
 
 		runningClosedLoop = false;
 	}
@@ -172,24 +194,50 @@ public class DriveTrain {
 			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), VisionAlignment.getInstance().getRotateCmd(), 0);
 		}
 		else if(fieldOrientedCtrl.get() == 0.0) {
-			// For operator control, non-field oriented, and no vision assist, get all commands from driver
-			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), 0);
+			if(DriverController.getInstance().getTestClosedLoopModeEnabled()){
+				// Test mode for tuning drivetrain PID
+				double speedSetpointRPM = 0;
+				double speedSetpointRPM2 = 0;
+				if(DriverController.getInstance().getTestClosedLoopFwdDesired()){
+					speedSetpointRPM = testSpeedSetpoint.get();
+					speedSetpointRPM2 = speedSetpointRPM;
+				} else if (DriverController.getInstance().getTestClosedLoopRevDesired()){
+					speedSetpointRPM = -1 * testSpeedSetpoint.get();
+					speedSetpointRPM2 = speedSetpointRPM;
+				} else if (DriverController.getInstance().getTestClosedLoopStrafeDesired()) {
+					speedSetpointRPM =  testSpeedSetpoint.get();
+					speedSetpointRPM2 = -1 * speedSetpointRPM;
+				} else {
+					speedSetpointRPM = 0;
+				}
+				
+				getFrontLeftCTRL().setSetpoint(speedSetpointRPM);
+				getFrontRightCTRL().setSetpoint(speedSetpointRPM2);
+				getRearLeftCTRL().setSetpoint(speedSetpointRPM2);
+				getRearRightCTRL().setSetpoint(speedSetpointRPM);
+				
+				runClosedLoop();
+				
+			} else {
+				// Non-test mode non-field oriented driver control
+				runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), 0);
+			}
 
-			/*
-			 * //Tuning temp
-			 * frontLeftAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
-			 * frontRightAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
-			 * rearLeftAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
-			 * rearRightAutonCtrl.setSetpoint(600*Math.sin(Timer.getFPGATimestamp()*2*Math.PI*0.175));
-			 * runClosedLoop();
-			 */
 		}
 		else {
 			// For operator control, field oriented, and no vision assist, get all commands from driver along with gyro angle
 			runOpenLoop(driverControl.getFwdRevCmd(), driverControl.getStrafeCmd(), driverControl.getRotateCmd(), Gyro.getInstance().getAngle());
+		
 		}
 	}
 
+	public void updateEncoderSpeeds(){
+		FLEncoderSpeed =  FL_encoder_filt.filter(frontLeftEncoder.getRate()) ;
+		FREncoderSpeed =  FR_encoder_filt.filter(frontRightEncoder.getRate()) ;
+		RLEncoderSpeed =  RL_encoder_filt.filter(rearLeftEncoder.getRate()) ;
+		RREncoderSpeed =  RR_encoder_filt.filter(rearRightEncoder.getRate()) ;
+	}
+	
 	/**
 	 * Disables PI controllers (if needed) and sends commands to the open-loop drivetrain algorithm
 	 * 
@@ -199,6 +247,8 @@ public class DriveTrain {
 	 * @param gyroAngle
 	 */
 	private void runOpenLoop(double fwdRevCmd, double strafeCmd, double rotateCmd, double gyroAngle) {
+		updateEncoderSpeeds();
+		
 		frontLeftAutonCtrl.setEnabled(false);
 		frontRightAutonCtrl.setEnabled(false);
 		rearLeftAutonCtrl.setEnabled(false);
@@ -216,6 +266,8 @@ public class DriveTrain {
 	 * Enables PI controllers (if not yet enabled). Assumes setpoints for PI controllers are managed elsewhere
 	 */
 	private void runClosedLoop() {
+		updateEncoderSpeeds();
+		
 		frontLeftAutonCtrl.setEnabled(true);
 		frontRightAutonCtrl.setEnabled(true);
 		rearLeftAutonCtrl.setEnabled(true);
@@ -261,19 +313,19 @@ public class DriveTrain {
 	}
 
 	public double getFrontLeftWheelSpeedRPM() {
-		return frontLeftEncoder.getRate() * 60.0;
+		return FLEncoderSpeed * 60.0;
 	}
 
 	public double getFrontRightWheelSpeedRPM() {
-		return frontRightEncoder.getRate() * 60.0;
+		return FREncoderSpeed * 60.0;
 	}
 
 	public double getRearLeftWheelSpeedRPM() {
-		return rearLeftEncoder.getRate() * 60.0;
+		return RLEncoderSpeed * 60.0;
 	}
 
 	public double getRearRightWheelSpeedRPM() {
-		return rearRightEncoder.getRate() * 60.0;
+		return RREncoderSpeed* 60.0;
 	}
 
 	public double getHeadingSetpoint() {

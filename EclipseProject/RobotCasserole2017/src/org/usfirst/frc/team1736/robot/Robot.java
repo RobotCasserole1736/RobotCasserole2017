@@ -203,13 +203,8 @@ public class Robot extends IterativeRobot {
 			// Init the execution time tracker
 			lastLoopExTime = Timer.getFPGATimestamp();
 			
-			CasseroleWebPlots.addNewSignal("RIO Processor Load", "Pct");
-			CasseroleWebPlots.addNewSignal("RIO RAM Usage", "Pct");
-			CasseroleWebPlots.addNewSignal("PDP Voltage", "V");
-			CasseroleWebPlots.addNewSignal("PDP Current", "A");
-			CasseroleWebPlots.addNewSignal("PDP Temperature", "C");
-			CasseroleWebPlots.addNewSignal("System Presure", "PSI");
-			CasseroleWebPlots.addNewSignal("Compressor Current", "A");
+			initWebPlots();
+				
 
 		}
 		catch(Throwable t) {
@@ -406,6 +401,7 @@ public class Robot extends IterativeRobot {
 			updateDriverView();
 			CsvLogger.logData(false);
 			updateWebStates();
+			updateWebPlots();
 
 			// Mark end of loop and Calculate Loop Time
 			// Must be as close to the end of the loop as possible.
@@ -521,6 +517,7 @@ public class Robot extends IterativeRobot {
 		updateDriverView();
 		CsvLogger.logData(false);
 		updateWebStates();
+		updateWebPlots();
 		// Mark end of loop and Calculate Loop Time
 		// Must be as close to the end of the loop as possible.
 		loopTimeElapsed = Timer.getFPGATimestamp() - prevLoopStartTimestamp;
@@ -625,6 +622,7 @@ public class Robot extends IterativeRobot {
 		CsvLogger.preCacheAllMethods();
 	}
 
+
 	public void initDriverView() {
 		CasseroleDriverView.newDial("RobotSpeed ft/sec", 0, 25, 5, 0, 20);
 		CasseroleDriverView.newDial("Shooter Speed RPM", 0, 5000, 500, shotCTRL.wheel_Set_Point_rpm.get() - shooterWheelControl.ErrorRange.get(),
@@ -652,6 +650,55 @@ public class Robot extends IterativeRobot {
 		}
 		CasseroleDriverView.newWebcam("Driver_cam", RobotConstants.DRIVER_CAMERA_URL, 75, 35, 180);
 	}
+	
+	
+	//Inits all desired signals in the robot Plot Page
+	public void initWebPlots(){
+		CasseroleWebPlots.addNewSignal("RIO Processor Load", "Pct");
+		CasseroleWebPlots.addNewSignal("RIO RAM Usage", "Pct");
+		CasseroleWebPlots.addNewSignal("PDP Voltage", "V");
+		CasseroleWebPlots.addNewSignal("PDP Current", "A");
+		CasseroleWebPlots.addNewSignal("PDP Temperature", "C");
+		CasseroleWebPlots.addNewSignal("System Presure", "PSI");
+		CasseroleWebPlots.addNewSignal("Compressor Current", "A");
+		CasseroleWebPlots.addNewSignal("FL Desired Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("FL Actual Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("FL Motor Command", "cmd");
+		CasseroleWebPlots.addNewSignal("FR Desired Speed","RPM");
+		CasseroleWebPlots.addNewSignal("FR Actual Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("FR Motor Command", "cmd");
+		CasseroleWebPlots.addNewSignal("RL Desired Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("RL Actual Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("RL Motor Command", "cmd");
+		CasseroleWebPlots.addNewSignal("RR Desired Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("RR Actual Speed", "RPM");
+		CasseroleWebPlots.addNewSignal("RR Motor Command", "cmd");
+		return;
+	}
+	
+	public void updateWebPlots() {
+		double time = Timer.getFPGATimestamp();
+		CasseroleWebPlots.addSample("RIO Processor Load",time,this.getCpuLoad());
+		CasseroleWebPlots.addSample("RIO RAM Usage", time,this.getRAMUsage());
+		CasseroleWebPlots.addSample("PDP Voltage",time,pdp.getVoltage());
+		CasseroleWebPlots.addSample("PDP Current",time,pdp.getTotalCurrent());
+		CasseroleWebPlots.addSample("PDP Temperature", time,pdp.getTemperature());
+		CasseroleWebPlots.addSample("System Presure", time,PneumaticsSupply.getInstance().getStoragePress());
+		CasseroleWebPlots.addSample("Compressor Current", time,PneumaticsSupply.getInstance().getCompressorCurrent());
+		CasseroleWebPlots.addSample("FL Desired Speed", time, DriveTrain.getInstance().getFrontLeftDesiredWheelSpeedRPM());
+		CasseroleWebPlots.addSample("FL Actual Speed", time, DriveTrain.getInstance().getFrontLeftWheelSpeedRPM());
+		CasseroleWebPlots.addSample("FL Motor Command", time, DriveTrain.getInstance().getFLDriveMotorCmd());
+		CasseroleWebPlots.addSample("FR Desired Speed", time, DriveTrain.getInstance().getFrontRightDesiredWheelSpeedRPM());
+		CasseroleWebPlots.addSample("FR Actual Speed", time, DriveTrain.getInstance().getFrontRightWheelSpeedRPM());
+		CasseroleWebPlots.addSample("FR Motor Command", time, DriveTrain.getInstance().getFRDriveMotorCmd());
+		CasseroleWebPlots.addSample("RL Desired Speed", time, DriveTrain.getInstance().getRearLeftDesiredWheelSpeedRPM());
+		CasseroleWebPlots.addSample("RL Actual Speed", time, DriveTrain.getInstance().getRearLeftWheelSpeedRPM());
+		CasseroleWebPlots.addSample("RL Motor Command", time, DriveTrain.getInstance().getRLDriveMotorCmd());
+		CasseroleWebPlots.addSample("RR Desired Speed", time, DriveTrain.getInstance().getRearRightDesiredWheelSpeedRPM());
+		CasseroleWebPlots.addSample("RR Actual Speed", time, DriveTrain.getInstance().getRearRightWheelSpeedRPM());
+		CasseroleWebPlots.addSample("RR Motor Command", time, DriveTrain.getInstance().getRRDriveMotorCmd());
+					
+	}
 
 	public void updateDriverView() {
 		CasseroleDriverView.setDialValue("RobotSpeed ft/sec", poseCalc.getNetSpeedFtPerS());
@@ -678,15 +725,6 @@ public class Robot extends IterativeRobot {
 					(visionProc.getTarget().getTopTargetXPixelPos() / RobotConstants.VISION_X_PIXELS) * 100.0,
 					(visionProc.getTarget().getTopTargetYPixelPos() / RobotConstants.VISION_Y_PIXELS) * 100.0);
 		}
-		
-		double time = Timer.getFPGATimestamp();
-		CasseroleWebPlots.addSample("RIO Processor Load",time,this.getCpuLoad());
-		CasseroleWebPlots.addSample("RIO RAM Usage", time,this.getRAMUsage());
-		CasseroleWebPlots.addSample("PDP Voltage",time,pdp.getVoltage());
-		CasseroleWebPlots.addSample("PDP Current",time,pdp.getTotalCurrent());
-		CasseroleWebPlots.addSample("PDP Temperature", time,pdp.getTemperature());
-		CasseroleWebPlots.addSample("System Presure", time,PneumaticsSupply.getInstance().getStoragePress());
-		CasseroleWebPlots.addSample("Compressor Current", time,PneumaticsSupply.getInstance().getCompressorCurrent());
 	}
 
 	private String leftJustifyDouble(double input) {
@@ -696,6 +734,7 @@ public class Robot extends IterativeRobot {
 		}
 		return temp;
 	}
+
 
 	// Puts all relevant data to the robot State webpage
 	public void updateWebStates() {
