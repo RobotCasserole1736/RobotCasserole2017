@@ -12,6 +12,8 @@ var signal_display_names = []
 
 var global_chart;
 
+var time_range_sec = 10.0;
+
 
 dataSocket.onopen = function (event) {
     document.getElementById("id01").innerHTML = "COM Status: Socket Opened.";
@@ -43,16 +45,35 @@ dataSocket.onmessage = function (event) {
 
 };
 
+//Given a chunk of json data which is presumed to represent a set of 
+// samples for the currently-plotted signals, add that data to the plot.
 function addDataToPlot(data){
     var sig_iter;
     var samp_iter;
+    var samp_time;
+    var samp_val;
+    var newest_timestamp = 0;
     
+    //Iterate over all samples in all signals recieved
     for(sig_iter = 0; sig_iter < data.length; sig_iter++){
         for(samp_iter = 0; samp_iter < data[sig_iter].samples.length; samp_iter++){
-            global_chart.series[sig_iter].addPoint([parseFloat(data[sig_iter].samples[samp_iter].time), parseFloat(data[sig_iter].samples[samp_iter].val)],false,false,true);
+            
+            //Parse each sample time&value
+            samp_time = parseFloat(data[sig_iter].samples[samp_iter].time);
+            samp_val = parseFloat(data[sig_iter].samples[samp_iter].val);
+            
+            //Keep track of the most recent sample of all the data
+            if(samp_time > newest_timestamp){
+                newest_timestamp = samp_time;
+            }
+            
+            //Add the saple to the plot
+            global_chart.series[sig_iter].addPoint([samp_time,samp_val],false,false,true);
         }
     }
     
+    global_chart.xAxis[0].setExtremes(newest_timestamp - time_range_sec,newest_timestamp,false)
+    //Force a chart update to display the table
     global_chart.redraw();
     
 }
@@ -133,13 +154,17 @@ function handleStartBtnClick(){
                                             title:{
                                                 text:unit,
                                                 style: {
-                                                    color: '#D43',
+                                                    color: '#DDD',
                                                 },
                                             }, 
                                             showEmpty:false,
+                                            lineColor: '#777',
+                                            tickColor: '#444',
+                                            gridLineColor: '#444',
+                                            gridLineWidth: 1,
                                             labels: {
                                                 style: {
-                                                    color: '#D43',
+                                                    color: '#DDD',
                                                     fontWeight: 'bold'
                                                 },
                                             },
@@ -153,6 +178,14 @@ function handleStartBtnClick(){
                                   visible:true,
                                   visibility_counter:0,
                                   yAxis:units_to_yaxis_index[unit],
+                                  states: {
+                                      hover: {
+                                          enabled: false
+                                      },
+                                  },
+                                  marker: {
+                                      enabled: null
+                                  },
                                  });
 
             }
@@ -170,8 +203,6 @@ function handleStartBtnClick(){
     $.each(temp_series, function(itemNo, element) {
         options.series.push(element);
     });
-    //chart named after its sosurce file
-    options.title.text = "Real-Time Data";
     //Create dat chart
     global_chart = new Highcharts.Chart(options);
 
@@ -195,6 +226,9 @@ function handleStopBtnClick(){
             checkboxes[j].disabled = false;
         }
     }
+    
+    //Reset chart bounds to all data recieved.
+    global_chart.xAxis[0].setExtremes(null,null)
 }
 
 function handleRefreshSignalsBtnClick(){
@@ -226,35 +260,56 @@ var dflt_options =  {
 		chart: {
 			zoomType: 'x',
 			renderTo: 'container',
-			animation: true,
+			animation: false,
 			ignoreHiddenSeries: true,
+            resetZoomButton: {
+                position: {
+                    align: 'left',
+                },
+                theme: {
+                    fill: '#822',
+                    stroke: '#999',
+                    r: 3,
+                    style: {
+                        color: '#999'
+                    },
+                    states: {
+                        hover: {
+                            fill: '#782828',
+                            style: {
+                                color: '#ccc'
+                            },
+                        },
+                    },
+                },
+            },
 			panning: true,
 			panKey: 'shift',
 			showAxes: true,
             backgroundColor: {
                 linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
                 stops: [
-                    [0, 'rgb(96, 96, 96)'],
-                    [1, 'rgb(16, 16, 16)']
+                    [0, 'rgb(0, 0, 0)'], //Yes, both black. Just in case I decide to change back....
+                    [1, 'rgb(0, 0, 0)']
                 ]
             },
 		},
         
-		title: {
-			text: '',
-            style: {
-                color: '#D43',
-            },
+		title: { 
+            //disable title
+			text: null,
 		},
         
 		xAxis: {
 			type: 'linear',
 			title: 'Time (sec)',
-            lineColor: '#999',
-            tickColor: '#999',
+            lineColor: '#777',
+            tickColor: '#444',
+            gridLineColor: '#444',
+            gridLineWidth: 1,
             labels: {
                 style: {
-                    color: '#D43',
+                    color: '#DDD',
                     fontWeight: 'bold'
                 },
             },
@@ -275,7 +330,7 @@ var dflt_options =  {
             floating: true,
             itemStyle: {
                 font: '9pt Trebuchet MS, Verdana, sans-serif',
-                color: '#D43'
+                color: '#DDD'
             },
             itemHoverStyle:{
                 color: 'gray'
@@ -292,11 +347,11 @@ var dflt_options =  {
 		plotOptions: {
 			line: {
 				marker: {
-					radius: 5
+					radius: 2
 				},
-				lineWidth: 3,
+				lineWidth: 1,
 				threshold: null,
-				animation: true,
+				animation: false,
 			}
 		},
 		tooltip: {
@@ -306,14 +361,15 @@ var dflt_options =  {
 			backgroundColor: null,
             snap: 30,
 			borderWidth: 1,
+            borderColor: '#FF0000',
 			shadow: true,
-			animation: true,
+			animation: false,
 			useHTML: false,
 			style: {
-					padding: 0,
-                    color: '#D43',
-				}
-            },  
+                padding: 0,
+                color: '#D43',
+            }
+        },  
 
 		series: []
 	}
