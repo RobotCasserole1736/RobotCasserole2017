@@ -25,7 +25,9 @@ import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 /**
@@ -39,8 +41,8 @@ public class Robot extends IterativeRobot {
 
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
-
-
+	XboxController xbox; 
+	Spark sparky;
 
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -56,7 +58,8 @@ public class Robot extends IterativeRobot {
 		webServer.startServer();
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
-
+		xbox = new XboxController(0);
+		sparky = new Spark(5);
 	}
 
 	/**
@@ -112,7 +115,14 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
-
+		boolean hammerOnX = xbox.getXButton();
+		CassesroleWebStates.putBoolean("x button value",hammerOnX );
+		if (hammerOnX == true){
+			sparky.set(1);
+		}
+		else {
+			sparky.set(0);
+		}
 	}
 
 }
