@@ -26,6 +26,7 @@ import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 /**
@@ -39,7 +40,7 @@ public class Robot extends IterativeRobot {
 
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
-
+	XboxController bumper;
 
 
 	///////////////////////////////////////////////////////////////////
@@ -56,7 +57,7 @@ public class Robot extends IterativeRobot {
 		webServer.startServer();
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
-
+		bumper = new XboxController (0);
 	}
 
 	/**
