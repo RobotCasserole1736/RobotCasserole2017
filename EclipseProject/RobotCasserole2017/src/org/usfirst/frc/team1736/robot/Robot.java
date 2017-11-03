@@ -25,7 +25,9 @@ import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 /**
@@ -39,6 +41,8 @@ public class Robot extends IterativeRobot {
 
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
+	RobotDrive drive;
+	XboxController xBox;
 
 
 
@@ -56,6 +60,8 @@ public class Robot extends IterativeRobot {
 		webServer.startServer();
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
+		drive = new RobotDrive(1,3,0,2);
+		xBox = new XboxController(0);
 
 	}
 
@@ -110,8 +116,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
+		drive.arcadeDrive(xBox,
+                1,
+                xBox,
+                4,
+                true);
+
 
 	}
 
