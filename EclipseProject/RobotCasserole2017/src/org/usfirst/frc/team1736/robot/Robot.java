@@ -24,8 +24,11 @@ import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 /**
@@ -39,8 +42,9 @@ public class Robot extends IterativeRobot {
 
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
-
-
+	Servo flappyGear; 
+	XboxController controller1; //because I couldn't think of a better name
+	 
 
 	///////////////////////////////////////////////////////////////////
 	// Robot Top-Level Methods
@@ -54,6 +58,9 @@ public class Robot extends IterativeRobot {
 		// Set up and start web server (must be after all other website init functions)
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
+		flappyGear = new Servo(8);
+		flappyGear.setAngle(-90);
+		controller1 = new XboxController(1);
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
 
@@ -103,6 +110,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 
+		
 	}
 
 	/**
@@ -113,6 +121,13 @@ public class Robot extends IterativeRobot {
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
 
+		boolean flappyGearDesired = controller1.getTrigger(GenericHID.Hand.kRight);
+		
+		if(flappyGearDesired = true){
+			flappyGear.setAngle(90);
+		}else{
+			flappyGear.setAngle(-90);
+		}
 	}
 
 }
