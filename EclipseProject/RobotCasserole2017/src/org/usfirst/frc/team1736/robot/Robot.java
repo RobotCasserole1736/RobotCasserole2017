@@ -27,6 +27,7 @@ import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -42,12 +43,11 @@ public class Robot extends IterativeRobot {
 
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
-
-	XboxController bumper;
-
 	Compressor compressor;
 	AnalogInput analogInput;
 
+	XboxController xbox; 
+	Spark sparky;
 
 
 	///////////////////////////////////////////////////////////////////
@@ -65,12 +65,15 @@ public class Robot extends IterativeRobot {
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
 
-		bumper = new XboxController (0);
+
+		xbox = new XboxController (0);
 
 		analogInput = new AnalogInput(0);
 		
 		compressor = new Compressor();
-		
+
+
+		sparky = new Spark(5);
 
 	}
 
@@ -127,12 +130,23 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
+
 		double voltage = analogInput.getVoltage();
 		double pressure = (voltage * 37.5) - 18.75;
 		
 		CassesroleWebStates.putDouble("Pressure", pressure);
 		
 		
+
+		boolean hammerOnX = xbox.getXButton();
+		CassesroleWebStates.putBoolean("x button value",hammerOnX );
+		if (hammerOnX == true){
+			sparky.set(1);
+		}
+		else {
+			sparky.set(0);
+		}
+
 	}
 
 }
