@@ -33,11 +33,10 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-
-
-
+import edu.wpi.first.wpilibj.GenericHID;
 
 
 /**
@@ -58,6 +57,7 @@ public class Robot extends IterativeRobot {
 	Spark sparky;
 	XboxController shooterController;
 	CANTalon shooterMotor;
+	Servo flappyGear; 
 
 
 	///////////////////////////////////////////////////////////////////
@@ -72,6 +72,8 @@ public class Robot extends IterativeRobot {
 		// Set up and start web server (must be after all other website init functions)
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
+		flappyGear = new Servo(8);
+		flappyGear.setAngle(-90);
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
 
@@ -107,8 +109,6 @@ public class Robot extends IterativeRobot {
 		shooterMotor.reverseOutput(false);
 		shooterMotor.reverseSensor(true);
 		shooterMotor.setIZone(100);
-
-
 		
 	}
 
@@ -157,8 +157,7 @@ public class Robot extends IterativeRobot {
 	
 	
 	public void teleopInit() {
-			
-		
+
 		
 	}
 
@@ -174,6 +173,15 @@ public class Robot extends IterativeRobot {
                 xbox,
                 4,
                 true);
+
+		boolean flappyGearDesired = xbox.getTrigger(GenericHID.Hand.kRight);
+		
+		if(flappyGearDesired = true){
+			flappyGear.setAngle(90);
+		}else{
+			flappyGear.setAngle(-90);
+		}
+	
 
 
 		double voltage = analogInput.getVoltage();
