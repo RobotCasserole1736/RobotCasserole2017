@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -45,7 +46,7 @@ public class Robot extends IterativeRobot {
 	CasseroleWebServer webServer;
 	Compressor compressor;
 	AnalogInput analogInput;
-
+	RobotDrive drive;
 	XboxController xbox; 
 	Spark sparky;
 
@@ -64,7 +65,7 @@ public class Robot extends IterativeRobot {
 		webServer.startServer();
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
-
+		drive = new RobotDrive(1,3,0,2);
 
 		xbox = new XboxController (0);
 
@@ -128,8 +129,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
+		drive.arcadeDrive(xbox,
+                1,
+                xbox,
+                4,
+                true);
+
 
 		double voltage = analogInput.getVoltage();
 		double pressure = (voltage * 37.5) - 18.75;
