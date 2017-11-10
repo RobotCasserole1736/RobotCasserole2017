@@ -24,6 +24,8 @@ import org.usfirst.frc.team1736.lib.Calibration.CalWrangler;
 import org.usfirst.frc.team1736.lib.WebServer.CasseroleWebServer;
 import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -40,7 +42,12 @@ public class Robot extends IterativeRobot {
 
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
+
 	XboxController bumper;
+
+	Compressor compressor;
+	AnalogInput analogInput;
+
 
 
 	///////////////////////////////////////////////////////////////////
@@ -57,7 +64,14 @@ public class Robot extends IterativeRobot {
 		webServer.startServer();
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
+
 		bumper = new XboxController (0);
+
+		analogInput = new AnalogInput(0);
+		
+		compressor = new Compressor();
+		
+
 	}
 
 	/**
@@ -113,7 +127,12 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
-
+		double voltage = analogInput.getVoltage();
+		double pressure = (voltage * 37.5) - 18.75;
+		
+		CassesroleWebStates.putDouble("Pressure", pressure);
+		
+		
 	}
 
 }
