@@ -26,11 +26,18 @@ import org.usfirst.frc.team1736.lib.WebServer.CassesroleWebStates;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+
+
+
 
 
 /**
@@ -49,6 +56,8 @@ public class Robot extends IterativeRobot {
 	RobotDrive drive;
 	XboxController xbox; 
 	Spark sparky;
+	XboxController shooterController;
+	CANTalon shooterMotor;
 
 
 	///////////////////////////////////////////////////////////////////
@@ -65,6 +74,7 @@ public class Robot extends IterativeRobot {
 		webServer.startServer();
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
+
 		drive = new RobotDrive(1,3,0,2);
 
 		xbox = new XboxController (0);
@@ -75,7 +85,31 @@ public class Robot extends IterativeRobot {
 
 
 		sparky = new Spark(5);
+		
+		shooterController = new XboxController(0);
+		shooterMotor = new CANTalon(0);
+		double Shooter_ff_Gain = 0.0269;
+		double Shooter_P_Gain = 0.6;
+		double Shooter_I_Gain = 0.01;
+		double Shooter_D_Gain = 0.2;
+		double ErrorRange = 100;
 
+		shooterMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative); // Tells the SRX an encoder is attached to its input.
+		shooterMotor.setProfile(0); // Select slot 0 for PID gains
+		shooterMotor.changeControlMode(TalonControlMode.Speed); // Set that a PID algorithm should be used to control the output
+
+		shooterMotor.setF(Shooter_ff_Gain); // Set the PID algorithm gains based on calibration values
+		shooterMotor.setP(Shooter_P_Gain);
+		shooterMotor.setI(Shooter_I_Gain);
+		shooterMotor.setD(Shooter_D_Gain);
+
+		shooterMotor.enableBrakeMode(true); // Brake when 0 commanded (to stop shooter as fast as possible)
+		shooterMotor.reverseOutput(false);
+		shooterMotor.reverseSensor(true);
+		shooterMotor.setIZone(100);
+
+
+		
 	}
 
 	/**
@@ -120,8 +154,12 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	@Override
+	
+	
 	public void teleopInit() {
-
+			
+		
+		
 	}
 
 	/**
@@ -129,6 +167,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
 		drive.arcadeDrive(xbox,
                 1,
@@ -153,6 +192,15 @@ public class Robot extends IterativeRobot {
 			sparky.set(0);
 		}
 
-	}
 
+		boolean aButton = shooterController.getAButton();
+		if(aButton) {
+			 shooterMotor.setSetpoint(1000);
+		}
+		else {
+			shooterMotor.setSetpoint(0);
+		}
+		CassesroleWebStates.putDouble("Shooter Speed (rpm)", shooterMotor.getSpeed());
+
+	}
 }
