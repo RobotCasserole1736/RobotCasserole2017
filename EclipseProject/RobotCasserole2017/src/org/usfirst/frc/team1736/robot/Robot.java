@@ -39,7 +39,8 @@ import edu.wpi.first.wpilibj.XboxController;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
+	
+	
 	CalWrangler wrangler;
 	CasseroleWebServer webServer;
 	Servo flappyGear; 
@@ -58,9 +59,9 @@ public class Robot extends IterativeRobot {
 		// Set up and start web server (must be after all other website init functions)
 		webServer = new CasseroleWebServer();
 		webServer.startServer();
-		flappyGear = new Servo(8);
+		flappyGear = new Servo(2);
 		flappyGear.setAngle(-90);
-		controller1 = new XboxController(1);
+		controller1 = new XboxController(0);
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", 0.0);
 
@@ -121,9 +122,9 @@ public class Robot extends IterativeRobot {
 		
 		CassesroleWebStates.putDouble("Time since boot (s)", Timer.getFPGATimestamp());
 
-		boolean flappyGearDesired = controller1.getTrigger(GenericHID.Hand.kRight);
+		boolean flappyGearDesired = controller1.getBButton();
 		
-		if(flappyGearDesired = true){
+		if(flappyGearDesired == true){
 			flappyGear.setAngle(90);
 		}else{
 			flappyGear.setAngle(-90);
